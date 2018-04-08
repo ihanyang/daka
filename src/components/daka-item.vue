@@ -78,10 +78,12 @@ span {
 
 <script>
     export default {
-        props: ['item'],
+        props: ['item', 'index'],
 
         methods: {
             go(id) {
+                getApp().index = this.index
+
                 wx.navigateTo({
                     url: `/pages/detail/index?id=${id}`
                 })
