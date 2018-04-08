@@ -31,7 +31,7 @@
                 <div class="btn created-daka-btn" @click="go">创建我的打卡</div>
             </header>
             <ul>
-                <daka-item :item="item" :key="item.url" v-for="item of dakaList"></daka-item>
+                <daka-item :item="item" :index="index" :key="item.url" v-for="item of dakaList"></daka-item>
             </ul>
         </div>
 
