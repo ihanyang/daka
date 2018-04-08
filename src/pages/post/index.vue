@@ -139,6 +139,7 @@
                 getApp().dakaList.unshift({
                     HasFinish: 0,
                     HasClock: 0,
+                    ClockNum: 0,
                     ClockPID: data.data.id,
                     PlanName: this.title,
                     Cover: this.postImg,
