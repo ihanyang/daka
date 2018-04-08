@@ -43,7 +43,6 @@
 
 <script>
     import dakaItem from '@/components/daka-item'
-    import navigator from '@/components/navigator'
     import loading from '@/components/loading'
 
     import api from '@/api'
@@ -72,7 +71,6 @@
 
         components: {
             dakaItem,
-            navigator,
             loading
         },
 
