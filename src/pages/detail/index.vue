@@ -96,8 +96,14 @@
                     clockPID: this.$root.$mp.query.id
                 }
 
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
+
                 const data = await api.getDetailData(params)
 
+                wx.hideLoading()
                 wx.setNavigationBarTitle({
                     title: data.data.PlanName
                 })
