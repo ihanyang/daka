@@ -526,7 +526,7 @@ app.$mount();
             var _this2 = this;
 
             return __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
-                var params, data;
+                var params, data, dakaList, index;
                 return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
@@ -545,6 +545,13 @@ app.$mount();
                                     _this2.isDaKa = true;
 
                                     _this2.todayDaKa = data.data.TotalJoinNum;
+
+                                    dakaList = getApp().dakaList;
+                                    index = getApp().index;
+
+
+                                    dakaList[index].HasClock = 1;
+                                    dakaList[index].ClockNum++;
 
                                     wx.showToast({
                                         title: '加油，你离梦想又近了一步！',

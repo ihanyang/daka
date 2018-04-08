@@ -122,6 +122,7 @@ var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._sel
       key: item.url,
       attrs: {
         "item": item,
+        "index": index,
         "mpcomid": '0-' + index
       }
     })

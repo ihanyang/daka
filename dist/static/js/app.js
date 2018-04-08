@@ -130,6 +130,7 @@ app.$mount();
 "use strict";
 
 /* harmony default export */ __webpack_exports__["a"] = ({
+    index: -1,
     dakaList: []
 });
 
