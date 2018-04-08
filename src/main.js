@@ -25,20 +25,20 @@ export default {
         tabBar: {
             color:'#CCC',
             selectedColor:'#22CDCB',
-            //borderStyle: 'white',
+            borderStyle: 'white',
             backgroundColor: '#FFF',
             list: [
                 {
                     text: '打卡',
                     pagePath: 'pages/index/index',
                     iconPath: 'static/daka-icon.png',
-                    selectedIconPath: 'static/daka-icon.png'
+                    selectedIconPath: 'static/daka-icon-selected.png'
                 },
                 {
                     text: '发现',
                     pagePath: 'pages/discover/index',
                     iconPath: 'static/discover-icon.png',
-                    selectedIconPath: 'static/discover-icon.png'
+                    selectedIconPath: 'static/discover-icon-selected.png'
                 }
             ]
         }
