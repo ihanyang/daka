@@ -6,7 +6,8 @@
             <h2>打卡项目名称</h2>
             <input type="text" placeholder="例：考研打卡群（必填）" focus="true" maxlength="50" v-model="title">
             <div class="post-img-wrapper">
-                <img :src="postImg" mode="aspectFill" :class="{selected: isSelectImg}">
+                <img :src="postImg" class="selected" mode="aspectFill" v-if="postImage">
+                <img :src="postImg" mode="aspectFill" v-else>
                 <div class="post-input" @click="chooseImage">
                     <span>本地上传图片</span>
                 </div>
@@ -24,7 +25,6 @@
 </template>
 
 <script>
-    //import postImg from '@/images/discover-icon.png'
     import api from '@/api'
 
     export default {
@@ -32,15 +32,17 @@
             return {
                 title: '',
                 detail: '',
-                postImg: '',
+                postImage: '',
 
                 generating: false
             }
         },
 
         computed: {
-            isSelectImg() {
-                return ! this.postImg.startsWith('data')
+            postImg() {
+                const arr = ['http://oocffpuei.bkt.clouddn.com/FmG4MSRzdulpZCtJHuGKtSBXon8P', 'http://oocffpuei.bkt.clouddn.com/FpZmEjtse2nlTY5fhGXLGY2LvUy-', 'http://oocffpuei.bkt.clouddn.com/FvKzKmPpen_rEyQOqT_HBfAJHQxS', 'http://oocffpuei.bkt.clouddn.com/FoyIKF2GBSJvxMzZWZlmmfiB2R1x']
+
+                return arr[Math.floor(Math.random() * arr.length)]
             },
             isDisabled() {
                 return this.title && this.postImg
@@ -111,7 +113,7 @@
 
                                     return
                                 }
-                                this.postImg = `${app.domain}${data.key}`
+                                this.postImage = `${app.domain}${data.key}`
                             }
                         })
                     }
@@ -143,7 +145,7 @@
                 const params = {
                     planName: this.title,
                     description: this.detail,
-                    cover: this.postImg
+                    cover: this.postImage
                 }
 
                 const data = await api.createDaKa(params)
