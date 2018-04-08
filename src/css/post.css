@@ -157,3 +157,6 @@
 	box-shadow: 0 0 15px rgba(46, 217, 208, .2);
 	background-color: #FFF;
 }
+.generation-plan.disabled {
+	pointer-events: auto;
+}
