@@ -67,7 +67,7 @@ button.modal-item {
 			},
 			go() {
 				wx.navigateTo({
-                    url: `/pages/invite/index?id=${this.$root.$mp.query}`
+                    url: `/pages/invite/index?id=${this.$root.$mp.query.id}`
                 })
 			}
 		}
