@@ -93,11 +93,21 @@
                 this.dateType = value
             },
             chooseImage() {
+                const app = getApp()
+
                 wx.chooseImage({
                     success: (res) => {
-                        console.log(res)
-
-                        this.postImg = res.tempFilePaths[0]
+                        wx.uploadFile({
+                            url: 'https://up.qbox.me',
+                            filePath: res.tempFilePaths[0],
+                            name: 'file',
+                            formData: {
+                                token: app.token
+                            },
+                            success: (res) => {
+                                this.postImg = `${app.domain}${JSON.parse(res.data).key}`
+                            }
+                        })
                     }
                 })
             },
