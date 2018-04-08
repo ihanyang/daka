@@ -47,12 +47,12 @@
     import loading from '@/components/loading'
 
     import api from '@/api'
-    import {login} from '@/utils'
 
     export default {
         data() {
             return {
                 isLoading: false,
+                isLoaded: false,
 
                 userInfo: {},
 
@@ -134,14 +134,29 @@
                     url: '/pages/discover/index'
                 })
 
+                this.noAuthorize = true
+            }
+        },
+
+        async onShow() {
+            if (this.noAuthorize) {
                 return
             }
 
+            if (this.isLoaded) {
+                return
+            }
+
+            this.isLoaded = true
             this.isLoading = true
 
-            await this.getHomeData()
+            await this.getUserInfo()
 
             this.isLoading = false
+        },
+
+        onHide() {
+            this.noAuthorize = false
         },
 
         onReachBottom() {
@@ -149,12 +164,7 @@
         },
 
         methods: {
-            async getHomeData(code) {
-                await login()
-
-                this.getUserInfo()
-            },
-            getUserInfo() {
+            async getUserInfo() {
                 wx.getUserInfo({
                     withCredentials: true,
                     success: async (res) => {
@@ -202,6 +212,16 @@
                 }
 
                 const data = await api.getMyDaKaList(params)
+
+                if (data.flag !== 1) {
+                    wx.showModal({
+                        title: '提示',
+                        content: data.msg,
+                        showCancel: false
+                    })
+
+                    return
+                }
 
                 this.page++
                 this.isDakaRecord = !! data.data.Total
