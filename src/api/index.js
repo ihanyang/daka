@@ -28,52 +28,11 @@ function fetch(url, data = {}, method = 'POST') {
     })
 }
 
-// import Fly from 'flyio'
-// import qs from 'qs'
-
-//const fly = new Fly()
 const baseURL = 'http://jhtest.jinghao.com'
 
-
-// fly.config.baseURL = baseURL
-
-// fly.interceptors.request.use((request) => {
-//     const session = wx.getStorageSync('session')
-//     wx.showNavigationBarLoading()
-//     console.log(request.body)
-
-//     request.body += `&session=${session}`
-//     console.log(request.body)
-
-//     return request
-// })
-
-// fly.interceptors.response.use((response, promise) => {
-//     wx.hideNavigationBarLoading()
-
-//     if (response.data.flag === 1) {
-//         return promise.resolve(response.data)
-//     }
-
-//     wx.showModal({
-//         title: '提示',
-//         content: response.data.msg,
-//         showCancel: false
-//     })
-
-//     return promise.reject(response.data.msg)
-// }, (err, promise) => {
-//     wx.hideNavigationBarLoading()
-
-//     wx.showToast({
-//         title: err.message,
-//         icon: 'none'
-//     })
-
-//     return promise.resolve()
-// })
-
 const api = {
+    getQiNiuToken: () => fetch('/api/system/getUploadToken'),
+
     login: (params) => fetch('/wxapplib/wxapp/login', params),
 
     saveUserInfo: (params) => fetch('/wxapplib/wxapp/saveUserInfo', params),
