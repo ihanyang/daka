@@ -123,6 +123,12 @@
 
                     this.todayDaKa = data.data.TotalJoinNum
 
+                    const dakaList = getApp().dakaList
+                    const index = getApp().index
+
+                    dakaList[index].HasClock = 1
+                    dakaList[index].ClockNum++
+
                     wx.showToast({
                         title: '加油，你离梦想又近了一步！',
                         icon: 'none',
