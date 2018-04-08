@@ -7,6 +7,7 @@
             return {
                 index: -1,
                 token: '',
+                domain: '',
                 dakaList: []
             }
         },
@@ -27,6 +28,7 @@
             }
 
             getApp().token = data.data.token
+            getApp().domain = data.data.domain
         }
     }
 </script>
