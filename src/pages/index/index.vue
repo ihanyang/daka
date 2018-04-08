@@ -1,0 +1,238 @@
+<style src="@/css/home"></style>
+
+<template>
+    <div class="home-wrapper">
+
+        <header class="home-header">
+            <div class="user-info">
+                <img class="avatar" :src="userInfo.avatar">
+                <p v-text="userInfo.nickname"></p>
+            </div>
+            <div class="home-learn">
+                <div class="home-learn-item">
+                    <strong>{{learnHoursFormat}}</strong>
+                    <p>累计学习时长</p>
+                </div>
+                <div class="home-learn-item">
+                    <strong>{{dakaTimes}}天</strong>
+                    <p>累计打卡天数</p>
+                </div>
+                <div class="home-learn-item">
+                    <strong>{{learnPlan}}个</strong>
+                    <p>学习计划</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="btn create-daka-btn" :class="{dakaed: isDakaRecord}" @click="go" v-if="! isDakaRecord">创建我的打卡</div>
+        <div class="daka-list-wrapper" v-else>
+            <header>
+                <h1>我的计划</h1>
+                <div class="btn created-daka-btn" @click="go">创建我的打卡</div>
+            </header>
+            <ul>
+                <daka-item :item="item" :key="item.url" v-for="item of dakaList"></daka-item>
+            </ul>
+        </div>
+
+        <div class="loading-scroll" v-if="loadingScroll"></div>
+
+        <loading v-if="isLoading"></loading>
+    </div>
+</template>
+
+<script>
+    import dakaItem from '@/components/daka-item'
+    import navigator from '@/components/navigator'
+    import loading from '@/components/loading'
+
+    import api from '@/api'
+    import {login} from '@/utils'
+
+    export default {
+        data() {
+            return {
+                isLoading: false,
+
+                userInfo: {},
+
+                isDakaRecord: false,
+                isListLoaded: false,
+                dakaList: [],
+
+                learnHours: 0,
+                dakaTimes: 0,
+                learnPlan: 0,
+
+                page: 1,
+
+                loadingScroll: false
+            }
+        },
+
+        components: {
+            dakaItem,
+            navigator,
+            loading
+        },
+
+        computed: {
+            learnHoursFormat() {
+                let str
+                const hours = 1 * 60 * 60
+                const time = this.learnHours
+
+                if (time < hours) {
+                    str = `${Math.round(Math.max(1, time / 60))}分钟`
+                }
+
+                if (time % hours === 0) {
+                    str = `${time / hours}小时`
+                }
+
+                if (time < 24 * hours) {
+                    const h = ~~ (time / hours)
+
+                    str = `${h}小时${Math.round(Math.max(1, (time - h * hours) / 60))}分钟`
+                }
+
+                if (time % (24 * hours) === 0) {
+                    str = `${time / (hours * 24)}天`
+                }
+
+                if (time > 24 * hours && time % (24 * hours) !== 0) {
+                    const day = ~~ (time / (24 * hours))
+                    const h = ~~ ((time - (day * 24 * hours)) / hours)
+                    const m = Math.round(Math.max(1, (time - ((day * 24 * hours) + (h * hours))) / 60))
+
+                    //console.log(h)
+                    const hourStr = `${h}小时`
+                    const minuteStr = `${m}分钟`
+
+                    str = `${day}天${h ? hourStr : ''}${m && ! h ? minuteStr : ''}`
+                }
+
+                if (time >= 30 * 24 * hours) {
+                    const month = ~~ (time / (30 * 24 * hours))
+                    const day = ~~ ((time - (month * 30 * 24 * hours)) / (24 * hours))
+
+                    const monthStr = `${month}月`
+                    const dayStr = `${day}天`
+
+                    str = `${month}月${day ? dayStr : ''}`
+                }
+
+                return str
+            }
+        },
+
+        async onLoad() {
+            this.isDakaRecord = wx.getStorageSync('isDakaRecord')
+
+            if (! this.isDakaRecord) {
+                wx.switchTab({
+                    url: '/pages/discover/index'
+                })
+
+                return
+            }
+
+            this.isLoading = true
+
+            await this.getHomeData()
+
+            this.isLoading = false
+        },
+
+        onReachBottom() {
+            this.scroll()
+        },
+
+        methods: {
+            async getHomeData(code) {
+                await login()
+
+                this.getUserInfo()
+            },
+            getUserInfo() {
+                wx.getUserInfo({
+                    withCredentials: true,
+                    success: async (res) => {
+                        await api.saveUserInfo({
+                            encryptedData: res.encryptedData,
+                            iv: res.iv
+                        })
+
+                        const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
+
+                        this.userInfo = {
+                            avatar: userInfo.data.Avatar,
+                            nickname: userInfo.data.Nickname
+                        }
+
+                        wx.setStorage({
+                            key: 'user',
+                            data: this.userInfo
+                        })
+
+                        this.learnHours = userInfo.data.StudyTime
+                        this.dakaTimes = userInfo.data.ClockDay
+                        this.learnPlan = userInfo.data.PlanNum
+                    },
+                    fail: () => {
+                        wx.showModal({
+                            title: '用户拒绝授权',
+                            content: '请重新授权',
+                            showCancel: false,
+                            success: () => {
+                                wx.openSetting({
+                                    success: () => {
+                                        this.getUserInfo()
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            },
+            async getMyDaKaList() {
+                const params = {
+                    page: this.page,
+                    pagesize: 10
+                }
+
+                const data = await api.getMyDaKaList(params)
+
+                this.page++
+                this.isDakaRecord = !! data.data.Total
+
+                data.data.Rows.forEach((item) => {
+                    item.IsJoin = true
+                })
+
+                getApp().dakaList = [... this.dakaList, ... data.data.Rows]
+
+                this.dakaList = getApp().dakaList
+
+                this.isListLoaded =  this.dakaList.length === data.data.Total
+
+                ! wx.getStorageSync('isDakaRecord') && wx.setStorage({
+                    key: 'isDakaRecord',
+                    data: this.isDakaRecord
+                })
+            },
+            go() {
+                wx.navigateTo({
+                    url: '/pages/post/index'
+                })
+            },
+            async scroll() {
+                this.loadingScroll = true
+
+                ! this.isListLoaded && await this.getMyDaKaList()
+
+                this.loadingScroll = false
+            }
+        }
+    }
+</script>

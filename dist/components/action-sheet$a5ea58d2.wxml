@@ -1,0 +1,9 @@
+<template name="action-sheet$a5ea58d2">
+  <view class="_div data-v-2f3deb48 modal" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}">
+    <view class="_div data-v-2f3deb48 modal-content">
+      <button class="_button data-v-2f3deb48 modal-item" open-type="share">分享给朋友</button>
+      <view class="_div data-v-2f3deb48 modal-item share" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}">分享给朋友</view>
+      <view class="_div data-v-2f3deb48 modal-item" bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}">生成卡片 保存分享</view>
+    </view>
+  </view>
+</template>

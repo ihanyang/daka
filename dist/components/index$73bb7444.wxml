@@ -1,0 +1,8 @@
+<template name="index$73bb7444">
+  <view class="_div data-v-b622e6c0 invite-wrapper">
+    <view class="_div data-v-b622e6c0 invite-content">
+      <image src="{{qr}}" mode="aspectFill" class="_img data-v-b622e6c0"></image>
+    </view>
+    <view class="_div data-v-b622e6c0 btn save-btn" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}">保存图片</view>
+  </view>
+</template>

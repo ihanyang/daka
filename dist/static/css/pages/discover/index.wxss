@@ -1,0 +1,27 @@
+@import "/static/css/vendor.wxss";
+
+.discover-wrapper {
+  min-height: 100vh;
+  background-color: #FAFAFA;
+}
+.tag-list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 40rpx 30rpx;
+}
+.tag-list ._li {
+  width: 200rpx;
+  color: #333;
+  font-size: 32rpx;
+  text-align: center;
+  line-height: 70rpx;
+  border-radius: 6rpx;
+  background-color: #FFF;
+}
+.tag-list ._li:nth-child(n+4) {
+  margin-top: 30rpx;
+}
+.tag-list .selected {
+  color: #22CDCB;
+}

@@ -1,0 +1,6 @@
+<template name="navigator$1e527ed8">
+  <view class="_nav data-v-4858ecc7 navigator">
+    <navigator class="_a data-v-4858ecc7 daka-icon" url="/pages/index/index">打卡</navigator>
+    <navigator class="_a data-v-4858ecc7 discover-icon" url="/pages/discover/index">发现</navigator>
+  </view>
+</template>

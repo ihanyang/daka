@@ -1,0 +1,74 @@
+.detail-wrapper {
+	min-height: 100vh;
+	background-color: #FAFAFA;
+}
+.detail-header {
+	height: 250px;
+	padding-top: 25px;
+	position: relative;
+	color: #FFF;
+	text-align: center;
+	font-size: 17px;
+	box-sizing: border-box;
+	background: #22cdcb url(http://oocffpuei.bkt.clouddn.com/Frk8EjrzHMz_5SQ4jGGPzmEZTU6m) no-repeat;
+	background-size: 100%;
+
+	& strong {
+		display: block;
+		margin: 20px 0 18px;
+		font-size: 50px;
+		font-weight: bold;
+	}
+}
+.detail-avatar-list {
+	margin-top: 10px;
+	font-size: 0;
+
+	& img {
+		width: 15px;
+		height: 15px;
+		border-radius: 50%;
+		border: 1px solid #FFF;
+	}
+}
+.invite-btn {
+	width: 95px;
+	height: 45px;
+	position: absolute;
+	right: 0;
+	bottom: 25px;
+	background: url(~@/images/invite.png) no-repeat;
+	background-size: 100%;
+}
+
+.daka-btn {
+	width: 90%;
+	margin: 25px auto 0;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 55px;
+	background-color: #22CDCB;
+}
+.detail-intro {
+	width: 66%;
+	margin: 20px auto 0;
+	color: #AAA;
+	font-size: 14px;
+	line-height: 1.5;
+
+	& .btn {
+		margin-top: 15px;
+		color: #22CDCB;
+	}
+}
+
+.join-btn {
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+	color: #22CDCB;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 60px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+}

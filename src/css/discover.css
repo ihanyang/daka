@@ -1,0 +1,29 @@
+.discover-wrapper {
+	min-height: 100vh;
+	background-color: #FAFAFA;
+}
+
+.tag-list {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	padding: 20px 15px;
+
+	& li {
+		width: 100px;
+		color: #333;
+		font-size: 16px;
+		text-align: center;
+		line-height: 35px;
+		border-radius: 3px;
+		background-color: #FFF;
+	}
+
+	& li:nth-child(n+4) {
+		margin-top: 15px;
+	}
+
+	& .selected {
+		color: #22CDCB;
+	}
+}

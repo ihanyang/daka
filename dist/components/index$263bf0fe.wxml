@@ -1,0 +1,13 @@
+<import src="daka-item$5b465b8e" />
+<import src="loading$67a0817d" />
+<template name="index$263bf0fe">
+  <view class="_div data-v-273a8300 discover-wrapper">
+    <view class="_ul data-v-273a8300 tag-list">
+      <view wx:key="item.TagID" key="{{item.TagID}}" bindtap="handleProxy" data-eventid="{{'0-'+index}}" data-comkey="{{$k}}" wx:for="{{tagList}}" wx:for-index="index" wx:for-item="item" class="_li data-v-273a8300 {{[tagID === item.TagID ? 'selected' : '']}}">{{item.TagName}}</view>
+    </view>
+    <view class="_ul data-v-273a8300 daka-list">
+      <template wx:key="item.url" data="{{...$root[$kk+'0-'+index], $root}}" is="daka-item$5b465b8e" wx:for="{{dakaList}}" wx:for-index="index" wx:for-item="item"></template>
+    </view>
+    <template wx:if="{{isLoading}}" data="{{...$root[$kk+'1'], $root}}" is="loading$67a0817d"></template>
+  </view>
+</template>

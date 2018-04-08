@@ -1,0 +1,73 @@
+@import "/static/css/vendor.wxss";
+
+.invite-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: #FAFAFA;
+}
+.invite-content {
+  flex: 1;
+  padding: 0 36rpx;
+}
+.invite-content ._img {
+  width: 100%;
+  height: 100%;
+}
+.invite-user-info {
+  margin-top: 140rpx;
+  color: #333;
+  text-align: center;
+  font-size: 28rpx;
+}
+.invite-user-info .avatar {
+  width: 118rpx;
+  height: 118rpx;
+  margin: 0 auto;
+}
+.invite-user-info ._span {
+  display: block;
+  margin: 30rpx 0 20rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.invite-desc {
+  width: 350rpx;
+  padding: 34rpx 0;
+  margin: 120rpx auto 0;
+  color: #22CDCB;
+  font-size: 32rpx;
+  font-weight: bold;
+  line-height: 1.7;
+  border-top: 2rpx solid currentcolor;
+  border-bottom: 2rpx solid currentcolor;
+}
+.invite-qr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 410rpx;
+  position: absolute;
+  left: 50%;
+  bottom: 130rpx;
+  color: #333;
+  font-size: 28rpx;
+  line-height: 1.7;
+  transform: translateX(-50%);
+}
+.invite-qr ._img {
+  flex-shrink: 0;
+  width: 160rpx;
+  height: 160rpx;
+  margin-right: 34rpx;
+}
+.save-btn {
+  margin-top: 40rpx;
+  color: #22CDCB;
+  font-size: 32rpx;
+  font-weight: bold;
+  line-height: 120rpx;
+  box-shadow: 0 0 20rpx rgba(0, 0, 0, .1);
+  background-color: #FFF;
+}

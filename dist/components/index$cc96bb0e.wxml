@@ -1,0 +1,38 @@
+<import src="daka-item$5b465b8e" />
+<import src="loading$67a0817d" />
+<template name="index$cc96bb0e">
+  <view class="_div data-v-3be21c31 home-wrapper">
+    <view class="_header data-v-3be21c31 home-header">
+      <view class="_div data-v-3be21c31 user-info">
+        <image class="_img data-v-3be21c31 avatar" src="{{userInfo.avatar}}"></image>
+        <view class="_p data-v-3be21c31">{{userInfo.nickname}}</view>
+      </view>
+      <view class="_div data-v-3be21c31 home-learn">
+        <view class="_div data-v-3be21c31 home-learn-item">
+          <view class="_strong data-v-3be21c31">{{learnHoursFormat}}</view>
+          <view class="_p data-v-3be21c31">累计学习时长</view>
+        </view>
+        <view class="_div data-v-3be21c31 home-learn-item">
+          <view class="_strong data-v-3be21c31">{{dakaTimes}}天</view>
+          <view class="_p data-v-3be21c31">累计打卡天数</view>
+        </view>
+        <view class="_div data-v-3be21c31 home-learn-item">
+          <view class="_strong data-v-3be21c31">{{learnPlan}}个</view>
+          <view class="_p data-v-3be21c31">学习计划</view>
+        </view>
+      </view>
+    </view>
+    <view class="_div data-v-3be21c31 btn create-daka-btn {{[isDakaRecord ? 'dakaed' : '']}}" bindtap="handleProxy" wx:if="{{! isDakaRecord}}" data-eventid="{{'1'}}" data-comkey="{{$k}}">创建我的打卡</view>
+    <view class="_div data-v-3be21c31 daka-list-wrapper" wx:else>
+      <view class="_header data-v-3be21c31">
+        <view class="_h1 data-v-3be21c31">我的计划</view>
+        <view class="_div data-v-3be21c31 btn created-daka-btn" bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}">创建我的打卡</view>
+      </view>
+      <view class="_ul data-v-3be21c31">
+        <template wx:key="item.url" data="{{...$root[$kk+'0-'+index], $root}}" is="daka-item$5b465b8e" wx:for="{{dakaList}}" wx:for-index="index" wx:for-item="item"></template>
+      </view>
+    </view>
+    <view class="_div data-v-3be21c31 loading-scroll" wx:if="{{loadingScroll}}"></view>
+    <template wx:if="{{isLoading}}" data="{{...$root[$kk+'1'], $root}}" is="loading$67a0817d"></template>
+  </view>
+</template>
