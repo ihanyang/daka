@@ -20,6 +20,13 @@ textarea {
 	pointer-events: none;
 }
 
+.no-data {
+	margin-top: 30px;
+	color: #AAAA;
+	text-align: center;
+	font-size: 14px;
+}
+
 .line-overflow {
     display: -webkit-box;
     -webkit-box-orient: vertical;
