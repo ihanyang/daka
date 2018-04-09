@@ -6,7 +6,7 @@
             <h2>打卡项目名称</h2>
             <input type="text" placeholder="例：考研打卡群（必填）" focus="true" maxlength="50" v-model="title">
             <div class="post-img-wrapper">
-                <img :src="postImg" class="selected" mode="aspectFill" v-if="postImage">
+                <img :src="postImage" class="selected" mode="aspectFill" v-if="postImage">
                 <img :src="postImg" mode="aspectFill" v-else>
                 <div class="post-input" @click="chooseImage">
                     <span>本地上传图片</span>
@@ -160,9 +160,10 @@
                     HasFinish: 0,
                     HasClock: 0,
                     ClockNum: 0,
+                    IsJoin: 1,
                     ClockPID: data.data.id,
                     PlanName: this.title,
-                    Cover: this.postImg,
+                    Cover: this.postImage,
                     Description: this.detail,
                     AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
                 })
