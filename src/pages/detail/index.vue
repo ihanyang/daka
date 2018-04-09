@@ -12,7 +12,7 @@
             <div class="detail-avatar-list">
                 <img :key="item.Avatar" :src="item.Avatar" v-for="item of avatarList">
             </div>
-            <div class="invite-btn" v-if="! isComplete" @click="showActionSheet"></div>
+            <div class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
         </header>
 
         <template v-if="isJoin">
@@ -73,6 +73,9 @@
         computed: {
             isLongIntro() {
                 return this.intro.length > 40
+            },
+            isShowInviteBtn() {
+                return this.isJoin && ! this.isComplete
             }
         },
 
