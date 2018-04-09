@@ -153,7 +153,10 @@
 
                 this.generating = false
 
-                getApp().dakaList.unshift({
+                const app = getApp()
+
+                app.isLearningPlanNumChange = true
+                app.dakaList.unshift({
                     HasFinish: 0,
                     HasClock: 0,
                     ClockNum: 0,
