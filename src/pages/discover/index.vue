@@ -6,7 +6,9 @@
             <li :class="{selected: tagID === item.TagID}" v-text="item.TagName" :key="item.TagID" v-for="item of tagList" @click="tagID = item.TagID"></li>
         </ul>
 
-        <ul class="daka-list">
+        <p class="no-data" v-if="noList">暂无计划</p>
+
+        <ul class="daka-list" v-else>
             <daka-item :item="item" :key="item.url" v-for="item of dakaList"></daka-item>
         </ul>
 
@@ -23,6 +25,7 @@
     export default {
         data() {
             return {
+                isLodaded: false,
                 isLoading: false,
 
                 tagID: 0,
@@ -41,14 +44,22 @@
             loading
         },
 
+        computed: {
+            noList() {
+                return this.isLodaded && ! this.dakaList.length
+            }
+        },
+
         watch: {
             async tagID(value) {
+                this.isLodaded = false
                 this.isLoading = true
                 this.dakaList = []
 
                 await this.getTagData()
 
                 this.isLoading = false
+                this.isLodaded = true
             }
         },
 
