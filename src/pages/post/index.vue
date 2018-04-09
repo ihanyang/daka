@@ -4,7 +4,7 @@
     <div class="post-wrapper">
         <div class="post-box">
             <h2>打卡项目名称</h2>
-            <input type="text" placeholder="例：考研打卡群（必填）" focus="true" maxlength="50" v-model="title">
+            <input type="text" placeholder="例：考研打卡群（必填 50 字以内）" focus="true" maxlength="50" v-model="title">
             <div class="post-img-wrapper">
                 <img :src="postImage" class="selected" mode="aspectFill" v-if="postImage">
                 <img :src="postImg" mode="aspectFill" v-else>
