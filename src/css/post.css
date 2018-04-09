@@ -1,6 +1,6 @@
 .post-wrapper {
 	min-height: 100vh;
-	padding: 25px 15px 60px;
+	padding: 25px 15px 80px;
 	box-sizing: border-box;
 	background-color: #FAFAFA;
 }
@@ -150,6 +150,7 @@
 	position: fixed;
 	left: 0;
 	bottom: 0;
+	z-index: 10;
 	color: #22CDCB;
 	font-size: 15px;
 	font-weight: bold;
@@ -158,5 +159,6 @@
 	background-color: #FFF;
 }
 .generation-plan.disabled {
+	opacity: 1;
 	pointer-events: auto;
 }
