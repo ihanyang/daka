@@ -27,10 +27,12 @@
 	}
 
 	& textarea {
+		height: 100px;
 		padding: 15px;
 		font-size: 15px;
 		line-height: 1.5;
 		border-radius: 5px;
+		box-sizing: border-box;
 		background-color: #FFF;
 		word-wrap: break-word;
 	}
@@ -150,7 +152,6 @@
 	position: fixed;
 	left: 0;
 	bottom: 0;
-	z-index: 10;
 	color: #22CDCB;
 	font-size: 15px;
 	font-weight: bold;
