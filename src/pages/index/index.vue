@@ -178,6 +178,11 @@
                             nickname: userInfo.data.Nickname
                         }
 
+                        ! wx.getStorageSync('isDakaRecord') && wx.setStorage({
+                            key: 'isDakaRecord',
+                            data: true
+                        })
+
                         wx.setStorage({
                             key: 'user',
                             data: this.userInfo
@@ -233,11 +238,6 @@
                 this.dakaList = getApp().dakaList
 
                 this.isListLoaded =  this.dakaList.length === data.data.Total
-
-                ! wx.getStorageSync('isDakaRecord') && wx.setStorage({
-                    key: 'isDakaRecord',
-                    data: this.isDakaRecord
-                })
             },
             go() {
                 wx.navigateTo({
