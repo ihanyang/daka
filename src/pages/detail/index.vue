@@ -216,6 +216,9 @@
 
                 if (data.flag === 1) {
                     this.isJoin = true
+                    this.avatarList.push({
+                        Avatar: wx.getStorageSync('user').avatar
+                    })
 
                     wx.showToast({
                         title: '加入成功',
