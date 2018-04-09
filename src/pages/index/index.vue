@@ -82,20 +82,28 @@
 
                 if (time < hours) {
                     str = `${Math.round(Math.max(1, time / 60))}分钟`
+
+                    return str
                 }
 
                 if (time % hours === 0) {
                     str = `${time / hours}小时`
+
+                    return str
                 }
 
                 if (time < 24 * hours) {
                     const h = ~~ (time / hours)
 
                     str = `${h}小时${Math.round(Math.max(1, (time - h * hours) / 60))}分钟`
+
+                    return str
                 }
 
                 if (time % (24 * hours) === 0) {
                     str = `${time / (hours * 24)}天`
+
+                    return str
                 }
 
                 if (time > 24 * hours && time % (24 * hours) !== 0) {
@@ -108,6 +116,8 @@
                     const minuteStr = `${m}分钟`
 
                     str = `${day}天${h ? hourStr : ''}${m && ! h ? minuteStr : ''}`
+
+                    return str
                 }
 
                 if (time >= 30 * 24 * hours) {
@@ -118,9 +128,9 @@
                     const dayStr = `${day}天`
 
                     str = `${month}月${day ? dayStr : ''}`
-                }
 
-                return str
+                    return str
+                }
             }
         },
 
