@@ -23,7 +23,7 @@ export default {
           navigationBarBackgroundColor: '#22CDCB'
         },
         tabBar: {
-            color:'#CCC',
+            color:'#7AE6E6',
             selectedColor:'#22CDCB',
             borderStyle: 'white',
             backgroundColor: '#FFF',
