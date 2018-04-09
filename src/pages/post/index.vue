@@ -163,7 +163,7 @@
                     IsJoin: 1,
                     ClockPID: data.data.id,
                     PlanName: this.title,
-                    Cover: this.postImage,
+                    Cover: this.postImage || this.postImg,
                     Description: this.detail,
                     AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
                 })
