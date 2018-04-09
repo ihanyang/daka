@@ -71,7 +71,7 @@ span {
             </template>
         </template>
         <template v-else>
-            <div class="btn daka-btn">去打卡</div>
+            <div class="btn daka-btn">加入</div>
         </template>
     </li>
 </template>
