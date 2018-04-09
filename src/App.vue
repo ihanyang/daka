@@ -12,7 +12,9 @@
         },
 
         async onLaunch() {
-            await login()
+            if (! wx.getStorageSync('session')) {
+                await login()
+            }
         }
     }
 </script>
