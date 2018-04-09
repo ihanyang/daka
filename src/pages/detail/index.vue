@@ -218,7 +218,7 @@
                         Avatar: wx.getStorageSync('user').avatar
                     })
 
-                    getApp().item.HasJoin = 1
+                    getApp().item.IsJoin = 1
 
                     wx.showToast({
                         title: '加入成功',
