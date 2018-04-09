@@ -95,30 +95,58 @@
 
         methods: {
             async getDetailData() {
-                const params = {
-                    clockPID: this.$root.$mp.query.id
-                }
+                wx.getUserInfo({
+                    withCredentials: true,
+                    success: async (res) => {
+                        await api.saveUserInfo({
+                            encryptedData: res.encryptedData,
+                            iv: res.iv
+                        })
 
-                wx.showLoading({
-                    title: '正在加载',
-                    mask: true
+                        const params = {
+                            clockPID: this.$root.$mp.query.id
+                        }
+
+                        wx.showLoading({
+                            title: '正在加载',
+                            mask: true
+                        })
+
+                        const data = await api.getDetailData(params)
+
+                        wx.hideLoading()
+                        wx.setNavigationBarTitle({
+                            title: data.data.PlanName
+                        })
+
+                        this.day = data.data.ClockDay
+                        this.todayDaKa = data.data.TodayClockNum
+                        this.totalDaKa = data.data.TotalJoinNum
+                        this.avatarList = data.data.AvatarList
+                        this.intro = data.data.Description
+                        this.isJoin = data.data.HasJoin
+                        this.isDaKa = data.data.HasClock
+                        this.isComplete = data.data.HasFinish
+
+                    },
+                    fail: () => {
+                        wx.showModal({
+                            title: '用户拒绝授权',
+                            content: '请重新授权',
+                            showCancel: false,
+                            success: () => {
+                                wx.openSetting({
+                                    success: () => {
+                                        this.getDetailData()
+                                    }
+                                })
+                            }
+                        })
+                    }
                 })
 
-                const data = await api.getDetailData(params)
 
-                wx.hideLoading()
-                wx.setNavigationBarTitle({
-                    title: data.data.PlanName
-                })
 
-                this.day = data.data.ClockDay
-                this.todayDaKa = data.data.TodayClockNum
-                this.totalDaKa = data.data.TotalJoinNum
-                this.avatarList = data.data.AvatarList
-                this.intro = data.data.Description
-                this.isJoin = data.data.HasJoin
-                this.isDaKa = data.data.HasClock
-                this.isComplete = data.data.HasFinish
             },
             async daka() {
                 const params = {
