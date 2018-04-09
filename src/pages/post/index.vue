@@ -123,7 +123,7 @@
             async generationPlan() {
                 if (! this.title.trim().length) {
                     wx.showToast({
-                        title: '请填写标题',
+                        title: '请填写打卡项目名称',
                         icon: 'none',
                         duration: 2000
                     })
