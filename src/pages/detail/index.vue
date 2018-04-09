@@ -180,11 +180,9 @@
                 this.todayDaKa = data.data.TodayClockNum
 
                 const app = getApp()
-                const dakaList = app.dakaList
-                const index = app.index
 
-                dakaList[index].HasClock = 1
-                dakaList[index].ClockNum++
+                app.item.HasClock = 1
+                app.item.ClockNum++
 
                 wx.showToast({
                     title: '加油，你离梦想又近了一步！',
@@ -219,6 +217,8 @@
                     this.avatarList.push({
                         Avatar: wx.getStorageSync('user').avatar
                     })
+
+                    getApp().item.HasJoin = 1
 
                     wx.showToast({
                         title: '加入成功',
