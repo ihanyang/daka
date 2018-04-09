@@ -32,6 +32,8 @@
             return {
                 title: '',
                 detail: '',
+
+                postImg: '',
                 postImage: '',
 
                 generating: false
@@ -39,17 +41,16 @@
         },
 
         computed: {
-            postImg() {
-                const arr = ['http://oocffpuei.bkt.clouddn.com/FmG4MSRzdulpZCtJHuGKtSBXon8P', 'http://oocffpuei.bkt.clouddn.com/FpZmEjtse2nlTY5fhGXLGY2LvUy-', 'http://oocffpuei.bkt.clouddn.com/FvKzKmPpen_rEyQOqT_HBfAJHQxS', 'http://oocffpuei.bkt.clouddn.com/FoyIKF2GBSJvxMzZWZlmmfiB2R1x']
-
-                return arr[Math.floor(Math.random() * arr.length)]
-            },
             isDisabled() {
-                return this.title && this.postImg
+                return this.title.trim()
             }
         },
 
         async onLoad() {
+            const arr = ['http://oocffpuei.bkt.clouddn.com/FmG4MSRzdulpZCtJHuGKtSBXon8P', 'http://oocffpuei.bkt.clouddn.com/FpZmEjtse2nlTY5fhGXLGY2LvUy-', 'http://oocffpuei.bkt.clouddn.com/FvKzKmPpen_rEyQOqT_HBfAJHQxS', 'http://oocffpuei.bkt.clouddn.com/FoyIKF2GBSJvxMzZWZlmmfiB2R1x']
+
+            this.postImg = arr[Math.floor(Math.random() * arr.length)]
+
             const app = getApp()
 
             if (wx.getStorageSync('qiniu')) {
@@ -120,7 +121,7 @@
                 })
             },
             async generationPlan() {
-                if (! this.title) {
+                if (! this.title.trim().length) {
                     wx.showToast({
                         title: '请填写标题',
                         icon: 'none',
@@ -145,7 +146,7 @@
                 const params = {
                     planName: this.title,
                     description: this.detail,
-                    cover: this.postImage
+                    cover: this.postImage || this.postImg
                 }
 
                 const data = await api.createDaKa(params)
