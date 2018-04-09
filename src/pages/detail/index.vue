@@ -153,40 +153,52 @@
                     clockPID: this.$root.$mp.query.id
                 }
 
+                this.isDaKa = true
+
                 const data = await api.daka(params)
 
-                if (data.flag === 1) {
-                    this.day++
-                    this.isDaKa = true
-                    this.todayDaKa = data.data.TodayClockNum
-
-                    const app = getApp()
-                    const dakaList = app.dakaList
-                    const index = app.index
-
-                    dakaList[index].HasClock = 1
-                    dakaList[index].ClockNum++
+                if (data.flag !== 1) {
+                    this.isDaKa = false
 
                     wx.showToast({
-                        title: '加油，你离梦想又近了一步！',
+                        title: data.msg,
                         icon: 'none',
                         duration: 2000
                     })
 
-                    // 首页累计打卡天数自动更新
+                    return
+                }
 
-                    const dakaDate = wx.getStorageSync('dakaDate')
-                    const date = new Date()
-                    const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+                this.day++
 
-                    if (! dakaDate || dakaDate !== dateString) {
-                        app.isDakaNumChange = true
+                this.todayDaKa = data.data.TodayClockNum
 
-                        wx.setStorage({
-                            key: 'dakaDate',
-                            data: dateString
-                        })
-                    }
+                const app = getApp()
+                const dakaList = app.dakaList
+                const index = app.index
+
+                dakaList[index].HasClock = 1
+                dakaList[index].ClockNum++
+
+                wx.showToast({
+                    title: '加油，你离梦想又近了一步！',
+                    icon: 'none',
+                    duration: 2000
+                })
+
+                // 首页累计打卡天数自动更新
+
+                const dakaDate = wx.getStorageSync('dakaDate')
+                const date = new Date()
+                const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
+                if (! dakaDate || dakaDate !== dateString) {
+                    app.isDakaNumChange = true
+
+                    wx.setStorage({
+                        key: 'dakaDate',
+                        data: dateString
+                    })
                 }
             },
             async join() {
