@@ -178,6 +178,12 @@
                 wx.getUserInfo({
                     withCredentials: true,
                     success: async (res) => {
+                        // 保存一个授权完成的标志 发现页面需要据此更新状态
+                        wx.setStorage({
+                            key: 'isAuthorization',
+                            data: true
+                        })
+
                         await api.saveUserInfo({
                             encryptedData: res.encryptedData,
                             iv: res.iv

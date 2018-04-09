@@ -71,6 +71,17 @@
             this.isLoading = false
         },
 
+        onShow() {
+            if (wx.getStorageSync('isAuthorization') && ! wx.getStorageSync('isUpdate')) {
+                wx.setStorage({
+                    key: 'isUpdate',
+                    data: true
+                })
+
+                this.getTagData()
+            }
+        },
+
         methods: {
             async getDiscoverData() {
                 const apiList = [api.getDiscoverTagList(), api.getDiscoverDaKaList({
