@@ -82,7 +82,9 @@ span {
 
         methods: {
             go(id) {
-                getApp().index = this.index
+                const app = getApp()
+
+                app.item = this.item
 
                 wx.navigateTo({
                     url: `/pages/detail/index?id=${id}`
