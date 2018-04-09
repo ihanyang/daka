@@ -222,9 +222,9 @@
                     },
                     fail: () => {
                         wx.showModal({
-                            title: '用户拒绝授权',
-                            content: '请重新授权',
+                            content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
                             showCancel: false,
+                            confirmText: '下一步',
                             success: () => {
                                 wx.openSetting({
                                     success: () => {
