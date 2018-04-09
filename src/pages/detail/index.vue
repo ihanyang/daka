@@ -156,12 +156,13 @@
                 const data = await api.daka(params)
 
                 if (data.flag === 1) {
+                    this.day++
                     this.isDaKa = true
+                    this.todayDaKa = data.data.TodayClockNum
 
-                    this.todayDaKa = data.data.TotalJoinNum
-
-                    const dakaList = getApp().dakaList
-                    const index = getApp().index
+                    const app = getApp()
+                    const dakaList = app.dakaList
+                    const index = app.index
 
                     dakaList[index].HasClock = 1
                     dakaList[index].ClockNum++
@@ -171,6 +172,21 @@
                         icon: 'none',
                         duration: 2000
                     })
+
+                    // 首页累计打卡天数自动更新
+
+                    const dakaDate = wx.getStorageSync('dakaDate')
+                    const date = new Date()
+                    const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
+                    if (! dakaDate || dakaDate !== dateString) {
+                        app.isDakaNumChange = true
+
+                        wx.setStorage({
+                            key: 'dakaDate',
+                            data: dateString
+                        })
+                    }
                 }
             },
             async join() {
