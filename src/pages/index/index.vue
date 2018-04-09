@@ -137,6 +137,18 @@
         },
 
         async onShow() {
+            const app = getApp()
+
+            if (app.isLearningPlanNumChange) {
+                this.learnPlan++
+                app.isLearningPlanNumChange = false
+            }
+
+            if (app.isDakaNumChange) {
+                this.dakaTimes++
+                app.isDakaNumChange = false
+            }
+
             if (this.noAuthorize) {
                 return
             }
