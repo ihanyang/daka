@@ -3,6 +3,7 @@ li {
     display: flex;
     padding: 15px 20px;
     margin-bottom: 15px;
+    border-radius: 5px;
     background-color: #FFF;
 }
 

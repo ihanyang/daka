@@ -7,7 +7,7 @@ page {
 }
 
 .home-header {
-	padding: 5px 0 40px;
+	padding: 25px 0 40px;
 	color: #FFF;
 	text-align: center;
 	font-size: 17px;
@@ -27,12 +27,12 @@ page {
 .home-learn {
 	display: flex;
 	justify-content: space-around;
-	margin-top: 40px;
+	margin-top: 22px;
 	font-size: 13px;
 
 	& strong {
 		display: block;
-		margin-bottom: 9px;
+		margin-bottom: 10px;
 		font-size: 20px;
 		font-weight: bold;
 	}
