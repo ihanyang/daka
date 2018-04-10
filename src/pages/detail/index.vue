@@ -151,11 +151,13 @@
                             showCancel: false,
                             confirmText: '下一步',
                             success: () => {
-                                wx.openSetting({
-                                    success: () => {
-                                        this.getDetailData()
-                                    }
-                                })
+                                if (res.confirm) {
+                                    wx.openSetting({
+                                        success: () => {
+                                            this.getDetailData()
+                                        }
+                                    })
+                                }
                             }
                         })
                     }
@@ -214,25 +216,33 @@
             },
             async join() {
                 const params = {
-                    clockPID: +this.$root.$mp.query.id
+                    clockPID: + this.$root.$mp.query.id
                 }
 
                 const data = await api.joinGroup(params)
 
-                if (data.flag === 1) {
-                    this.isJoin = true
-                    this.avatarList.push({
-                        Avatar: wx.getStorageSync('user').avatar
-                    })
-
-                    getApp().item.IsJoin = 1
-
+                if (data.flag !== 1) {
                     wx.showToast({
-                        title: '加入成功',
+                        title: data.msg,
                         icon: 'none',
                         duration: 2000
                     })
+
+                    return
                 }
+
+                this.isJoin = true
+                this.avatarList.push({
+                    Avatar: wx.getStorageSync('user').avatar
+                })
+
+                getApp().item.IsJoin = 1
+
+                wx.showToast({
+                    title: '加入成功',
+                    icon: 'none',
+                    duration: 2000
+                })
             },
             dakaPrompt() {
                 wx.showToast({
