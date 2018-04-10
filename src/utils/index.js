@@ -31,3 +31,7 @@ export function sendTime(time) {
 
     app.enterTime = null
 }
+
+export function getDefaultAvatar() {
+    return 'http://oocffpuei.bkt.clouddn.com/FoQRQHVQwZRd4mhGQ4qsPxDsqmnz'
+}
