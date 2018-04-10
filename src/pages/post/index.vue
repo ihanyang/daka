@@ -16,7 +16,7 @@
 
         <div class="post-box">
             <h2>打卡详细描述</h2>
-            <textarea v-model="detail" maxlength="300" :show-confirm-bar="false" placeholder="请输入详细描述（选填）"></textarea>
+            <textarea v-model="detail" maxlength="300" placeholder-class="placeholder" placeholder="请输入详细描述（选填 300 字以内）"></textarea>
         </div>
 
         <div class="btn generation-plan" :class="{disabled: ! isDisabled}" @click="generationPlan" v-if="! generating">生成计划</div>
