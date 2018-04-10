@@ -45,6 +45,7 @@
     import actionSheet from '@/components/action-sheet'
 
     import api from '@/api'
+    import {sendTime} from '@/utils'
 
     export default {
         data() {
@@ -94,6 +95,21 @@
 
             this.getDetailData()
         },
+
+        onShow() {
+            const app = getApp()
+
+            if (! app.enterTime) {
+                app.enterTime = + new Date()
+            }
+        },
+
+        onHide() {
+            if (wx.getStorageSync('isAuthorization')) {
+                sendTime()
+            }
+        },
+
         onUnload() {
             this.clear()
         },

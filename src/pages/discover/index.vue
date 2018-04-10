@@ -21,6 +21,7 @@
     import dakaItem from '@/components/daka-item'
 
     import api from '@/api'
+    import {sendTime} from '@/utils'
 
     export default {
         data() {
@@ -79,6 +80,18 @@
                 })
 
                 this.getTagData()
+            }
+
+            const app = getApp()
+
+            if (! app.enterTime) {
+                app.enterTime = + new Date()
+            }
+        },
+
+        onHide() {
+            if (wx.getStorageSync('isAuthorization')) {
+                sendTime()
             }
         },
 

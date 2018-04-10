@@ -11,7 +11,7 @@
             <div class="home-learn">
                 <div class="home-learn-item">
                     <strong>{{learnHoursFormat}}</strong>
-                    <p>累计学习时长</p>
+                    <p>累计时长</p>
                 </div>
                 <div class="home-learn-item">
                     <strong>{{dakaTimes}}天</strong>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="home-learn-item">
                     <strong>{{learnPlan}}个</strong>
-                    <p>学习计划</p>
+                    <p>打卡计划</p>
                 </div>
             </div>
         </header>
@@ -46,6 +46,7 @@
     import loading from '@/components/loading'
 
     import api from '@/api'
+    import {sendTime} from '@/utils'
 
     export default {
         data() {
@@ -173,9 +174,17 @@
             await this.getUserInfo()
 
             this.isLoading = false
+
+            if (! app.enterTime) {
+                app.enterTime = + new Date()
+            }
         },
 
         onHide() {
+            if (wx.getStorageSync('isAuthorization')) {
+                sendTime()
+            }
+
             this.noAuthorize = false
         },
 
@@ -189,10 +198,7 @@
                     withCredentials: true,
                     success: async (res) => {
                         // 保存一个授权完成的标志 发现页面需要据此更新状态
-                        wx.setStorage({
-                            key: 'isAuthorization',
-                            data: true
-                        })
+                        wx.setStorageSync('isAuthorization', true)
 
                         await api.saveUserInfo({
                             encryptedData: res.encryptedData,

@@ -26,6 +26,7 @@
 
 <script>
     import api from '@/api'
+    import {sendTime} from '@/utils'
 
     export default {
         data() {
@@ -83,11 +84,23 @@
             app.domain = domain
         },
 
+        onShow() {
+            const app = getApp()
+
+            if (! app.enterTime) {
+                app.enterTime = + new Date()
+            }
+        },
+
         onUnload() {
             this.title = ''
             this.postImg = ''
             this.postImage = ''
             this.detail = ''
+
+            if (wx.getStorageSync('isAuthorization')) {
+                sendTime()
+            }
         },
 
         methods: {
