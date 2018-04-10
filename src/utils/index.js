@@ -21,3 +21,13 @@ export function login() {
         })
     })
 }
+
+export function sendTime(time) {
+    const app = getApp()
+
+    api.sendTime({
+        studyTime: (+ new Date() - app.enterTime) / 1000
+    })
+
+    app.enterTime = null
+}
