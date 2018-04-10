@@ -51,7 +51,7 @@
         data() {
             return {
                 isLoading: false,
-                isLoaded: false,
+                //isLoaded: false,
 
                 userInfo: {},
 
@@ -163,11 +163,11 @@
                 return
             }
 
-            if (this.isLoaded) {
-                return
-            }
+            // if (this.isLoaded) {
+            //     return
+            // }
 
-            this.isLoaded = true
+            // this.isLoaded = true
             this.isLoading = true
 
             await this.getUserInfo()
@@ -225,12 +225,14 @@
                             content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
                             showCancel: false,
                             confirmText: '下一步',
-                            success: () => {
-                                wx.openSetting({
-                                    success: () => {
-                                        this.getUserInfo()
-                                    }
-                                })
+                            success: (res) => {
+                                if (res.confirm) {
+                                    wx.openSetting({
+                                        success: () => {
+                                            this.getUserInfo()
+                                        }
+                                    })
+                                }
                             }
                         })
                     }
