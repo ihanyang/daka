@@ -46,7 +46,7 @@
     import loading from '@/components/loading'
 
     import api from '@/api'
-    import {sendTime} from '@/utils'
+    import {sendTime, getDefaultAvatar} from '@/utils'
 
     export default {
         data() {
@@ -160,6 +160,15 @@
                 app.isDakaNumChange = false
             }
 
+            // 加入计划后自动更新
+
+            if (app.joins && app.joins.length) {
+                this.learnPlan = + this.learnPlan + app.joins.length
+                this.dakaList = [... app.joins, ... this.dakaList]
+
+                app.joins = []
+            }
+
             if (this.noAuthorize) {
                 return
             }
@@ -208,7 +217,7 @@
                         const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
 
                         this.userInfo = {
-                            avatar: userInfo.data.Avatar,
+                            avatar: userInfo.data.Avatar || getDefaultAvatar(),
                             nickname: userInfo.data.Nickname
                         }
 
