@@ -96,7 +96,7 @@
                 if (time < 24 * hours) {
                     const h = ~~ (time / hours)
 
-                    str = `${h}小时${Math.round(Math.max(1, (time - h * hours) / 60))}分钟`
+                    str = `${h}小时${Math.round(Math.max(1, (time - h * hours) / 60))}分`
 
                     return str
                 }
