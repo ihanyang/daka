@@ -86,6 +86,7 @@
         onUnload() {
             this.title = ''
             this.postImg = ''
+            this.postImage = ''
             this.detail = ''
         },
 
