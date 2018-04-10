@@ -26,6 +26,7 @@ li {
 h2 {
     color: #333;
     font-size: 16px;
+    word-break: break-all;
 }
 
 .avatar {
