@@ -88,15 +88,17 @@
         onLoad() {
             const {item} = getApp()
 
-            this.isJoin = item.IsJoin
-            this.isDaKa = item.HasClock
-            this.isComplete = item.HasFinish
-            this.todayDaKa = item.ClockNum
-            this.avatarList = item.AvatarList
+            if (item) {
+                this.isJoin = item.IsJoin
+                this.isDaKa = item.HasClock
+                this.isComplete = item.HasFinish
+                this.todayDaKa = item.ClockNum
+                this.avatarList = item.AvatarList
 
-            wx.setNavigationBarTitle({
-                title: item.PlanName.length > 20 ? `${item.PlanName.slice(0, 20)}...` : item.PlanName
-            })
+                wx.setNavigationBarTitle({
+                    title: item.PlanName.length > 20 ? `${item.PlanName.slice(0, 20)}...` : item.PlanName
+                })
+            }
 
             this.getDetailData()
         },
@@ -163,6 +165,15 @@
 
                         wx.hideLoading()
 
+                        if (data.flag !== 1) {
+                            wx.showModal({
+                                title: '错误',
+                                content: data.msg
+                            })
+
+                            return
+                        }
+
                         this.day = data.data.ClockDay
                         this.todayDaKa = data.data.TodayClockNum
                         this.totalDaKa = data.data.TotalJoinNum
@@ -173,6 +184,10 @@
                         this.isJoin = data.data.HasJoin
                         this.isDaKa = data.data.HasClock
                         this.isComplete = data.data.HasFinish
+
+                        wx.setNavigationBarTitle({
+                            title: data.data.PlanName.length > 20 ? `${data.data.PlanName.slice(0, 20)}...` : data.data.PlanName
+                        })
                     },
                     fail: () => {
                         wx.showModal({
@@ -268,6 +283,9 @@
                 const app = getApp()
 
                 app.item.IsJoin = 1
+                app.item.AvatarList.unshift({
+                    Avatar: wx.getStorageSync('user').avatar
+                })
 
                 if (! app.joins) {
                     app.joins = []
