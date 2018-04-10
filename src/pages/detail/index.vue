@@ -10,7 +10,7 @@
             <p v-else>今日已有{{todayDaKa}}人打卡</p>
 
             <div class="detail-avatar-list">
-                <img :key="item.Avatar" :src="item.Avatar" v-for="item of avatarList">
+                <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
             </div>
             <div class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
         </header>
@@ -30,7 +30,8 @@
 
         <div class="detail-intro">
             <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
-            <div class="btn" @click="isShrink = false" v-if="isShrink && isLongIntro">展开</div>
+            <div class="btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
+            <div class="btn" @click="shrink" v-if="isLongIntro && taped">收起</div>
         </div>
 
         <button open-type="share"></button>
@@ -45,7 +46,7 @@
     import actionSheet from '@/components/action-sheet'
 
     import api from '@/api'
-    import {sendTime} from '@/utils'
+    import {sendTime, getDefaultAvatar} from '@/utils'
 
     export default {
         data() {
@@ -57,6 +58,7 @@
 
                 totalDaKa: 0,
                 isShrink: true,
+                taped: false,
 
                 isDaKaing: false,
                 isComplete: false,
@@ -77,6 +79,9 @@
             },
             isShowInviteBtn() {
                 return this.isJoin && ! this.isComplete
+            },
+            defaultAvatar() {
+                return getDefaultAvatar()
             }
         },
 
@@ -90,7 +95,7 @@
             this.avatarList = item.AvatarList
 
             wx.setNavigationBarTitle({
-                title: item.PlanName
+                title: item.PlanName.length > 20 ? `${item.PlanName.slice(0, 20)}...` : item.PlanName
             })
 
             this.getDetailData()
@@ -122,6 +127,14 @@
         },
 
         methods: {
+            spread() {
+                this.isShrink = false
+                this.taped = true
+            },
+            shrink() {
+                this.isShrink = true
+                this.taped = false
+            },
             async getDetailData() {
                 wx.getUserInfo({
                     withCredentials: true,
@@ -252,7 +265,18 @@
                     Avatar: wx.getStorageSync('user').avatar
                 })
 
-                getApp().item.IsJoin = 1
+                const app = getApp()
+
+                app.item.IsJoin = 1
+
+                if (! app.joins) {
+                    app.joins = []
+                }
+
+                app.joins.push(app.item)
+
+                //getApp().joins.push(getApp().item)
+
 
                 wx.showToast({
                     title: '加入成功',
@@ -284,10 +308,13 @@
                 this.intro = ''
                 this.avatarList = []
 
+                this.taped = false
+                this.isShrink = true
                 this.isJoin = false
                 this.isComplete = false
                 this.isDaKa = false
                 this.isDaKaing = false
+                this.shareModalStatus = false
             }
         }
     }
