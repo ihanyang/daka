@@ -37,6 +37,10 @@
 		word-wrap: break-word;
 	}
 
+	& .placeholder {
+		color: #DBDBDB;
+	}
+
 	& label {
 		display: flex;
 		align-items: center;
