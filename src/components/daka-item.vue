@@ -28,6 +28,9 @@ h2 {
     font-size: 16px;
     word-break: break-all;
 }
+h2.line-overflow {
+    -webkit-line-clamp: 1;
+}
 
 .avatar {
     display: inline-block;
@@ -55,7 +58,7 @@ span {
     <li @click="go(item.ClockPID)">
         <img class="figure" mode="aspectFill" :src="item.Cover">
         <div class="daka-info">
-            <h2 v-text="item.PlanName"></h2>
+            <h2 class="line-overflow" v-text="item.PlanName"></h2>
             <p>
                 <img class="avatar" :src="item.Avatar" :key="item" v-for="item of item.AvatarList">
                 <span>今天已有{{item.TodayClockNum || item.ClockNum}}人打卡</span>
