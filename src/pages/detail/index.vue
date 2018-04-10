@@ -80,6 +80,18 @@
         },
 
         onLoad() {
+            const {item} = getApp()
+
+            this.isJoin = item.IsJoin
+            this.isDaKa = item.HasClock
+            this.isComplete = item.HasFinish
+            this.todayDaKa = item.ClockNum
+            this.avatarList = item.AvatarList
+
+            wx.setNavigationBarTitle({
+                title: item.PlanName
+            })
+
             this.getDetailData()
         },
         onUnload() {
@@ -104,6 +116,11 @@
                             data: true
                         })
 
+                        wx.showLoading({
+                            title: '正在加载',
+                            mask: true
+                        })
+
                         await api.saveUserInfo({
                             encryptedData: res.encryptedData,
                             iv: res.iv
@@ -113,27 +130,20 @@
                             clockPID: this.$root.$mp.query.id
                         }
 
-                        wx.showLoading({
-                            title: '正在加载',
-                            mask: true
-                        })
-
                         const data = await api.getDetailData(params)
 
                         wx.hideLoading()
-                        wx.setNavigationBarTitle({
-                            title: data.data.PlanName
-                        })
 
                         this.day = data.data.ClockDay
                         this.todayDaKa = data.data.TodayClockNum
                         this.totalDaKa = data.data.TotalJoinNum
                         this.avatarList = data.data.AvatarList
                         this.intro = data.data.Description
+
+                        // 获取详情之后需要再次设置，因为第一次进入时可能没授权
                         this.isJoin = data.data.HasJoin
                         this.isDaKa = data.data.HasClock
                         this.isComplete = data.data.HasFinish
-
                     },
                     fail: () => {
                         wx.showModal({
@@ -150,9 +160,6 @@
                         })
                     }
                 })
-
-
-
             },
             async daka() {
                 const params = {
