@@ -31,6 +31,8 @@ function fetch(url, data = {}, method = 'POST') {
 const baseURL = 'http://jhtest.jinghao.com'
 
 const api = {
+    sendTime: (params) => fetch('/api/clock/studyTime', params),
+
     getQiNiuToken: () => fetch('/api/system/getUploadToken'),
 
     login: (params) => fetch('/wxapplib/wxapp/login', params),
