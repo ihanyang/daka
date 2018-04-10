@@ -61,7 +61,7 @@ span {
         <div class="daka-info">
             <h2 class="line-overflow" v-text="item.PlanName"></h2>
             <p>
-                <img class="avatar" :src="item.Avatar" :key="item" v-for="item of item.AvatarList">
+                <img class="avatar" :src="item.Avatar || defaultAvatar" :key="item" v-for="item of item.AvatarList">
                 <span>今天已有{{item.TodayClockNum || item.ClockNum}}人打卡</span>
             </p>
         </div>
@@ -82,8 +82,16 @@ span {
 </template>
 
 <script>
+    import {getDefaultAvatar} from '@/utils'
+
     export default {
         props: ['item', 'index'],
+
+        computed: {
+            defaultAvatar() {
+                return getDefaultAvatar()
+            }
+        },
 
         methods: {
             go(id) {
