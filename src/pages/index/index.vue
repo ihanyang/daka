@@ -24,7 +24,7 @@
             </div>
         </header>
 
-        <div class="btn create-daka-btn" :class="{dakaed: isDakaRecord}" @click="go" v-if="! isDakaRecord">创建我的打卡</div>
+        <div id="daka-create" class="btn create-daka-btn" :class="{dakaed: isDakaRecord}" @click="go" v-if="! isDakaRecord">创建我的打卡</div>
         <div class="daka-list-wrapper" v-else>
             <header>
                 <h1>我的计划</h1>

@@ -21,7 +21,7 @@
             <img :src="qr" mode="aspectFill">
         </div>
 
-        <div class="btn save-btn" @click="save">保存图片</div>
+        <div id="daka-save" class="btn save-btn" @click="save">保存图片</div>
     </div>
 </template>
 

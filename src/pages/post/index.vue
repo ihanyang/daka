@@ -19,7 +19,7 @@
             <textarea v-model="detail" maxlength="300" placeholder-class="placeholder" placeholder="请输入详细描述（选填 300 字以内）"></textarea>
         </div>
 
-        <div class="btn generation-plan" :class="{disabled: ! isDisabled}" @click="generationPlan" v-if="! generating">生成计划</div>
+        <div id="daka-generation" class="btn generation-plan" :class="{disabled: ! isDisabled}" @click="generationPlan" v-if="! generating">生成计划</div>
         <div class="btn generation-plan disabled" v-else>生成中...</div>
     </div>
 </template>
@@ -130,6 +130,13 @@
                                 }
                                 this.postImage = `${app.domain}${data.key}`
                             }
+                        })
+                    },
+                    fail() {
+                        wx.showToast({
+                            title: '选择图片失败，请重试'，
+                            icon: 'none',
+                            duration: 2000
                         })
                     }
                 })

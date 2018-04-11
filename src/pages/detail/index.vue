@@ -12,7 +12,7 @@
             <div class="detail-avatar-list">
                 <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
             </div>
-            <div class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
+            <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
         </header>
 
         <template v-if="isJoin">
@@ -21,7 +21,7 @@
             </template>
             <template v-else>
                 <div class="btn daka-btn disabled" v-if="isDaKa">已打卡</div>
-                <div class="btn daka-btn" @click="daka" v-else>打卡</div>
+                <div id="daka-daka" class="btn daka-btn" @click="daka" v-else>打卡</div>
             </template>
         </template>
         <template v-else>
@@ -36,7 +36,7 @@
 
         <button open-type="share"></button>
 
-        <div class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div>
+        <div id="daka-join" class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div>
         <div class="btn join-btn" v-if="joining">加入中...</div>
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
