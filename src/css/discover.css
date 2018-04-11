@@ -4,19 +4,23 @@
 }
 
 .tag-list {
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap;
 	padding: 20px 15px;
+	font-size: 0;
 
 	& li {
+		display: inline-block;
 		width: 100px;
+		margin-right: 20px;
 		color: #333;
 		font-size: 16px;
 		text-align: center;
 		line-height: 35px;
 		border-radius: 3px;
 		background-color: #FFF;
+	}
+
+	& li:nth-child(3n) {
+		margin-right: 0;
 	}
 
 	& li:nth-child(n+4) {
