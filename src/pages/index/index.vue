@@ -82,7 +82,7 @@
                 const time = this.learnHours
 
                 if (time < hours) {
-                    str = `${Math.round(Math.max(1, time / 60))}分钟`
+                    str = `${Math.round(time / 60)}分钟`
 
                     return str
                 }
