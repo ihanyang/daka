@@ -111,14 +111,12 @@
             }
         },
 
-        onHide() {
+        onUnload() {
+            this.clear()
+
             if (wx.getStorageSync('isAuthorization')) {
                 sendTime()
             }
-        },
-
-        onUnload() {
-            this.clear()
         },
 
         onShareAppMessage(res) {
