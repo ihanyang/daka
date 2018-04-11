@@ -1,3 +1,5 @@
+import {login} from '@/utils'
+
 function fetch(url, data = {}, method = 'POST') {
     let header = {}
     const session = wx.getStorageSync('session')
@@ -25,6 +27,18 @@ function fetch(url, data = {}, method = 'POST') {
                 reject(`接口：${url} 调用失败` + JSON.stringify(e))
             }
         })
+    }).then((data) => {
+        if (data.flag === -100) {
+            login().then(() => {
+                wx.reLaunch({
+                    url: '/pages/index/index'
+                })
+            })
+
+            return
+        }
+
+        return data
     })
 }
 

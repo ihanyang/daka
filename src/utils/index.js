@@ -11,7 +11,7 @@ export function login() {
 
                 //console.log(response)
 
-                ! wx.getStorageSync('session') && wx.setStorageSync('session', data.data.session)
+                wx.setStorageSync('session', data.data.session)
 
                 resolve()
             },
