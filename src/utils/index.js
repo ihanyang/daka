@@ -33,5 +33,5 @@ export function sendTime(time) {
 }
 
 export function getDefaultAvatar() {
-    return 'http://oocffpuei.bkt.clouddn.com/FoQRQHVQwZRd4mhGQ4qsPxDsqmnz'
+    return 'http://jhsy-img.caizhu.com/daka/FoQRQHVQwZRd4mhGQ4qsPxDsqmnz.png'
 }

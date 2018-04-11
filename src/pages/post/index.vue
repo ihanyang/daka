@@ -48,7 +48,7 @@
         },
 
         async onLoad() {
-            const arr = ['http://oocffpuei.bkt.clouddn.com/FmG4MSRzdulpZCtJHuGKtSBXon8P', 'http://oocffpuei.bkt.clouddn.com/FpZmEjtse2nlTY5fhGXLGY2LvUy-', 'http://oocffpuei.bkt.clouddn.com/FvKzKmPpen_rEyQOqT_HBfAJHQxS', 'http://oocffpuei.bkt.clouddn.com/FoyIKF2GBSJvxMzZWZlmmfiB2R1x']
+            const arr = ['http://jhsy-img.caizhu.com/daka/FmG4MSRzdulpZCtJHuGKtSBXon8P.gif', 'http://jhsy-img.caizhu.com/daka/FoyIKF2GBSJvxMzZWZlmmfiB2R1x.gif', 'http://jhsy-img.caizhu.com/daka/FpZmEjtse2nlTY5fhGXLGY2LvUy-.gif', 'http://jhsy-img.caizhu.com/daka/FvKzKmPpen_rEyQOqT_HBfAJHQxS.gif']
 
             this.postImg = arr[Math.floor(Math.random() * arr.length)]
 
