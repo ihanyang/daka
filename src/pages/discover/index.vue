@@ -83,16 +83,19 @@
         },
 
         onShow() {
+            const app = getApp()
+
             if (wx.getStorageSync('isAuthorization') && ! wx.getStorageSync('isUpdate')) {
                 wx.setStorage({
                     key: 'isUpdate',
                     data: true
                 })
 
+                this.page = 1
+                this.dakaList = []
+
                 this.getTagData()
             }
-
-            const app = getApp()
 
             if (! app.enterTime) {
                 app.enterTime = + new Date()
