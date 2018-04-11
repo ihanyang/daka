@@ -145,6 +145,16 @@
                             data: true
                         })
 
+                        const userInfo = {
+                            avatar: res.userInfo.avatarUrl,
+                            nickname: res.userInfo.nickName
+                        }
+
+                        wx.setStorage({
+                            key: 'user',
+                            data: userInfo
+                        })
+
                         wx.showLoading({
                             title: '正在加载',
                             mask: true
