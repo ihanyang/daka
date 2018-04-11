@@ -12,6 +12,8 @@
             <daka-item :item="item" :key="item.url" v-for="item of dakaList"></daka-item>
         </ul>
 
+        <div class="loading-scroll" v-if="loadingScroll"></div>
+
         <loading v-if="isLoading"></loading>
     </div>
 </template>
@@ -37,6 +39,11 @@
                     }
                 ],
                 dakaList: [],
+
+                page: 1,
+
+                isListLoaded: false,
+                loadingScroll: false
             }
         },
 
@@ -53,6 +60,9 @@
 
         watch: {
             async tagID(value) {
+                this.page = 1
+                this.isListLoaded = false
+
                 this.isLodaded = false
                 this.isLoading = true
                 this.dakaList = []
@@ -95,11 +105,13 @@
             }
         },
 
+        onReachBottom() {
+            this.scroll()
+        },
+
         methods: {
             async getDiscoverData() {
-                const apiList = [api.getDiscoverTagList(), api.getDiscoverDaKaList({
-                    tagID: 0
-                })]
+                const apiList = [api.getDiscoverTagList(), this.getTagData()]
                 const [tagData, listData] = await Promise.all(apiList).catch(() => {
                     wx.showModal({
                         title: '出错',
@@ -115,12 +127,6 @@
                     this.tagList = [... this.tagList, ... tagData.data.Rows]
                 }
 
-                if (listData.flag === 1) {
-                    isShowErrowToast = true
-
-                    this.dakaList = listData.data.Rows
-                }
-
                 ! isShowErrowToast && wx.showModal({
                     title: '提示',
                     content: tagData.msg,
@@ -129,12 +135,17 @@
             },
             async getTagData() {
                 const params = {
-                    tagID: this.tagID
+                    tagID: this.tagID,
+                    page: this.page,
+                    pageSize: 10
                 }
                 const data = await api.getDiscoverDaKaList(params)
 
                 if (data.flag === 1) {
-                    this.dakaList = data.data.Rows
+                    this.dakaList = [... this.dakaList, ... data.data.Rows]
+
+                    this.page++
+                    this.isListLoaded =  this.dakaList.length === data.data.Total
 
                     return
                 }
@@ -144,6 +155,13 @@
                     content: '接口错误',
                     showCancel: false
                 })
+            },
+            async scroll() {
+                this.loadingScroll = true
+
+                ! this.isListLoaded && await this.getTagData()
+
+                this.loadingScroll = false
             }
         }
   }
