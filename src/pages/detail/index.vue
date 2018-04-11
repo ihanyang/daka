@@ -274,7 +274,7 @@
                 }
 
                 this.isJoin = true
-                this.avatarList.length < 3 && this.avatarList.push({
+                this.avatarList.length < 3 && this.avatarList.unshift({
                     Avatar: wx.getStorageSync('user').avatar
                 })
 
