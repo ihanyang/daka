@@ -36,7 +36,8 @@
 
         <button open-type="share"></button>
 
-        <div class="btn join-btn" v-if="! isJoin" @click="join">加入该小组</div>
+        <div class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div>
+        <div class="btn join-btn" v-if="joining">加入中...</div>
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
     </div>
@@ -64,6 +65,8 @@
                 isComplete: false,
                 isDaKa: false,
                 isJoin: false,
+
+                joining: false,
 
                 shareModalStatus: false
             }
@@ -273,7 +276,11 @@
                     clockPID: + this.$root.$mp.query.id
                 }
 
+                this.joining = true
+
                 const data = await api.joinGroup(params)
+
+                this.joining = false
 
                 if (data.flag !== 1) {
                     wx.showToast({
