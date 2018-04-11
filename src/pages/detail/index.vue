@@ -121,7 +121,7 @@
 
         onShareAppMessage(res) {
             return {
-                title: `#${wx.getStorageSync('user').nickname}邀请你加入打卡计划-${getApp().planName}`,
+                title: `${wx.getStorageSync('user').nickname}邀请你加入打卡计划#${getApp().planName}#`,
                 path: `/pages/detail/index?id=${this.$root.$mp.query.id}`
             }
         },
