@@ -276,7 +276,7 @@
                 }
 
                 this.isJoin = true
-                this.avatarList.push({
+                this.avatarList.length < 3 && this.avatarList.push({
                     Avatar: wx.getStorageSync('user').avatar
                 })
 
