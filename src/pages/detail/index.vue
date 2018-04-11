@@ -274,16 +274,30 @@
                 }
 
                 this.isJoin = true
-                this.avatarList.length < 3 && this.avatarList.unshift({
-                    Avatar: wx.getStorageSync('user').avatar
-                })
+
+                if (this.avatarList.length < 3) {
+                    this.avatarList.unshift({
+                        Avatar: wx.getStorageSync('user').avatar
+                    })
+                } else {
+                    this.avatarList = [{
+                        Avatar: wx.getStorageSync('user').avatar
+                    }, ... this.avatarList.slice(0, 2)]
+                }
 
                 const app = getApp()
 
                 app.item.IsJoin = 1
-                app.item.AvatarList.length < 3 && app.item.AvatarList.unshift({
-                    Avatar: wx.getStorageSync('user').avatar
-                })
+
+                if (app.item.AvatarList.length < 3) {
+                    app.item.AvatarList.unshift({
+                        Avatar: wx.getStorageSync('user').avatar
+                    })
+                } else {
+                    app.item.AvatarList = [{
+                        Avatar: wx.getStorageSync('user').avatar
+                    }, ... app.item.AvatarList.slice(0, 2)]
+                }
 
                 if (! app.joins) {
                     app.joins = []
