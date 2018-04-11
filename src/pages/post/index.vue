@@ -134,7 +134,7 @@
                     },
                     fail() {
                         wx.showToast({
-                            title: '选择图片失败，请重试'，
+                            title: '选择图片失败请重试',
                             icon: 'none',
                             duration: 2000
                         })
