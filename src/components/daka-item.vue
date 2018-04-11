@@ -1,6 +1,7 @@
 <style scoped>
 li {
     display: flex;
+    align-items: center;
     padding: 15px 20px;
     margin-bottom: 15px;
     border-radius: 5px;
@@ -15,6 +16,7 @@ li {
 
 .daka-info {
     flex: 1;
+    align-self: stretch;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
