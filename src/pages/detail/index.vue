@@ -121,7 +121,7 @@
 
         onShareAppMessage(res) {
             return {
-                title: `${wx.getStorageSync('user').nickname}邀请你加入打卡计划`,
+                title: `#${wx.getStorageSync('user').nickname}邀请你加入打卡计划-${getApp().planName}`,
                 path: `/pages/detail/index?id=${this.$root.$mp.query.id}`
             }
         },
@@ -182,6 +182,8 @@
                         this.isJoin = data.data.HasJoin
                         this.isDaKa = data.data.HasClock
                         this.isComplete = data.data.HasFinish
+
+                        getApp().planName = data.data.PlanName
 
                         wx.setNavigationBarTitle({
                             title: data.data.PlanName.length > 20 ? `${data.data.PlanName.slice(0, 20)}...` : data.data.PlanName
