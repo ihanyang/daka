@@ -3,6 +3,7 @@
 <template>
     <div class="discover-wrapper">
         <ul class="tag-list">
+            <li :class="{selected: tagID === 0}" @click="tagID = 0">全部</li>
             <li :class="{selected: tagID === item.TagID}" v-text="item.TagName" :key="item.TagID" v-for="item of tagList" @click="tagID = item.TagID"></li>
         </ul>
 
@@ -32,12 +33,7 @@
                 isLoading: false,
 
                 tagID: 0,
-                tagList: [
-                    {
-                        TagName: '全部',
-                        TagID: 0
-                    }
-                ],
+                tagList: [],
                 dakaList: [],
 
                 page: 1,
@@ -127,7 +123,8 @@
                 if (tagData.flag === 1) {
                     isShowErrowToast = true
 
-                    this.tagList = [... this.tagList, ... tagData.data.Rows]
+                    //this.tagList = [... this.tagList, ... tagData.data.Rows]
+                    this.tagList = tagData.data.Rows
                 }
 
                 ! isShowErrowToast && wx.showModal({
