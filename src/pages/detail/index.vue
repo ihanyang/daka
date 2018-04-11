@@ -283,7 +283,7 @@
                 const app = getApp()
 
                 app.item.IsJoin = 1
-                app.item.AvatarList.unshift({
+                app.item.AvatarList.length < 3 && app.item.AvatarList.unshift({
                     Avatar: wx.getStorageSync('user').avatar
                 })
 
