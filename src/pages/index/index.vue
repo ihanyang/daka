@@ -278,7 +278,16 @@
                     item.IsJoin = true
                 })
 
-                getApp().dakaList = [... this.dakaList, ... data.data.Rows]
+                const ids = data.data.Rows.map((item) => item.ClockPID)
+                const temp = this.dakaList.filter((item, index) => {
+                    if (ids.indexOf(item.ClockPID) !== -1) {
+                        return false
+                    }
+
+                    return true
+                })
+
+                getApp().dakaList = [... temp, ... data.data.Rows]
 
                 this.dakaList = getApp().dakaList
 
