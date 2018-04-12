@@ -27,7 +27,6 @@
 
 <script>
     import api from '@/api'
-    import {sendTime} from '@/utils'
 
     export default {
         data() {
@@ -49,20 +48,6 @@
 
         onLoad() {
             this.getInviteQR()
-        },
-
-        onShow() {
-            const app = getApp()
-
-            if (! app.enterTime) {
-                app.enterTime = + new Date()
-            }
-        },
-
-        onHide() {
-            if (wx.getStorageSync('isAuthorization')) {
-                sendTime()
-            }
         },
 
         onShareAppMessage() {

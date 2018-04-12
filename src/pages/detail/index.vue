@@ -39,6 +39,8 @@
         <div id="daka-join" class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div>
         <div class="btn join-btn" v-if="joining">加入中...</div>
 
+        <div class="go-home" v-if="isShowHome" @click="goHome"></div>
+
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
     </div>
 </template>
@@ -52,6 +54,7 @@
     export default {
         data() {
             return {
+                isShowHome: false,
                 day: 0,
                 todayDaKa: 0,
                 avatarList: [],
@@ -103,23 +106,23 @@
                 })
             }
 
+            // 用户点击分享进入
+            if (getCurrentPages()[0].route.indexOf('detail') !== -1) {
+                this.isShowHome = true
+            }
+
             this.getDetailData()
         },
 
-        onShow() {
-            const app = getApp()
-
-            if (! app.enterTime) {
-                app.enterTime = + new Date()
-            }
-        },
-
         onUnload() {
+            this.isShowHome = false
+
             this.clear()
 
-            if (wx.getStorageSync('isAuthorization')) {
-                sendTime()
-            }
+        },
+
+        onHide() {
+            this.isShowHome = false
         },
 
         onShareAppMessage(res) {
@@ -130,6 +133,11 @@
         },
 
         methods: {
+            goHome() {
+                wx.switchTab({
+                    url: '/pages/index/index'
+                })
+            },
             spread() {
                 this.isShrink = false
                 this.taped = true
@@ -163,6 +171,7 @@
                             mask: true
                         })
 
+
                         await api.saveUserInfo({
                             encryptedData: res.encryptedData,
                             iv: res.iv
@@ -172,13 +181,26 @@
                             clockPID: this.$root.$mp.query.id
                         }
 
+
                         const data = await api.getDetailData(params)
 
                         wx.hideLoading()
 
                         if (data.flag !== 1) {
+
+                            // 需要重新登陆
+                            if (data.flag === -100) {
+                                const currentPage = getCurrentPages()[0]
+
+                                wx.reLaunch({
+                                    url: `/${currentPage.route}?id=${currentPage.options.id}`
+                                })
+
+                                return
+                            }
+
                             wx.showModal({
-                                title: '错误',
+                                title: '提示',
                                 content: data.msg
                             })
 
@@ -196,6 +218,10 @@
                         this.isDaKa = data.data.HasClock
                         this.isComplete = data.data.HasFinish
 
+                        if (this.isJoin) {
+                            wx.setStorageSync('isJoined', true)
+                        }
+
                         getApp().planName = data.data.PlanName
 
                         wx.setNavigationBarTitle({
@@ -203,20 +229,33 @@
                         })
                     },
                     fail: () => {
-                        wx.showModal({
-                            content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
-                            showCancel: false,
-                            confirmText: '下一步',
-                            success: (res) => {
-                                if (res.confirm) {
-                                    wx.openSetting({
-                                        success: () => {
-                                            this.getDetailData()
-                                        }
-                                    })
+                        const flag = wx.getStorageSync('flag')
+
+                        if (flag) {
+                            wx.removeStorageSync('flag')
+
+                            wx.switchTab({
+                                url: '/pages/discover/index'
+                            })
+                        } else {
+                            wx.showModal({
+                                content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
+                                showCancel: false,
+                                confirmText: '下一步',
+                                success: (res) => {
+                                    //if (res.confirm) {
+                                        wx.setStorageSync('flag', true)
+
+                                        wx.openSetting({
+                                            success: () => {
+                                                this.getDetailData()
+                                            }
+                                        })
+                                    //}
                                 }
-                            }
-                        })
+                            })
+                        }
+
                     }
                 })
             },
@@ -263,7 +302,12 @@
                 const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 
                 if (! dakaDate || dakaDate !== dateString) {
-                    app.isDakaNumChange = true
+                    //app.isDakaNumChange = true
+
+                    //console.log(app.dakaTotalNum)
+                    app.dakaTotalNum++
+
+                    //console.log(app.dakaTotalNum)
 
                     wx.setStorage({
                         key: 'dakaDate',
@@ -318,13 +362,25 @@
                     }, ... app.item.AvatarList.slice(0, 2)]
                 }
 
-                if (! app.joins) {
-                    app.joins = []
-                }
+                // if (wx.getStorageSync('isLoadedHomeData')) {
+                //     app.dakaList.unshift(Object.assign({}, app.item))
+                // }
 
-                app.joins.push(app.item)
+                // if (! app.joins) {
+                //     app.joins = []
+                // }
+
+                // app.joins.push(app.item)
 
                 //getApp().joins.push(getApp().item)
+
+                // wx.setStorage({
+                //     key: 'isNeedUpdate',
+                //     data: true
+                // })
+
+                // 加入任意一个之后，再次进入就直接进入首页
+                wx.setStorageSync('isJoined', true)
 
 
                 wx.showToast({

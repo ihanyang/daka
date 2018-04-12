@@ -26,7 +26,6 @@
 
 <script>
     import api from '@/api'
-    import {sendTime} from '@/utils'
 
     export default {
         data() {
@@ -84,23 +83,11 @@
             app.domain = domain
         },
 
-        onShow() {
-            const app = getApp()
-
-            if (! app.enterTime) {
-                app.enterTime = + new Date()
-            }
-        },
-
         onUnload() {
             this.title = ''
             this.postImg = ''
             this.postImage = ''
             this.detail = ''
-
-            if (wx.getStorageSync('isAuthorization')) {
-                sendTime()
-            }
         },
 
         methods: {
@@ -176,7 +163,7 @@
 
                 const app = getApp()
 
-                app.isLearningPlanNumChange = true
+                app.dakaPlanNum++
                 app.dakaList.unshift({
                     HasFinish: 0,
                     HasClock: 0,
@@ -189,8 +176,8 @@
                     AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
                 })
 
-                wx.navigateBack({
-                    delta: 1
+                wx.switchTab({
+                    url: '/pages/index/index'
                 })
             }
         }

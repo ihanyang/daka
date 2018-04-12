@@ -28,21 +28,25 @@ function fetch(url, data = {}, method = 'POST') {
             }
         })
     }).then((data) => {
-        if (data.flag === -100) {
-            login().then(() => {
-                wx.reLaunch({
-                    url: '/pages/index/index'
-                })
-            })
+        // if (data.flag === -100) {
+        //     wx.showModal({
+        //         title: '我去打撒',
+        //         content: 23432
+        //     })
+        //     login().then(() => {
+        //         wx.reLaunch({
+        //             url: '/pages/index/index'
+        //         })
+        //     })
 
-            return
-        }
+        //     return
+        // }
 
         return data
     })
 }
 
-const baseURL = 'http://jhtest.jinghao.com'
+const baseURL = 'https://api.jinghao.com'
 
 const api = {
     sendTime: (params) => fetch('/api/clock/studyTime', params),

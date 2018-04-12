@@ -79,3 +79,15 @@
 	box-shadow: 0 0 10px rgba(0, 0, 0, .1);
 	background-color: #FFF;
 }
+
+.go-home {
+	width: 55px;
+	height: 55px;
+	position: fixed;
+	right: 19px;
+	bottom: 15%;
+	border-radius: 50%;
+	box-shadow: 0 2px 10px -2px #22CDCB;
+	background: #22CDCB url(~@/images/home-icon.png) center no-repeat;
+	background-size: 50%;
+}

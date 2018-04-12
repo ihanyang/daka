@@ -93,15 +93,6 @@
                 this.getTagData()
             }
 
-            if (! app.enterTime) {
-                app.enterTime = + new Date()
-            }
-        },
-
-        onHide() {
-            if (wx.getStorageSync('isAuthorization')) {
-                sendTime()
-            }
         },
 
         onReachBottom() {
@@ -111,12 +102,7 @@
         methods: {
             async getDiscoverData() {
                 const apiList = [api.getDiscoverTagList(), this.getTagData()]
-                const [tagData, listData] = await Promise.all(apiList).catch(() => {
-                    wx.showModal({
-                        title: '出错',
-                        content: '接口错误'
-                    })
-                })
+                const [tagData] = await Promise.all(apiList)
 
                 let isShowErrowToast = false
 
@@ -152,7 +138,7 @@
 
                 wx.showModal({
                     title: '出错',
-                    content: '接口错误',
+                    content: data.msg,
                     showCancel: false
                 })
             },
