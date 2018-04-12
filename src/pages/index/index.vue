@@ -298,7 +298,7 @@
 
                                         wx.openSetting({
                                             success: () => {
-                                                //this.getDetailData()
+                                                this.getUserInfo()
                                             }
                                         })
                                     //}
