@@ -46,7 +46,7 @@ function fetch(url, data = {}, method = 'POST') {
     })
 }
 
-const baseURL = 'https://api.jinghao.com'
+const baseURL = 'http://jhtest.jinghao.com'
 
 const api = {
     sendTime: (params) => fetch('/api/clock/studyTime', params),
