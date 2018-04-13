@@ -9,9 +9,23 @@ li {
 }
 
 .figure {
-    width: 55px;
-    height: 55px;
-    border-radius: 5px;
+    position: relative;
+
+    & img {
+        width: 55px;
+        height: 55px;
+        border-radius: 5px;
+    }
+}
+.figure.message::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    border-radius: 50%;
+    background-color: #FE3D5D;
 }
 
 .daka-info {
@@ -59,7 +73,9 @@ span {
 
 <template>
     <li @click="go(item.ClockPID)">
-        <img class="figure" mode="aspectFill" :src="item.Cover">
+        <div class="figure" :class="{message: item.aa}">
+            <img mode="aspectFill" :src="item.Cover">
+        </div>
         <div class="daka-info">
             <h2 class="line-overflow" v-text="item.PlanName"></h2>
             <p>
