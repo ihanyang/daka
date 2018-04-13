@@ -295,6 +295,7 @@
 
                 const app = getApp()
 
+                app.item.TodayClockNum = + app.item.TodayClockNum + 1
                 app.item.HasClock = 1
                 app.item.ClockNum++
 

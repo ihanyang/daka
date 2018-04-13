@@ -181,6 +181,17 @@
             this.isDakaRecord = app.dakaList.length
             //console.log(app.dakaList.length)
 
+            // 更新状态
+            let index = -1
+
+            app.item && this.dakaList.forEach((item, i) => {
+                if (item.ClockPID === app.item.ClockPID) {
+                    index = i
+                }
+            })
+
+            index !== -1 && (this.dakaList[index] = app.item)
+
 
             // if (app.isLearningPlanNumChange) {
             //     this.learnPlan++
