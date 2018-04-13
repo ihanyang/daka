@@ -27,12 +27,12 @@
 	}
 
 	& textarea {
+		max-height: 200px;
 		height: 100px;
 		padding: 15px;
 		font-size: 15px;
 		line-height: 1.5;
 		border-radius: 5px;
-		box-sizing: border-box;
 		background-color: #FFF;
 		word-wrap: break-word;
 	}
@@ -46,6 +46,11 @@
 		align-items: center;
 		color: #333;
 		font-size: 15px;
+
+		& span {
+			margin-left: 10px;
+			color: #CCC;
+		}
 	}
 
 	& label:last-of-type {
@@ -154,6 +159,31 @@
 	}
 }
 
+.generation-btn-wrapper {
+	display: flex;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	color: #22CDCB;
+	font-size: 15px;
+	text-align: center;
+	line-height: 60px;
+	box-shadow: 0 0 15px rgba(46, 217, 208, .2);
+	background-color: #FFF;
+
+	& .btn:first-child {
+		flex: 1;
+		color: inherit;
+	}
+
+	& .generation-btn {
+		width: 150px;
+		color: #FFF;
+		background-color: #22CDCB;
+	}
+}
+
 .generation-plan {
 	width: 100%;
 	position: fixed;
@@ -163,10 +193,9 @@
 	font-size: 15px;
 	font-weight: bold;
 	line-height: 60px;
-	box-shadow: 0 0 15px rgba(46, 217, 208, .2);
+
 	background-color: #FFF;
 }
 .generation-plan.disabled {
-	opacity: 1;
 	pointer-events: auto;
 }
