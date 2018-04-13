@@ -46,7 +46,7 @@ function fetch(url, data = {}, method = 'POST') {
     })
 }
 
-const baseURL = 'http://jhtest.jinghao.com'
+const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.jinghao.com' : 'http://jhtest.jinghao.com'
 
 const api = {
     sendTime: (params) => fetch('/api/clock/studyTime', params),

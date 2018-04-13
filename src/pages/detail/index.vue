@@ -118,11 +118,12 @@
             const app = getApp()
 
             // 自动更新首页我的计划列表
-            if (wx.getStorageSync('isLoadedHomeData') && wx.getStorageSync('tapJoin')) {
-                wx.removeStorageSync('tapJoin')
 
+            if (wx.getStorageSync('isLoadedHomeData') && wx.getStorageSync('tapJoin')) {
                 app.dakaList.unshift(Object.assign({}, app.item))
             }
+
+            wx.removeStorageSync('tapJoin')
 
             this.isShowHome = false
 
