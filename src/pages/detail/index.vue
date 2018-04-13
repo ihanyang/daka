@@ -360,16 +360,18 @@
 
                 const app = getApp()
 
-                app.item.IsJoin = 1
+                if (app.item) {
+                    app.item.IsJoin = 1
 
-                if (app.item.AvatarList.length < 3) {
-                    app.item.AvatarList.unshift({
-                        Avatar: wx.getStorageSync('user').avatar
-                    })
-                } else {
-                    app.item.AvatarList = [{
-                        Avatar: wx.getStorageSync('user').avatar
-                    }, ... app.item.AvatarList.slice(0, 2)]
+                    if (app.item.AvatarList.length < 3) {
+                        app.item.AvatarList.unshift({
+                            Avatar: wx.getStorageSync('user').avatar
+                        })
+                    } else {
+                        app.item.AvatarList = [{
+                            Avatar: wx.getStorageSync('user').avatar
+                        }, ... app.item.AvatarList.slice(0, 2)]
+                    }
                 }
 
                 // 标记点击过加入按钮

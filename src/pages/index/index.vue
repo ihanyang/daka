@@ -147,8 +147,12 @@
 
 
 
-            this.isDakaRecord = wx.getStorageSync('isJoined')
-            this.isDakaRecord = wx.getStorageSync('isDakaRecord')
+            //this.isDakaRecord = wx.getStorageSync('isJoined')
+            //this.isDakaRecord = wx.getStorageSync('isDakaRecord')
+
+            if (wx.getStorageSync('isDakaRecord') || wx.getStorageSync('isJoined')) {
+                this.isDakaRecord = true
+            }
 
             //console.log(this.isDakaRecord)
 
