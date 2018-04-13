@@ -115,6 +115,15 @@
         },
 
         onUnload() {
+            const app = getApp()
+
+            // 自动更新首页我的计划列表
+            if (wx.getStorageSync('isLoadedHomeData') && wx.getStorageSync('tapJoin')) {
+                wx.removeStorageSync('tapJoin')
+
+                app.dakaList.unshift(Object.assign({}, app.item))
+            }
+
             this.isShowHome = false
 
             this.clear()
@@ -362,9 +371,8 @@
                     }, ... app.item.AvatarList.slice(0, 2)]
                 }
 
-                // if (wx.getStorageSync('isLoadedHomeData')) {
-                //     app.dakaList.unshift(Object.assign({}, app.item))
-                // }
+                // 标记点击过加入按钮
+                wx.setStorageSync('tapJoin', true)
 
                 // if (! app.joins) {
                 //     app.joins = []
