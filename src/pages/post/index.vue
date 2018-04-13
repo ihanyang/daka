@@ -16,11 +16,48 @@
 
         <div class="post-box">
             <h2>打卡详细描述</h2>
-            <textarea v-model="detail" maxlength="300" placeholder-class="placeholder" placeholder="请输入详细描述（选填 300 字以内）"></textarea>
+            <textarea v-model="detail" auto-height maxlength="300" placeholder-class="placeholder" placeholder="请输入详细描述（选填 300 字以内）"></textarea>
         </div>
 
-        <div id="daka-generation" class="btn generation-plan" :class="{disabled: ! isDisabled}" @click="generationPlan" v-if="! generating">生成计划</div>
-        <div class="btn generation-plan disabled" v-else>生成中...</div>
+        <div class="post-box">
+            <h2>设置开始结束日期</h2>
+            <label @click="selectSecretType(1)">
+                <i class="radio-btn" :class="{selected: secretType === 1}"></i>
+                公开
+                <span>允许任何人加入你的打卡小组</span>
+            </label>
+            <label @click="selectSecretType(2)">
+                <i class="radio-btn" :class="{selected: secretType === 2}"></i>
+                私密
+                <span>小组成员只能通过组长邀请进入小组</span>
+            </label>
+            <div class="post-date-box" v-if="isPostDateBoxShow">
+                <div class="post-date-item">
+                    <picker mode="date" :value="startDate" @change="startDateChange">
+                        <p :class="{actived: startDate}" v-text="startDate || '开始日期'"></p>
+                    </picker>
+                </div>
+                <div class="post-date-item">
+                    <picker mode="date" :start="startDate" :value="endDate" @change="endDateChange">
+                        <p :class="{actived: endDate}" v-text="endDate || '结束日期'"></p>
+                    </picker>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div id="daka-generation" class="btn generation-plan" :class="{disabled: ! isDisabled}" @click="generationPlan" v-if="! generating">生成计划</div>
+        <div class="btn generation-plan disabled" v-else>生成中...</div> -->
+
+        <div class="generation-btn-wrapper">
+            <div class="btn" @click="goAddContent">下一步：添加打卡内容</div>
+
+            <template v-if="! generating">
+                <div class="btn generation-btn" @click="generationPlan">直接生成计划</div>
+            </template>
+            <template v-else>
+                <div class="btn generation-btn">生成中...</div>
+            </template>
+        </div>
     </div>
 </template>
 
@@ -35,6 +72,8 @@
 
                 postImg: '',
                 postImage: '',
+
+                secretType: 1,
 
                 generating: false
             }
@@ -91,6 +130,14 @@
         },
 
         methods: {
+            goAddContent() {
+                wx.navigateTo({
+                    url: '/pages/add-content/index'
+                })
+            },
+            selectSecretType(value) {
+                this.secretType = value
+            },
             chooseImage() {
                 const app = getApp()
 
@@ -108,13 +155,14 @@
 
                                 if (res.statusCode !== 200) {
                                     wx.showModal({
-                                        title: '错误',
+                                        title: '提示',
                                         content: data.error,
                                         showCancel: false
                                     })
 
                                     return
                                 }
+
                                 this.postImage = `${app.domain}${data.key}`
                             }
                         })
@@ -139,25 +187,33 @@
                     return
                 }
 
-                if (! this.postImg) {
-                    wx.showToast({
-                        title: '请选择封面图片',
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
-
                 this.generating = true
 
                 const params = {
                     planName: this.title,
+                    cover: this.postImage || this.postImg,
                     description: this.detail,
-                    cover: this.postImage || this.postImg
+                    secretType: this.secretType
                 }
 
+                const timer = setTimeout(() => {
+                    wx.showLoading({
+                        title: '努力生成中',
+                        mask: true
+                    })
+                }, 1500)
+
                 const data = await api.createDaKa(params)
+
+                if (data.flag !== 1) {
+                    wx.showModal({
+                        title: '提示',
+                        content: data.msg,
+                        showCancel: false
+                    })
+
+                    return
+                }
 
                 this.generating = false
 
@@ -175,6 +231,9 @@
                     Description: this.detail,
                     AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
                 })
+
+                // 清楚掉定时器
+                clearTimeout(timer)
 
                 wx.switchTab({
                     url: '/pages/index/index'
