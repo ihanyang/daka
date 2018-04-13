@@ -55,27 +55,21 @@
         },
 
         watch: {
-            async tagID(value) {
+            tagID(value) {
                 this.page = 1
                 this.isListLoaded = false
 
                 this.isLodaded = false
-                this.isLoading = true
                 this.dakaList = []
 
-                await this.getTagData()
+                this.getTagData()
 
-                this.isLoading = false
                 this.isLodaded = true
             }
         },
 
-        async onLoad() {
-            this.isLoading = true
-
-            await this.getDiscoverData()
-
-            this.isLoading = false
+        onLoad() {
+            this.getDiscoverData()
         },
 
         onShow() {
@@ -125,7 +119,12 @@
                     page: this.page,
                     pageSize: 10
                 }
+
+                this.isLoading = true
+
                 const data = await api.getDiscoverDaKaList(params)
+
+                this.isLoading = false
 
                 if (data.flag === 1) {
                     this.dakaList = [... this.dakaList, ... data.data.Rows]

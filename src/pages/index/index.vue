@@ -169,7 +169,6 @@
         },
 
         async onShow() {
-            console.log(this.isDakaRecord)
             const app = getApp()
 
 

@@ -18,27 +18,20 @@
                 app.dakaTotalNum = 0
                 app.dakaPlanNum = 0
                 app.dakaList = []
-
-                console.log(getApp())
             }, 0)
 
             if (! wx.getStorageSync('session')) {
                 await login()
             }
-
-
         },
 
         onShow() {
-            //console.log(7777)
-
             setTimeout(() => {
                 getApp().enterTime = + new Date()
             })
         },
 
         onHide() {
-            //console.log(666)
             sendTime()
         },
 
