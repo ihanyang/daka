@@ -2,18 +2,46 @@
 
 <template>
     <div class="detail-wrapper">
-        <header class="detail-header">
-            <p>已坚持打卡（天）</p>
-            <strong v-text="day"></strong>
+        <template v-if="todayCover">
+            <header class="detail-header" v-if="isDaKa">
+                <p>已坚持打卡（天）</p>
+                <strong v-text="day"></strong>
 
-            <p v-if="isComplete">共有{{totalDaKa}}人完成打卡</p>
-            <p v-else>今日已有{{todayDaKa}}人打卡</p>
+                <p v-if="isComplete">共有{{totalDaKa}}人完成打卡</p>
+                <p v-else>今日已有{{todayDaKa}}人打卡</p>
 
-            <div class="detail-avatar-list">
-                <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
-            </div>
-            <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
-        </header>
+                <div class="detail-avatar-list">
+                    <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
+                </div>
+                <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
+            </header>
+
+            <header class="detail-header-complete" v-else>
+                <div class="detail-header-book" @click="goChapterDetail(todayID, 1)">
+                    <img :src="todayCover" mode="aspectFill">
+                    <div class="detail-header-book-info">
+                        <h3 v-text="todayTitle"></h3>
+                        <p v-text="todayAuthor"></p>
+                    </div>
+                    <div class="tips">今日任务</div>
+                </div>
+                <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
+            </header>
+        </template>
+        <template v-else>
+            <header class="detail-header">
+                <p>已坚持打卡（天）</p>
+                <strong v-text="day"></strong>
+
+                <p v-if="isComplete">共有{{totalDaKa}}人完成打卡</p>
+                <p v-else>今日已有{{todayDaKa}}人打卡</p>
+
+                <div class="detail-avatar-list">
+                    <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
+                </div>
+                <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
+            </header>
+        </template>
 
         <template v-if="isJoin">
             <template v-if="isComplete">
@@ -21,7 +49,7 @@
             </template>
             <template v-else>
                 <div class="btn daka-btn disabled" v-if="isDaKa">已打卡</div>
-                <div id="daka-daka" class="btn daka-btn" @click="daka" v-else>打卡</div>
+                <div id="daka-daka" class="btn daka-btn" @click="forDaka" v-else>打卡</div>
             </template>
         </template>
         <template v-else>
@@ -36,10 +64,56 @@
 
         <button open-type="share"></button>
 
+        <div class="new-messages" @click="goMessage" v-if="newMessagesNum">
+            <img :src="newMessagesAvatar" mode="aspectFill">
+            你有{{newMessagesNum}}条消息
+        </div>
+
+        <div class="detail-tab">
+            <div class="detail-tab-item" :class="{selected: index === 0}" @click="index = 0">打卡心得</div>
+            <div class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1">课程表</div>
+        </div>
+        <div class="experience-list" v-if="index === 0">
+            <experience-item :key="item.id" :item="item" v-for="item of experienceList" @showReplyBox="showReplyBox"></experience-item>
+        </div>
+        <p class="no-data" v-if="index === 0 && ! experienceList.length">暂无打卡心得</p>
+
+        <template v-if="index === 1">
+            <div class="resume-add-content-btn" @click="goAddContent" v-if="iszu">
+                <span class="add-icon"></span>
+                添加内容
+            </div>
+            <div class="syllabus-list">
+                <div class="syllabus-item" v-for="item of syllabusList">
+                    <div class="syllabus-content">
+                        <img :src="item.Cover" mode="aspectFill">
+                        <div class="syllabus-info">
+                            <h2 v-text="item.Title"></h2>
+                            <span v-text="item.Author"></span>
+                            <p class="line-overflow" v-text="item.Abstract"></p>
+                        </div>
+                    </div>
+
+                    <template v-if="item.Unlock === 0">
+                        <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" v-for="(item, $ii) of item.ChapterList"></div>
+                    </template>
+                    <template v-else>
+                        <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" v-for="(item, $ii) of item.ChapterList" @click="goChapterDetail(item.SECID)"></div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
         <div id="daka-join" class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div>
         <div class="btn join-btn" v-if="joining">加入中...</div>
 
         <div class="go-home" v-if="isShowHome" @click="goHome"></div>
+        <div class="post-comment-btn" v-else @click="goPost"></div>
+
+        <div class="reply-box" v-if="isShowReplyBox">
+            <textarea v-model="replyContent" auto-height :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
+            <div @click="reply">发布</div>
+        </div>
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
     </div>
@@ -47,13 +121,16 @@
 
 <script>
     import actionSheet from '@/components/action-sheet'
+    import experienceItem from '@/components/experience-item'
 
-    import api from '@/api'
+    import api, {fetch} from '@/api'
     import {sendTime, getDefaultAvatar} from '@/utils'
 
     export default {
         data() {
             return {
+                index: 0,
+
                 isShowHome: false,
                 day: 0,
                 todayDaKa: 0,
@@ -69,14 +146,32 @@
                 isDaKa: false,
                 isJoin: false,
 
+                iszu: false,
+
                 joining: false,
 
-                shareModalStatus: false
+                shareModalStatus: false,
+
+                placeholder: '说点啥',
+                isShowReplyBox: false,
+                replyContent: '',
+
+                isRead: 0,
+                todayID: -1,
+                todayCover: '',
+                todayTitle: '',
+                todayAuthor: '',
+
+                newMessagesNum: 0,
+                newMessagesAvatar: 'http://p3.ifengimg.com/a/2018_16/03dd1d38d0713ae.jpg',
+                experienceList: [],
+                syllabusList: []
             }
         },
 
         components: {
-            actionSheet
+            actionSheet,
+            experienceItem
         },
 
         computed: {
@@ -111,7 +206,26 @@
                 this.isShowHome = true
             }
 
-            this.getDetailData()
+            wx.showLoading({
+                title: '正在加载',
+                mask: true
+            })
+
+            Promise.all([this.getNewMessage(), this.getDetailData(), this.getExperienceList()]).then(() => {
+                wx.hideLoading()
+            }).catch(() => {
+                wx.hideLoading()
+            })
+        },
+
+        onShow() {
+            const app = getApp()
+
+            if (app.$post) {
+                this.experienceList.unshift(app.$post)
+
+                app.$post = null
+            }
         },
 
         onUnload() {
@@ -143,9 +257,47 @@
         },
 
         methods: {
+            showReplyBox({id, nickname}) {
+                if (nickname) {
+                    this.$replyID = id
+                    this.$replyNickname = nickname
+                    this.placeholder = `回复${nickname}`
+                }
+
+                this.isShowReplyBox = true
+            },
             goHome() {
                 wx.switchTab({
                     url: '/pages/index/index'
+                })
+            },
+            goMessage() {
+                // 去掉小红点
+                this.newMessagesNum = 0
+                getApp().item.NewMessageNum = 0
+
+                wx.navigateTo({
+                    url: `/pages/messages/index?id=${this.$root.$mp.query.id}`
+                })
+            },
+            goPost() {
+                wx.navigateTo({
+                    url: `/pages/post/index?id=${this.$root.$mp.query.id}`
+                })
+            },
+            goChapterDetail(id, isRead) {
+                getApp().isRead = !! isRead
+
+                wx.navigateTo({
+                    url: `/pages/read/index?id=${id}`
+                })
+            },
+            goAddContent() {
+                getApp().$genID = this.$root.$mp.query.id
+                getApp().$genType = 1
+
+                wx.navigateTo({
+                    url: '/pages/add-content/index'
                 })
             },
             spread() {
@@ -176,11 +328,6 @@
                             data: userInfo
                         })
 
-                        wx.showLoading({
-                            title: '正在加载',
-                            mask: true
-                        })
-
 
                         await api.saveUserInfo({
                             encryptedData: res.encryptedData,
@@ -193,8 +340,6 @@
 
 
                         const data = await api.getDetailData(params)
-
-                        wx.hideLoading()
 
                         if (data.flag !== 1) {
 
@@ -222,6 +367,18 @@
                         this.totalDaKa = data.data.TotalJoinNum
                         this.avatarList = data.data.AvatarList
                         this.intro = data.data.Description
+
+                        this.syllabusList = data.data.MenuList
+
+                        this.iszu = data.data.IsPlanOwner
+                        this.isRead = data.data.IsRead
+
+                        if (data.data.TodayData) {
+                            this.todayCover = data.data.TodayData.Cover
+                            this.todayAuthor = data.data.TodayData.Chapter.Title
+                            this.todayID = data.data.TodayData.Chapter.SECID
+                            this.todayTitle = data.data.TodayData.Title
+                        }
 
                         // 获取详情之后需要再次设置，因为第一次进入时可能没授权
                         this.isJoin = data.data.HasJoin
@@ -269,6 +426,107 @@
                     }
                 })
             },
+            blur() {
+                this.isShowReplyBox = false
+            },
+            async reply() {
+                const app = getApp()
+                const params = {
+                    postID: app.postItem.PostID,
+                    replyContent: this.replyContent
+                }
+
+                if (this.$replyID) {
+                    params.replyID = this.$replyID
+                }
+
+                const data = await fetch('/api/clock-post/reply', params)
+
+                if (data.flag !== 1) {
+                    wx.showToast({
+                        title: data.msg,
+                        icon: 'none',
+                        duration: 2000
+                    })
+
+                    return
+                }
+
+                app.postItem.ReplyList = [{
+                    Nickname: wx.getStorageSync('user').nickname,
+                    ReplyContent: this.replyContent,
+                    ReplyMemberID: this.$replyID,
+                    ReplyMemberNickname: this.$replyNickname
+                }, ... app.postItem.ReplyList]
+
+                app.postItem = null
+
+                this.$replyID = null
+                this.$replyNickname = null
+                this.isShowReplyBox = false
+                this.replyContent = ''
+
+
+                //this.experienceList = data.data.Rows
+            },
+            async getNewMessage() {
+                const params = {
+                    clockPID: this.$root.$mp.query.id
+                }
+                const data = await fetch('/api/clock/newMessageNum', params)
+
+                if (data.flag !== 1) {
+                    wx.showToast({
+                        title: data.msg,
+                        icon: 'none',
+                        duration: 2000
+                    })
+
+                    return
+                }
+
+                this.newMessagesNum = data.data.NewMessageNum
+                this.newMessagesAvatar = data.data.Avatar
+            },
+            async getExperienceList() {
+                const params = {
+                    clockPID: this.$root.$mp.query.id
+                }
+
+                const data = await fetch('/api/clock-post/list', params)
+
+                if (data.flag !== 1) {
+                    wx.showToast({
+                        title: data.msg,
+                        icon: 'none',
+                        duration: 2000
+                    })
+
+                    return
+                }
+
+                this.experienceList = data.data.Rows
+            },
+            forDaka() {
+                if (! getApp().isRead) {
+                    wx.showModal({
+                        title: '提示',
+                        content: '你还没有完成今日的打卡任务，确定要打卡吗？',
+                        cancelText: '再想想',
+                        success: (res) => {
+                            if (res.confirm) {
+                                this.daka()
+
+                                return
+                            }
+                        }
+                    })
+
+                    return
+                }
+
+                this.daka()
+            },
             async daka() {
                 const params = {
                     clockPID: this.$root.$mp.query.id
@@ -305,6 +563,16 @@
                     icon: 'none',
                     duration: 2000
                 })
+
+                if (app.isRead) {
+                    app.isRead = false
+
+                    setTimeout(() => {
+                        wx.navigateTo({
+                            url: `/pages/post/index?id=${this.$root.$mp.query.id}`
+                        })
+                    })
+                }
 
                 // 首页累计打卡天数自动更新
 
@@ -424,6 +692,10 @@
                 this.todayDaKa = 0
                 this.intro = ''
                 this.avatarList = []
+
+                this.index = 0
+                this.iszu = false
+                this.isRead = 0
 
                 this.taped = false
                 this.isShrink = true

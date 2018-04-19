@@ -71,4 +71,6 @@ const api = {
     getInviteCard: (params) => fetch('/api/clock/getInviteCard', params),
 }
 
+export {fetch}
+
 export default api

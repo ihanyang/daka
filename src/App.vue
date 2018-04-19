@@ -11,7 +11,7 @@
             }
         },
 
-        async onLaunch() {
+        onLaunch() {
             setTimeout(() => {
                 const app = getApp()
 
@@ -21,8 +21,13 @@
             }, 0)
 
             if (! wx.getStorageSync('session')) {
-                await login()
+                login()
             }
+
+            // 清除七牛 token
+            wx.removeStorage({
+                key: 'qiniu'
+            })
         },
 
         onShow() {

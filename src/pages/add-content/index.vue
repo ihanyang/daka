@@ -30,6 +30,10 @@
 }
 .add-content-list {
     margin: 0 25px 0 20px;
+
+    & .del-icon {
+        display: none;
+    }
 }
 </style>
 
@@ -42,67 +46,27 @@
         <p class="no-data" v-if="noList">暂无计划</p>
 
         <ul class="add-content-list" v-else>
-            <content-item :item="item" :key="item.url" v-for="item of dakaList"></content-item>
+            <content-item :item="item" :key="item.url" v-for="item of list"></content-item>
         </ul>
 
         <div class="loading-scroll" v-if="loadingScroll"></div>
-
-        <loading v-if="isLoading"></loading>
     </div>
 </template>
 
 <script>
-    import loading from '@/components/loading'
     import contentItem from '@/components/content-item'
 
-    import api from '@/api'
+    import api, {fetch} from '@/api'
     import {sendTime} from '@/utils'
 
     export default {
         data() {
             return {
                 isLodaded: false,
-                isLoading: false,
 
-                tagID: 11,
-                tagList: [
-                    {
-                        tagID: 11,
-                        TagName: '读书'
-                    },
-                    {
-                        tagID: 13,
-                        TagName: '支持'
-                    },
-                    {
-                        tagID: 15,
-                        TagName: '稍等'
-                    },
-                    {
-                        tagID: 15,
-                        TagName: '发生'
-                    }
-                ],
-                dakaList: [
-                    {
-                        src: 'http://t1.27270.com/uploads/tu/201804/49/87f7f6ca29.jpg',
-                        title: '的飒飒大事',
-                        author: '第三方',
-                        intro: '时代发生的是否是对方的身份第三放到沙发上的范德萨发的是东方大厦'
-                    },
-                    {
-                        src: 'http://t1.27270.com/uploads/tu/201804/51/38b277c569.jpg',
-                        title: '的飒飒大事',
-                        author: '第三方',
-                        intro: '时代发生的是否是对方的身份第三放到沙发上的范德萨发的是东方大厦'
-                    },
-                    {
-                        src: 'http://t1.27270.com/uploads/tu/201804/49/87f7f6ca29.jpg',
-                        title: '的飒飒大事',
-                        author: '第三方',
-                        intro: '时代发生的是否是对方的身份第三放到沙发上的范德萨发的是东方大厦'
-                    }
-                ],
+                tagID: -1,
+                tagList: [],
+                list: [],
 
                 page: 1,
 
@@ -112,13 +76,12 @@
         },
 
         components: {
-            contentItem,
-            loading
+            contentItem
         },
 
         computed: {
             noList() {
-                return this.isLodaded && ! this.dakaList.length
+                return this.isLodaded && ! this.list.length
             }
         },
 
@@ -128,16 +91,22 @@
                 this.isListLoaded = false
 
                 this.isLodaded = false
-                this.dakaList = []
+                this.list = []
 
-                this.getTagData()
+                this.getContentList()
 
                 this.isLodaded = true
             }
         },
 
-        onLoad() {
-            //this.getDiscoverData()
+        async onLoad() {
+            wx.showLoading({
+                title: '正在加载'
+            })
+
+            await this.getAddContentData()
+
+            wx.hideLoading()
         },
 
         onShow() {
@@ -163,57 +132,42 @@
         },
 
         methods: {
-            async getDiscoverData() {
-                const apiList = [api.getDiscoverTagList(), this.getTagData()]
-                const [tagData] = await Promise.all(apiList)
-
-                let isShowErrowToast = false
-
-                if (tagData.flag === 1) {
-                    isShowErrowToast = true
-
-                    //this.tagList = [... this.tagList, ... tagData.data.Rows]
-                    this.tagList = tagData.data.Rows
-                }
-
-                ! isShowErrowToast && wx.showModal({
-                    title: '提示',
-                    content: tagData.msg,
-                    showCancel: false
+            async getAddContentData() {
+                const tagData = await fetch('/api/tag/list', {
+                    type: 2
                 })
+
+                this.tagList = tagData.data.Rows
+                this.tagID = this.tagList[0].TagID
             },
-            async getTagData() {
+            async getContentList() {
                 const params = {
                     tagID: this.tagID,
                     page: this.page,
                     pageSize: 10
                 }
 
-                this.isLoading = true
+                const data = await fetch('/api/clock/contentList', params)
 
-                const data = await api.getDiscoverDaKaList(params)
-
-                this.isLoading = false
-
-                if (data.flag === 1) {
-                    this.dakaList = [... this.dakaList, ... data.data.Rows]
-
-                    this.page++
-                    this.isListLoaded =  this.dakaList.length === data.data.Total
+                if (data.flag !== 1) {
+                    wx.showModal({
+                        title: '提示',
+                        content: data.msg,
+                        showCancel: false
+                    })
 
                     return
                 }
 
-                wx.showModal({
-                    title: '出错',
-                    content: data.msg,
-                    showCancel: false
-                })
+                this.list = [... this.list, ... data.data.Rows]
+
+                this.page++
+                this.isListLoaded =  this.list.length === data.data.Total
             },
             async scroll() {
                 this.loadingScroll = true
 
-                ! this.isListLoaded && await this.getTagData()
+                ! this.isListLoaded && await this.getContentList()
 
                 this.loadingScroll = false
             }

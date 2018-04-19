@@ -41,28 +41,62 @@
 	font-size: 15px;
 
 	& h2 {
+		display: flex;
 		color: #333;
 		font-size: 16px;
 	}
+
+	& span {
+		flex: 1;
+		max-width: 200px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+}
+.del-icon {
+	width: 18px;
+	height: 18px;
+	margin-left: 10px;
+	background: url(~@/images/delete-icon.png);
+	background-size: 100%;
 }
 </style>
 
 <template>
-	<li class="content-item">
+	<li class="content-item" @click="go">
 		<div class="img-wrapper">
-			<span>限时免费</span>
-			<img :src="item.src" mode="aspectFill">
+			<span class="free">限时免费</span>
+			<img :src="item.Cover" mode="aspectFill">
 		</div>
 		<div class="info">
-			<h2 v-text="item.title"></h2>
-			<p v-text="item.author"></p>
-			<p class="line-overflow" v-text="item.intro"></p>
+			<h2>
+				<span v-text="item.Title"></span>
+				<div class="del-icon" @click="del"></div>
+			</h2>
+			<p v-text="item.Author"></p>
+			<p class="line-overflow" v-text="item.Abstract"></p>
 		</div>
 	</li>
 </template>
 
 <script>
 	export default {
-		props: ['item']
+		props: ['item', 'index'],
+
+		methods: {
+			go() {
+				// if (this.item.noClick) {
+				// 	return
+				// }
+
+                wx.navigateTo({
+					url: `/pages/book-detail/index?id=${this.item.CCLID}`
+				})
+            },
+            del() {
+            	this.$emit('del', this.index)
+            }
+		}
 	}
 </script>

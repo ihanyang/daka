@@ -73,7 +73,7 @@ span {
 
 <template>
     <li @click="go(item.ClockPID)">
-        <div class="figure" :class="{message: item.aa}">
+        <div class="figure" :class="{message: item.NewMessageNum}">
             <img mode="aspectFill" :src="item.Cover">
         </div>
         <div class="daka-info">

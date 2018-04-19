@@ -1,10 +1,10 @@
-.post-wrapper {
+.newly-build-wrapper {
 	min-height: 100vh;
 	padding: 25px 15px 80px;
 	box-sizing: border-box;
 	background-color: #FAFAFA;
 }
-.post-box {
+.newly-build-box {
 	margin-bottom: 30px;
 
 	& h2 {
@@ -57,7 +57,7 @@
 		margin: 20px 0;
 	}
 }
-.post-box:nth-last-child(2) {
+.newly-build-box:nth-last-child(2) {
 	margin-bottom: 0;
 }
 .radio-btn {
@@ -83,7 +83,7 @@
 		background-color: currentcolor;
 	}
 }
-.post-img-wrapper {
+.newly-build-img-wrapper {
 	display: flex;
 	margin-top: 20px;
 
@@ -114,7 +114,7 @@
 		display: none;
 	}
 }
-.post-input {
+.newly-build-input {
 	flex: 1;
 	display: flex;
 	justify-content: center;
@@ -128,12 +128,12 @@
 	& span {
 		display: block;
 		padding-top: 30px;
-		background: url(~@/images/post-input.png) center top no-repeat;
+		background: url(~@/images/newly-build-input.png) center top no-repeat;
 		background-size: 25px 20px;
 	}
 }
 
-.post-date-box {
+.newly-build-date-box {
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 20px;

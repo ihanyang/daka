@@ -6,6 +6,6 @@ app.$mount()
 
 export default {
     config: {
-        navigationBarTitleText: '打卡心得',
+        navigationBarTitleText: '新建打卡',
     }
 }

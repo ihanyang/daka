@@ -254,10 +254,12 @@
                         // 保存一个授权完成的标志 发现页面需要据此更新状态
                         wx.setStorageSync('isAuthorization', true)
 
-                        await api.saveUserInfo({
+                        const data = await api.saveUserInfo({
                             encryptedData: res.encryptedData,
                             iv: res.iv
                         })
+
+
 
                         const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
 
@@ -375,7 +377,7 @@
             },
             go() {
                 wx.navigateTo({
-                    url: '/pages/post/index'
+                    url: '/pages/newly-build/index'
                 })
             },
             async scroll() {
