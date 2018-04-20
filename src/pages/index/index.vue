@@ -164,9 +164,9 @@
 
                 // this.isLoading = false
 
-                wx.switchTab({
-                    url: '/pages/discover/index'
-                })
+                // wx.switchTab({
+                //     url: '/pages/discover/index'
+                // })
 
                 this.noAuthorize = true
             }
@@ -216,9 +216,9 @@
             //     app.joins = []
             // }
 
-            if (this.noAuthorize) {
-                return
-            }
+            // if (this.noAuthorize) {
+            //     return
+            // }
 
             // if (this.isLoaded) {
             //     return
