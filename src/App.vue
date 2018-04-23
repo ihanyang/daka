@@ -12,13 +12,13 @@
         },
 
         async onLaunch() {
-            setTimeout(() => {
-                const app = getApp()
+            const app = this.$mp.app
 
-                app.dakaTotalNum = 0
-                app.dakaPlanNum = 0
-                app.dakaList = []
-            }, 0)
+            app.dakaTotalNum = 0
+            app.dakaPlanNum = 0
+            app.dakaList = []
+
+            //console.log(app)
 
             if (! wx.getStorageSync('isDakaRecord')) {
                 wx.reLaunch({

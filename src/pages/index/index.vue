@@ -144,8 +144,23 @@
         },
 
         async onLoad() {
+            if (! wx.getStorageSync('isDiscovered')) {
+                return
+            }
 
+            if (! this.isLoadedHomeData) {
+            //if (! this.isLoadedHomeData) {
+                this.isLoading = true
 
+                await this.getUserInfo()
+
+                this.isLoading = false
+                this.isLoadedHomeData = true
+
+                wx.setStorageSync('isLoadedHomeData', true)
+            }
+
+            return
 
             //this.isDakaRecord = wx.getStorageSync('isJoined')
             //this.isDakaRecord = wx.getStorageSync('isDakaRecord')
@@ -176,7 +191,10 @@
             const app = getApp()
 
 
-            //console.log(app.dakaList.length)
+            // wx.showModal({
+            //     title: '提示',
+            //     content: '' + JSON.stringify(app)
+            // })
 
             this.dakaList = app.dakaList
             this.dakaPlanNum = app.dakaPlanNum
@@ -216,26 +234,21 @@
             //     app.joins = []
             // }
 
-            // if (this.noAuthorize) {
-            //     return
-            // }
+            if (this.noAuthorize) {
+                return
+            }
 
             // if (this.isLoaded) {
             //     return
             // }
 
             // this.isLoaded = true
+            // wx.showModal({
+            //     title: '提示',
+            //     content: '' + this.isLoadedHomeData
+            // })
 
-            if (! this.isLoadedHomeData) {
-                this.isLoading = true
 
-                await this.getUserInfo()
-
-                this.isLoading = false
-                this.isLoadedHomeData = true
-
-                wx.setStorageSync('isLoadedHomeData', true)
-            }
         },
 
         onHide() {
