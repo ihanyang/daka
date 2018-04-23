@@ -121,7 +121,7 @@ footer {
 		</div>
 		<img class="content-image" :src="item.ImageList[0].ImageUrl" mode="aspectFill" v-if="item.ImageList.length === 1" @click="previewImage">
 		<div class="image-wrapper" :class="{four: item.ImageList.length === 4}" v-else @click="previewImage">
-			<img class="content-image" :src="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
+			<img class="content-image" :key="item.ImageUrl" :src="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
 		</div>
 		<footer>
 			<div class="time">{{time}}</div>
@@ -129,7 +129,7 @@ footer {
 			<div class="comment-icon" @click="comment"></div>
 		</footer>
 		<div class="reply-list">
-			<div v-for="(item, $ii) of replyList" @click="comment(item.ReplyID, item.Nickname)">
+			<div v-for="(item, $ii) of replyList" :key="item.ReplyID" @click="comment(item.ReplyID, item.Nickname)">
 				<template v-if="item.ReplyMemberID">
 					<span v-text="item.ReplyMemberNickname"></span>
 					<span class="reply-text">回复</span>

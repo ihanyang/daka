@@ -74,7 +74,7 @@
             <div class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
         </div>
         <div class="experience-list" v-if="index === 0">
-            <experience-item :key="item.id" :item="item" v-for="item of experienceList" @showReplyBox="showReplyBox"></experience-item>
+            <experience-item :key="item.PostID" :item="item" v-for="item of experienceList" @showReplyBox="showReplyBox"></experience-item>
         </div>
         <p class="no-data" v-if="index === 0 && ! experienceList.length">暂无打卡心得</p>
 
@@ -84,7 +84,7 @@
                 添加内容
             </div>
             <div class="syllabus-list">
-                <div class="syllabus-item" v-for="item of syllabusList">
+                <div class="syllabus-item" :key="item.Title" v-for="item of syllabusList">
                     <div class="syllabus-content">
                         <img :src="item.Cover" mode="aspectFill">
                         <div class="syllabus-info">
@@ -359,7 +359,7 @@
                         })
 
                         const params = {
-                            clockPID: this.$root.$mp.query.id
+                            clockPID: this.$root.$mp.query.id || this.$root.$mp.appOptions.scene
                         }
 
 
@@ -737,6 +737,7 @@
                 this.isRead = 0
 
                 this.page = 1
+                this.experienceList = []
 
                 this.planType = 1
                 this.isRead = 0

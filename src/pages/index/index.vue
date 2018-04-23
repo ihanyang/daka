@@ -46,7 +46,7 @@
     import loading from '@/components/loading'
 
     import api from '@/api'
-    import {sendTime, getDefaultAvatar} from '@/utils'
+    import {login, sendTime, getDefaultAvatar} from '@/utils'
 
     export default {
         data() {
@@ -268,6 +268,8 @@
 
         methods: {
             async getUserInfo() {
+                await login()
+
                 wx.getUserInfo({
                     withCredentials: true,
                     success: async (res) => {
