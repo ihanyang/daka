@@ -26,9 +26,9 @@
                 })
             }
 
-            if (! wx.getStorageSync('session')) {
+            //if (! wx.getStorageSync('session')) {
                 await login()
-            }
+            //}
 
             // 清除七牛 token
             wx.removeStorage({
