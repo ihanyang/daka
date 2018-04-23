@@ -245,6 +245,13 @@
         onReachBottom() {
             this.scroll()
         },
+        async onPullDownRefresh() {
+            this.page = 1
+
+            await this.getMyDaKaList(1)
+
+            wx.stopPullDownRefresh()
+        },
 
         methods: {
             async getUserInfo() {
@@ -324,7 +331,7 @@
                     }
                 })
             },
-            async getMyDaKaList() {
+            async getMyDaKaList(flag) {
                 const params = {
                     page: this.page,
                     pagesize: 10
@@ -366,8 +373,15 @@
                 //getApp().dakaList = [... getApp().dakaList, ... data.data.Rows]
                 const app = getApp()
 
+                if (flag) {
+                    app.dakaList = []
+                    this.dakaList = []
+                }
+
                 app.dakaPlanNum = data.data.Total
                 app.dakaList.push(... data.data.Rows)
+
+                this.dakaList = app.dakaList
 
 
                 //console.log(this.dakaList)
