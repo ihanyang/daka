@@ -232,6 +232,7 @@
             const app = getApp()
 
             if (app.$post) {
+                this.index = 0
                 this.experienceList.unshift(app.$post)
 
                 app.$post = null
@@ -734,6 +735,8 @@
                 this.index = 0
                 this.iszu = false
                 this.isRead = 0
+
+                this.page = 1
 
                 this.planType = 1
                 this.isRead = 0
