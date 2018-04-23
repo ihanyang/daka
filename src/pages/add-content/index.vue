@@ -144,7 +144,7 @@
                 const params = {
                     tagID: this.tagID,
                     page: this.page,
-                    pageSize: 10
+                    pagesize: 10
                 }
 
                 const data = await fetch('/api/clock/contentList', params)
