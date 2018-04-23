@@ -20,7 +20,7 @@
         </div>
 
         <div class="newly-build-box">
-            <h2>是否公开</h2>
+            <h2>隐私设置</h2>
             <label @click="selectSecretType(0)">
                 <i class="radio-btn" :class="{selected: secretType === 0}"></i>
                 公开
@@ -58,7 +58,7 @@
                 newlyBuildImg: '',
                 newlyBuildImage: '',
 
-                secretType: 0,
+                secretType: -1,
 
                 generating: false
             }
@@ -188,6 +188,16 @@
                 if (! this.title.trim().length) {
                     wx.showToast({
                         title: '请填写打卡项目名称',
+                        icon: 'none',
+                        duration: 2000
+                    })
+
+                    return
+                }
+
+                if (this.secretType === -1) {
+                    wx.showToast({
+                        title: '请选择公开或者私密',
                         icon: 'none',
                         duration: 2000
                     })
