@@ -17,7 +17,7 @@
 				<img class="comment-image" :src="images[0].ImageUrl" mode="aspectFill">
 			</template>
 			<template v-if="images.length > 1">
-				<div class="image-wrapper">
+				<div class="image-wrapper" :class="{four: images.length === 4}">
 					<img class="content-image" :src="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of images">
 				</div>
 			</template>
@@ -37,7 +37,7 @@
 
 		<div class="reply-box" v-if="isShowReplyBox">
             <textarea v-model="replyContent" auto-height :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
-            <div @click="reply">发布</div>
+            <div @click="reply">发表</div>
         </div>
 	</div>
 </template>
