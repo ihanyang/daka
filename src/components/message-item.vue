@@ -56,11 +56,11 @@
 		<div class="info">
 
 			<template v-if="item.MessageType === 3">
-					<strong>{{item.name}}赞了你</strong>
+					<strong>{{item.Nickname}}赞了你</strong>
 					<p class="like"></p>
 				</template>
 				<template v-else>
-					<strong>{{item.name}}评论了你</strong>
+					<strong>{{item.Nickname}}评论了你</strong>
 					<p v-text="item.ReplyContent"></p>
 				</template>
 
