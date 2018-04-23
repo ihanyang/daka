@@ -108,7 +108,7 @@
 
         <div class="reply-box" v-if="isShowReplyBox">
             <textarea v-model="replyContent" auto-height :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
-            <div @click="reply">发布</div>
+            <div @click="reply">发表</div>
         </div>
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
@@ -276,8 +276,13 @@
                     this.$replyID = id
                     this.$replyNickname = nickname
                     this.placeholder = `回复${nickname}`
+
+                    this.isShowReplyBox = true
+
+                    return
                 }
 
+                this.placeholder = '说点啥'
                 this.isShowReplyBox = true
             },
             goHome() {
