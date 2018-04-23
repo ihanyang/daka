@@ -80,7 +80,13 @@ span {
             <h2 class="line-overflow" v-text="item.PlanName"></h2>
             <p>
                 <img class="avatar" :src="item.Avatar || defaultAvatar" :key="item" v-for="item of item.AvatarList">
-                <span>今天已有{{item.TodayClockNum || item.ClockNum}}人打卡</span>
+
+                <template v-if="item.TodayClockNum !== undefined">
+                    <span>今天已有{{item.TodayClockNum}}人打卡</span>
+                </template>
+                <template v-else>
+                    <span>今天已有{{item.ClockNum}}人打卡</span>
+                </template>
             </p>
         </div>
 
