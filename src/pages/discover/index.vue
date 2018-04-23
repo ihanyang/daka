@@ -105,6 +105,12 @@
 
                     //this.tagList = [... this.tagList, ... tagData.data.Rows]
                     this.tagList = tagData.data.Rows
+
+                    // 留个进入过发现页的标记
+                    wx.setStorage({
+                        key: 'isDiscovered',
+                        data: true
+                    })
                 }
 
                 ! isShowErrowToast && wx.showModal({
