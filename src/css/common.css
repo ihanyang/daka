@@ -59,6 +59,13 @@ textarea {
 		margin-top: 10px;
 	}
 }
+.image-wrapper.four {
+	width: 300px;
+
+	& img:nth-child(3) {
+		margin-right: 10px;
+	}
+}
 
 .reply-box {
 	display: flex;
