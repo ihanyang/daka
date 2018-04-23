@@ -30,15 +30,7 @@
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": [
-				{
-					"id": -1,
-					"name": "啊啊",
-					"pathName": "pages/detail/index",
-					"query": "",
-					"scene": "1048"
-				}
-			]
+			"list": []
 		}
 	}
 }

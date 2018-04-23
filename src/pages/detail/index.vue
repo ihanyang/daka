@@ -122,7 +122,7 @@
     import experienceItem from '@/components/experience-item'
 
     import api, {fetch} from '@/api'
-    import {sendTime, getDefaultAvatar} from '@/utils'
+    import {login, sendTime, getDefaultAvatar} from '@/utils'
 
     export default {
         data() {
@@ -196,7 +196,7 @@
             }
         },
 
-        onLoad() {
+        async onLoad() {
             const {item} = getApp()
 
             if (item) {
@@ -221,11 +221,21 @@
                 mask: true
             })
 
-            Promise.all([this.getNewMessage(), this.getDetailData(), this.getExperienceList()]).then(() => {
-                wx.hideLoading()
-            }).catch(() => {
-                wx.hideLoading()
-            })
+            if (! wx.getStorageSync('session')) {
+                await login()
+                await this.getDetailData()
+
+                //Promise.all([this.getNewMessage(), this.getExperienceList()]).then(() => {
+                //}).catch(() => {
+                    //wx.hideLoading()
+                //})
+            } else {
+                await this.getDetailData()
+            }
+
+            wx.hideLoading()
+
+
         },
 
         onShow() {
@@ -357,6 +367,9 @@
                             encryptedData: res.encryptedData,
                             iv: res.iv
                         })
+
+                        Promise.all([this.getNewMessage(), this.getExperienceList()])
+
 
                         const params = {
                             clockPID: this.$root.$mp.query.id || this.$root.$mp.appOptions.scene
