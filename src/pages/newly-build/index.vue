@@ -4,7 +4,7 @@
     <div class="newly-build-wrapper">
         <div class="newly-build-box">
             <h2>打卡项目名称</h2>
-            <input type="text" placeholder="例：考研打卡群（必填 50 字以内）" focus="true" maxlength="50" v-model="title">
+            <input type="text" placeholder="例：考研打卡群（必填 50 字以内）" focus="true" maxlength="50" v-model.lazy="title">
             <div class="newly-build-img-wrapper">
                 <img :src="newlyBuildImage" class="selected" mode="aspectFill" v-if="newlyBuildImage">
                 <img :src="newlyBuildImg" mode="aspectFill" v-else>
@@ -16,7 +16,7 @@
 
         <div class="newly-build-box">
             <h2>打卡详细描述</h2>
-            <textarea v-model="detail" auto-height maxlength="300" placeholder-class="placeholder" placeholder="请输入详细描述（选填 300 字以内）"></textarea>
+            <textarea v-model.lazy="detail" auto-height maxlength="300" placeholder-class="placeholder" placeholder="请输入详细描述（选填 300 字以内）"></textarea>
         </div>
 
         <div class="newly-build-box">
