@@ -1,5 +1,5 @@
 <script>
-    import {login, sendTime} from '@/utils'
+    import {sendTime} from '@/utils'
 
     export default {
         data() {
@@ -18,22 +18,16 @@
             app.dakaPlanNum = 0
             app.dakaList = []
 
-            //console.log(app)
-
             if (! wx.getStorageSync('isDakaRecord')) {
                 wx.reLaunch({
                     url: '/pages/discover/index'
                 })
             }
 
-            //if (! wx.getStorageSync('session')) {
-                await login()
-            //}
+            wx.removeStorageSync('session')
 
             // 清除七牛 token
-            wx.removeStorage({
-                key: 'qiniu'
-            })
+            wx.removeStorageSync('qiniu')
         },
 
         onShow() {
