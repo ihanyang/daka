@@ -11,7 +11,7 @@
             }
         },
 
-        onLaunch() {
+        async onLaunch() {
             setTimeout(() => {
                 const app = getApp()
 
@@ -20,14 +20,14 @@
                 app.dakaList = []
             }, 0)
 
-            if (! wx.getStorageSync('isDakaRecord') || ! wx.getStorageSync('isJoined')) {
+            if (! wx.getStorageSync('isDakaRecord')) {
                 wx.reLaunch({
                     url: '/pages/discover/index'
                 })
             }
 
             if (! wx.getStorageSync('session')) {
-                login()
+                await login()
             }
 
             // 清除七牛 token
