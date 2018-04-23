@@ -13,6 +13,7 @@
 
 			<div class="book-intro" :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></div>
             <div class="spread-btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
+            <div class="spread-btn" @click="shrink" v-if="spreaded">收起</div>
 		</div>
 		<div class="book-content">
 			<h2>目录</h2>
@@ -36,6 +37,7 @@
 		data() {
 			return {
 				isShrink: true,
+				spreaded: false,
 				isAdd: true,
 
 				cover: '',
@@ -80,6 +82,11 @@
 			})
 		},
 
+		onUnload() {
+			this.isShrink = true
+			this.spreaded = false
+		},
+
 		methods: {
 			async getDetail() {
 				const params = {
@@ -105,9 +112,18 @@
                 this.avatarList = data.data.AvatarList
 
                 this.bookContent = data.data.ChapterList
+
+                wx.setNavigationBarTitle({
+                	title: this.title
+                })
 			},
 			spread() {
 				this.isShrink = false
+				this.spreaded = true
+			},
+			shrink() {
+				this.isShrink = true
+				this.spreaded = false
 			},
 			add() {
 				const app = getApp()

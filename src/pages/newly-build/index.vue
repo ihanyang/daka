@@ -20,13 +20,13 @@
         </div>
 
         <div class="newly-build-box">
-            <h2>设置开始结束日期</h2>
-            <label @click="selectSecretType(1)">
+            <h2>是否公开</h2>
+            <label @click="selectSecretType(0)">
                 <i class="radio-btn" :class="{selected: secretType === 0}"></i>
                 公开
                 <span>允许任何人加入你的打卡小组</span>
             </label>
-            <label @click="selectSecretType(2)">
+            <label @click="selectSecretType(1)">
                 <i class="radio-btn" :class="{selected: secretType === 1}"></i>
                 私密
                 <span>小组成员只能通过组长邀请进入小组</span>
@@ -130,16 +130,6 @@
                     return
                 }
 
-                if (! this.detail.trim().length) {
-                    wx.showToast({
-                        title: '请填写打卡详细描述',
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
-
                 const app = getApp()
 
                 app.newlyBuild = {
@@ -211,7 +201,8 @@
                     planName: this.title,
                     cover: this.newlyBuildImage || this.newlyBuildImg,
                     description: this.detail,
-                    private: this.secretType
+                    private: this.secretType,
+                    planType: 1
                 }
 
                 const timer = setTimeout(() => {

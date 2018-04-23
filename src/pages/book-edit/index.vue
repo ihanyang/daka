@@ -156,6 +156,8 @@
 		            return
 		        }
 
+		        getApp().contentList = []
+
 		        wx.navigateTo({
 		        	url: `/pages/detail/index?id=${getApp().$genID}`
 		        })

@@ -18,13 +18,13 @@
                 app.dakaTotalNum = 0
                 app.dakaPlanNum = 0
                 app.dakaList = []
-
-                if (! wx.getStorageSync('isDakaRecord') || ! wx.getStorageSync('isJoined')) {
-                    wx.reLaunch({
-                        url: '/pages/discover/index'
-                    })
-                }
             }, 0)
+
+            if (! wx.getStorageSync('isDakaRecord') || ! wx.getStorageSync('isJoined')) {
+                wx.reLaunch({
+                    url: '/pages/discover/index'
+                })
+            }
 
             if (! wx.getStorageSync('session')) {
                 login()

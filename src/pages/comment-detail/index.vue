@@ -4,10 +4,10 @@
 	<div class="comment-detail-wrapper" :class="{commenting: isShowReplyBox}">
 		<div class="comment-box">
 			<header>
-				<img class="avatar" :src="avatar" mode="aspectFill">
+				<img class="avatar" :src="avatar || defaultAvatar" mode="aspectFill">
 				<div class="info">
 					<strong v-text="nickname"></strong>
-					<span>10分钟前</span>
+					<span>{{time}}</span>
 				</div>
 			</header>
 			<p v-text="content"></p>
@@ -23,8 +23,7 @@
 			</template>
 
 			<footer>
-				<div class="like-icon" @click="like" v-if="! liked"></div>
-				<div class="like-icon liked" v-else></div>
+				<div class="like-icon" :class="{liked: liked}" @click="like"></div>
 				<div class="comment-icon" @click="comment"></div>
 			</footer>
 		</div>
@@ -44,6 +43,8 @@
 </template>
 
 <script>
+	import {timeFormat, getDefaultAvatar} from '@/utils'
+
 	import replyItem from '@/components/reply-item'
 
 	import {fetch} from '@/api'
@@ -56,6 +57,7 @@
 				avatar: '',
 				nickname: '',
 				content: '',
+				createTime: '',
 				images: [],
 				likeNameList: [],
 
@@ -74,6 +76,12 @@
 		computed: {
 			likeName() {
 				return this.likeNameList.map((item) => item.Nickname).join('、')
+			},
+			time() {
+				return timeFormat(+ new Date(this.createTime))
+			},
+			defaultAvatar() {
+				return getDefaultAvatar()
 			}
 		},
 
@@ -107,6 +115,7 @@
                 this.avatar = data.data.Avatar
                 this.nickname = data.data.Nickname
                 this.content = data.data.Content
+                this.createTime = data.data.CreateTime
 
                 this.replyList = data.data.ReplyList
                 this.likeNameList = data.data.PraiseList
@@ -115,21 +124,23 @@
 			},
 			async like() {
 				const params = {
-					id: this.$root.$mp.query.id
+					postID: this.$root.$mp.query.id
 				}
-				const data = await fetch('/', params)
+				const url = ! this.liked ? '/api/clock-post/praise' : '/api/clock-post/unPraise'
+
+				this.liked = ! this.liked
+
+				const data = await fetch(url, params)
 
 				if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
+                    wx.showToast({
+                        title: data.msg,
+                        icon: 'none',
+                        duration: 2000
                     })
 
                     return
                 }
-
-                this.liked = true
 			},
 			blur() {
                 this.isShowReplyBox = false

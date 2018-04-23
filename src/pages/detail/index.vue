@@ -71,7 +71,7 @@
 
         <div class="detail-tab">
             <div class="detail-tab-item" :class="{selected: index === 0}" @click="index = 0">打卡心得</div>
-            <div class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1">课程表</div>
+            <div class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
         </div>
         <div class="experience-list" v-if="index === 0">
             <experience-item :key="item.id" :item="item" v-for="item of experienceList" @showReplyBox="showReplyBox"></experience-item>
@@ -94,12 +94,8 @@
                         </div>
                     </div>
 
-                    <template v-if="item.Unlock === 0">
-                        <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" v-for="(item, $ii) of item.ChapterList"></div>
-                    </template>
-                    <template v-else>
-                        <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" v-for="(item, $ii) of item.ChapterList" @click="goChapterDetail(item.SECID)"></div>
-                    </template>
+                    <!-- <div class="syllabus-chapter actived" :key="item.SECID" v-text="item.Title" v-if="item.Unlock === 0"></div> -->
+                    <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" @click="goChapterDetail(item.SECID, 0, item.Unlock)" v-for="(item, $ii) of item.ChapterList"></div>
                 </div>
             </div>
         </template>
@@ -108,7 +104,7 @@
         <div class="btn join-btn" v-if="joining">加入中...</div>
 
         <div class="go-home" v-if="isShowHome" @click="goHome"></div>
-        <div class="post-comment-btn" v-else @click="goPost"></div>
+        <div class="post-comment-btn" v-if="isShowInviteBtn" @click="goPost"></div>
 
         <div class="reply-box" v-if="isShowReplyBox">
             <textarea v-model="replyContent" auto-height :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
@@ -116,6 +112,8 @@
         </div>
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
+
+        <div class="loading-scroll" v-if="loadingScroll"></div>
     </div>
 </template>
 
@@ -130,6 +128,10 @@
         data() {
             return {
                 index: 0,
+
+                page: 1,
+                loadingScroll: false,
+                isListLoaded: false,
 
                 isShowHome: false,
                 day: 0,
@@ -156,6 +158,7 @@
                 isShowReplyBox: false,
                 replyContent: '',
 
+                planType: 1,
                 isRead: 0,
                 todayID: -1,
                 todayCover: '',
@@ -183,6 +186,13 @@
             },
             defaultAvatar() {
                 return getDefaultAvatar()
+            },
+            isShowTable() {
+                if (this.iszu === 0 && ! this.todayCover) {
+                    return false
+                }
+
+                return true
             }
         },
 
@@ -226,6 +236,10 @@
 
                 app.$post = null
             }
+        },
+
+        onReachBottom() {
+            this.scroll()
         },
 
         onUnload() {
@@ -285,7 +299,11 @@
                     url: `/pages/post/index?id=${this.$root.$mp.query.id}`
                 })
             },
-            goChapterDetail(id, isRead) {
+            goChapterDetail(id, isRead, lock) {
+                if (lock === 0) {
+                    return
+                }
+
                 getApp().isRead = !! isRead
 
                 wx.navigateTo({
@@ -372,6 +390,7 @@
 
                         this.iszu = data.data.IsPlanOwner
                         this.isRead = data.data.IsRead
+                        this.planType = data.data.PlanType
 
                         if (data.data.TodayData) {
                             this.todayCover = data.data.TodayData.Cover
@@ -490,7 +509,9 @@
             },
             async getExperienceList() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id
+                    clockPID: this.$root.$mp.query.id,
+                    page: this.page,
+                    pagesize: 10
                 }
 
                 const data = await fetch('/api/clock-post/list', params)
@@ -505,10 +526,15 @@
                     return
                 }
 
-                this.experienceList = data.data.Rows
+                this.page++
+
+                this.experienceList.push(... data.data.Rows)
+
+                //this.experienceList = data.data.Rows
+                this.isListLoaded =  this.experienceList.length === data.data.Total
             },
             forDaka() {
-                if (! getApp().isRead) {
+                if (this.planType === 2 && ! getApp().isRead) {
                     wx.showModal({
                         title: '提示',
                         content: '你还没有完成今日的打卡任务，确定要打卡吗？',
@@ -687,6 +713,13 @@
                     }
                 })
             },
+            async scroll() {
+                this.loadingScroll = true
+
+                ! this.isListLoaded && await this.getExperienceList()
+
+                this.loadingScroll = false
+            },
             clear() {
                 this.day = 0
                 this.todayDaKa = 0
@@ -696,6 +729,13 @@
                 this.index = 0
                 this.iszu = false
                 this.isRead = 0
+
+                this.planType = 1
+                this.isRead = 0
+                this.todayID = -1
+                this.todayCover = ''
+                this.todayTitle = ''
+                this.todayAuthor = ''
 
                 this.taped = false
                 this.isShrink = true

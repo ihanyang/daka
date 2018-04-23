@@ -27,6 +27,7 @@ header {
 .content {
 	margin-bottom: 20px;
 	line-height: 1.6;
+	word-break: break-all;
 }
 .content-image {
 	width: 100%;
@@ -97,26 +98,33 @@ footer {
 		margin-top: 10px;
 	}
 }
+.image-wrapper.four {
+	width: 300px;
+
+	& img:nth-child(3) {
+		margin-right: 10px;
+	}
+}
 </style>
 
 <template>
 	<div class="experience-item">
 		<div @click="go">
 			<header>
-				<img class="avatar" :src="item.Avatar" mode="aspectFill">
+				<img class="avatar" :src="item.Avatar || defaultAvatar" mode="aspectFill">
 				<div class="info">
 					<strong class="nickname" v-text="item.Nickname"></strong>
 					<span>已坚持打卡{{item.ClockDay}}天</span>
 				</div>
 			</header>
 			<p class="content" v-text="item.Content"></p>
-			<img class="content-image" :src="item.ImageList[0].ImageUrl" mode="aspectFill" v-if="item.ImageList.length === 1">
-			<div class="image-wrapper" v-else>
-				<img class="content-image" :src="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
-			</div>
+		</div>
+		<img class="content-image" :src="item.ImageList[0].ImageUrl" mode="aspectFill" v-if="item.ImageList.length === 1" @click="previewImage">
+		<div class="image-wrapper" :class="{four: item.ImageList.length === 4}" v-else @click="previewImage">
+			<img class="content-image" :src="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
 		</div>
 		<footer>
-			<div class="time">{{item.time}}</div>
+			<div class="time">{{time}}</div>
 			<div class="like-icon" :class="{liked: item.IsPraise}" @click="like"></div>
 			<div class="comment-icon" @click="comment"></div>
 		</footer>
@@ -138,6 +146,7 @@ footer {
 </template>
 
 <script>
+	import {timeFormat, getDefaultAvatar} from '@/utils'
 	import {fetch} from '@/api'
 
 	export default {
@@ -146,10 +155,21 @@ footer {
 		computed: {
 			replyList() {
 				return this.item.ReplyList.slice(0, 5)
+			},
+			time() {
+				return timeFormat(+ new Date(this.item.CreateTime))
+			},
+			defaultAvatar() {
+				return getDefaultAvatar()
 			}
 		},
 
 		methods: {
+			previewImage() {
+				wx.previewImage({
+					urls: this.item.ImageList.map((item) => item.ImageUrl)
+				})
+			},
 			go() {
 				wx.navigateTo({
 					url: `/pages/comment-detail/index?id=${this.item.PostID}`

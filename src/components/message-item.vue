@@ -61,13 +61,13 @@
 				</template>
 				<template v-else>
 					<strong>{{item.name}}评论了你</strong>
-					<p v-text="item.Content"></p>
+					<p v-text="item.ReplyContent"></p>
 				</template>
 
 			<div class="time" v-text="time"></div>
 		</div>
 		<div class="quote">
-			<p class="line-overflow" v-text="item.ReplyContent"></p>
+			<p class="line-overflow" v-text="item.Content"></p>
 		</div>
 	</div>
 </template>
@@ -85,7 +85,7 @@
 		},
 
 		methods: {
-			goMessage() {
+			go() {
                 wx.navigateTo({
 					url: `/pages/comment-detail/index?id=${this.item.PostID}`
 				})
