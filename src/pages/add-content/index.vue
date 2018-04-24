@@ -43,7 +43,7 @@
             <li :class="{selected: tagID === item.TagID}" v-text="item.TagName" :key="item.TagID" v-for="item of tagList" @click="tagID = item.TagID"></li>
         </ul>
 
-        <p class="no-data" v-if="noList">暂无计划</p>
+        <p class="no-data" v-if="noList">暂无内容</p>
 
         <ul class="add-content-list" v-else>
             <content-item :item="item" :key="item.url" v-for="item of list"></content-item>
