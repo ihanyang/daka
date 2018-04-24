@@ -42,17 +42,17 @@
 		background-color: #F2F2F2;
 	}
 }
-.like {
-	width: 12px;
-	height: 12px;
-	background: url(~@/images/liked-reply.png) left center no-repeat;
-	background-size: 100%;
-}
 .info p {
 	width: 175px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+.info .like {
+	width: 12px;
+	height: 12px;
+	background: url(~@/images/liked-reply.png) left center no-repeat;
+	background-size: 100%;
 }
 </style>
 
