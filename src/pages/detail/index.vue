@@ -581,7 +581,7 @@
             },
             forDaka() {
                 //if (this.planType === 2 && ! getApp().isRead) {
-                if (this.todayTitle && this.isRead === 0) {
+                if (this.todayTitle && ! getApp().isRead) {
                     wx.showModal({
                         title: '提示',
                         content: '你还没有完成今日的打卡任务，确定要打卡吗？',
