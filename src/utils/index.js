@@ -64,7 +64,7 @@ export function timeFormat(timestamp) {
     if (now - timestamp <= 60 * 60 * 1000) {
         str =  ~~ ((now - timestamp) / (60 * 1000))
 
-        return str <= 0 ? '刚刚' : `${str}分钟前`
+        return str <= 0 ? '1分钟前' : `${str}分钟前`
     }
 
     // 24小时内
@@ -75,21 +75,26 @@ export function timeFormat(timestamp) {
     }
 
     // 昨天
+    // if (yearNow === yearAgo && monthNow === monthAgo) {
+    //     if (dateNow - dateAgo === 1) {
+    //         return `昨天 ${hourAgo}:${minutesAgo}`.replace(/\b(\w)\b/g, '0$1')
+    //     }
+    // }
+
+    // 10天内
     if (yearNow === yearAgo && monthNow === monthAgo) {
-        if (dateNow - dateAgo === 1) {
-            return `昨天 ${hourAgo}:${minutesAgo}`.replace(/\b(\w)\b/g, '0$1')
-        }
+        return `${dateNow - dateAgo}天前`
     }
 
-    if (yearNow === yearAgo && monthNow - monthAgo === 1) {
-        const max = 2 * 24 * 60 * 60 * 1000
-        const min = 1
-        const timeDiff = now - timestamp
+    // if (yearNow === yearAgo && monthNow - monthAgo === 1) {
+    //     const max = 2 * 24 * 60 * 60 * 1000
+    //     const min = 1
+    //     const timeDiff = now - timestamp
 
-        if (timeDiff >= min && timeDiff < max) {
-            return `昨天 ${hourAgo}:${minutesAgo}`
-        }
-    }
+    //     if (timeDiff >= min && timeDiff < max) {
+    //         return `昨天 ${hourAgo}:${minutesAgo}`
+    //     }
+    // }
 
     // 小于一年
     if (date.getFullYear() === agoDate.getFullYear()) {
