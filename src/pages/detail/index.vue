@@ -104,7 +104,7 @@
         <div class="btn join-btn" v-if="joining">加入中...</div>
 
         <div class="go-home" v-if="isShowHome" @click="goHome"></div>
-        <div class="post-comment-btn" v-if="isShowInviteBtn" @click="goPost"></div>
+        <div class="post-comment-btn" v-if="isShowPostBtn" @click="goPost"></div>
 
         <div class="reply-box" v-if="isShowReplyBox">
             <textarea v-model="replyContent" auto-height :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
@@ -184,6 +184,9 @@
             isShowInviteBtn() {
                 return this.isJoin && ! this.isComplete
             },
+            isShowPostBtn() {
+                return this.isJoin && ! this.isShowHome
+            },
             defaultAvatar() {
                 return getDefaultAvatar()
             },
@@ -197,7 +200,7 @@
         },
 
         async onLoad() {
-            const {item} = getApp()
+            const {item, session} = getApp()
 
             if (item) {
                 this.isJoin = item.IsJoin
@@ -221,7 +224,7 @@
                 mask: true
             })
 
-            if (! wx.getStorageSync('session')) {
+            if (! session) {
                 await login()
                 await this.getDetailData()
 
@@ -238,14 +241,25 @@
 
         },
 
-        onShow() {
+        async onShow() {
             const app = getApp()
 
-            if (app.$post) {
+            if (app.post) {
                 this.index = 0
-                this.experienceList.unshift(app.$post)
+                this.experienceList.unshift(app.post)
 
-                app.$post = null
+                app.post = null
+            }
+
+            if (app.newContent) {
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
+
+                await this.getDetailData()
+
+                wx.hideLoading()
             }
         },
 
@@ -423,11 +437,18 @@
                         this.isDaKa = data.data.HasClock
                         this.isComplete = data.data.HasFinish
 
+                        // 更新 item
+                        const app = getApp()
+
+                        if (app.item) {
+                            app.item.IsJoin = true
+                        }
+
                         if (this.isJoin) {
                             wx.setStorageSync('isJoined', true)
                         }
 
-                        getApp().planName = data.data.PlanName
+                        app.planName = data.data.PlanName
 
                         wx.setNavigationBarTitle({
                             title: data.data.PlanName.length > 20 ? `${data.data.PlanName.slice(0, 20)}...` : data.data.PlanName
@@ -524,7 +545,7 @@
                 }
 
                 this.newMessagesNum = data.data.NewMessageNum
-                this.newMessagesAvatar = data.data.Avatar
+                this.newMessagesAvatar = data.data.Avatar || this.defaultAvatar
             },
             async getExperienceList() {
                 const params = {
@@ -553,7 +574,8 @@
                 this.isListLoaded =  this.experienceList.length === data.data.Total
             },
             forDaka() {
-                if (this.planType === 2 && ! getApp().isRead) {
+                //if (this.planType === 2 && ! getApp().isRead) {
+                if (this.todayTitle && this.isRead === 0) {
                     wx.showModal({
                         title: '提示',
                         content: '你还没有完成今日的打卡任务，确定要打卡吗？',
@@ -599,9 +621,15 @@
 
                 const app = getApp()
 
-                app.item.TodayClockNum = + app.item.TodayClockNum + 1
+
                 app.item.HasClock = 1
-                app.item.ClockNum++
+
+                if (typeof app.item.TodayClockNum !== 'undefined') {
+                    app.item.TodayClockNum = + app.item.TodayClockNum + 1
+                } else {
+                    app.item.ClockNum++
+                }
+
 
                 wx.showToast({
                     title: '加油，你离梦想又近了一步！',

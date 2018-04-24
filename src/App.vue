@@ -18,16 +18,13 @@
             app.dakaPlanNum = 0
             app.dakaList = []
 
-            if (! wx.getStorageSync('isDakaRecord')) {
-                wx.reLaunch({
-                    url: '/pages/discover/index'
-                })
+            if (! wx.getStorageSync('isAuthorization')) {
+                if (this.$mp.appOptions.path.indexOf('detail') === -1) {
+                    wx.reLaunch({
+                        url: '/pages/discover/index'
+                    })
+                }
             }
-
-            wx.removeStorageSync('session')
-
-            // 清除七牛 token
-            wx.removeStorageSync('qiniu')
         },
 
         onShow() {

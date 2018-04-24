@@ -83,17 +83,15 @@
             this.newlyBuildImg = ''
             this.newlyBuildImage = ''
             this.detail = ''
+
+            this.secretType = -1
         },
 
         methods: {
             async getQiNiuToken() {
                 const app = getApp()
-                const qiniu = wx.getStorageSync('qiniu')
 
-                if (qiniu) {
-                    app.token = qiniu.data.token
-                    app.domain = qiniu.data.domain
-
+                if (app.qiniu) {
                     return
                 }
 
@@ -109,15 +107,7 @@
                     return
                 }
 
-                const {token, domain} = data.data
-
-                wx.setStorage({
-                    key: 'qiniu',
-                    data
-                })
-
-                app.token = token
-                app.domain = domain
+                app.qiniu = data.data
             },
             goAddContent() {
                 if (! this.title.trim().length) {
@@ -156,7 +146,7 @@
                             filePath: res.tempFilePaths[0],
                             name: 'file',
                             formData: {
-                                token: app.token
+                                token: app.qiniu.token
                             },
                             success: (res) => {
                                 const data = JSON.parse(res.data)
@@ -171,7 +161,7 @@
                                     return
                                 }
 
-                                this.newlyBuildImage = `${app.domain}${data.key}`
+                                this.newlyBuildImage = `${app.qiniu.domain}${data.key}`
                             }
                         })
                     },

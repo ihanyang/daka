@@ -36,8 +36,6 @@
         </div>
 
         <div class="loading-scroll" v-if="loadingScroll"></div>
-
-        <loading v-if="isLoading"></loading>
     </div>
 </template>
 
@@ -52,7 +50,6 @@
         data() {
             return {
                 isLoadedHomeData: false,
-                isLoading: false,
                 //isLoaded: false,
 
                 userInfo: {},
@@ -150,11 +147,17 @@
 
             if (! this.isLoadedHomeData) {
             //if (! this.isLoadedHomeData) {
-                this.isLoading = true
+                //this.isLoading = true
+
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
 
                 await this.getUserInfo()
 
-                this.isLoading = false
+                wx.hideLoading()
+                //this.isLoading = false
                 this.isLoadedHomeData = true
 
                 wx.setStorageSync('isLoadedHomeData', true)

@@ -62,17 +62,20 @@
                 this.isLodaded = false
                 this.dakaList = []
 
-                this.getTagData()
+                this.getList()
 
                 this.isLodaded = true
             }
         },
 
         onLoad() {
-            this.getDiscoverData()
+            this.getTagList()
+
+            this.getList()
         },
 
         onShow() {
+            return
             const app = getApp()
 
             if (wx.getStorageSync('isAuthorization') && ! wx.getStorageSync('isUpdate')) {
@@ -84,7 +87,7 @@
                 this.page = 1
                 this.dakaList = []
 
-                this.getTagData()
+                this.getList()
             }
 
         },
@@ -94,17 +97,16 @@
         },
 
         methods: {
-            async getDiscoverData() {
-                const apiList = [api.getDiscoverTagList(), this.getTagData()]
-                const [tagData] = await Promise.all(apiList)
+            async getTagList() {
+                const data = await api.getDiscoverTagList()
 
                 let isShowErrowToast = false
 
-                if (tagData.flag === 1) {
+                if (data.flag === 1) {
                     isShowErrowToast = true
 
                     //this.tagList = [... this.tagList, ... tagData.data.Rows]
-                    this.tagList = tagData.data.Rows
+                    this.tagList = data.data.Rows
 
                     // 留个进入过发现页的标记
                     wx.setStorage({
@@ -115,11 +117,11 @@
 
                 ! isShowErrowToast && wx.showModal({
                     title: '提示',
-                    content: tagData.msg,
+                    content: data.msg,
                     showCancel: false
                 })
             },
-            async getTagData() {
+            async getList() {
                 const params = {
                     tagID: this.tagID,
                     page: this.page,
@@ -133,7 +135,7 @@
                 this.isLoading = false
 
                 if (data.flag === 1) {
-                    this.dakaList = [... this.dakaList, ... data.data.Rows]
+                    this.dakaList.push(... data.data.Rows)
 
                     this.page++
                     this.isListLoaded =  this.dakaList.length === data.data.Total
@@ -150,7 +152,7 @@
             async scroll() {
                 this.loadingScroll = true
 
-                ! this.isListLoaded && await this.getTagData()
+                ! this.isListLoaded && await this.getList()
 
                 this.loadingScroll = false
             }

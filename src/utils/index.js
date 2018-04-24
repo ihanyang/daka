@@ -11,7 +11,8 @@ export function login() {
 
                 //console.log(response)
 
-                wx.setStorageSync('session', data.data.session)
+                //wx.setStorageSync('session', data.data.session)
+                getApp().session = data.data.session
 
                 resolve()
             },

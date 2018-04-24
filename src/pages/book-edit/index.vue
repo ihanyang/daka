@@ -157,10 +157,14 @@
 		        }
 
 		        getApp().contentList = []
+		        getApp().newContent = 1
 
-		        wx.navigateTo({
-		        	url: `/pages/detail/index?id=${getApp().$genID}`
-		        })
+		        wx.navigateBack({
+					delta: 3
+				})
+		        // wx.redirectTo({
+		        // 	url: `/pages/detail/index?id=${getApp().$genID}`
+		        // })
             },
             async gen() {
             	if (! this.list.length) {

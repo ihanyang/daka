@@ -2,7 +2,7 @@ import {login} from '@/utils'
 
 function fetch(url, data = {}, method = 'POST') {
     let header = {}
-    const session = wx.getStorageSync('session')
+    const session = getApp().session
 
     if (session && url !== '/wxapplib/wxapp/login') {
         data = {session, ... data}

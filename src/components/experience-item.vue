@@ -49,7 +49,7 @@ header {
 .comment-icon {
 	width: 18px;
 	height: 19px;
-	background: url(~@/images/comment.png);
+	background: url(~@/images/comment.png) no-repeat;
 	background-size: 100%;
 }
 footer {
