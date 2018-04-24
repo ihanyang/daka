@@ -123,12 +123,27 @@
                 this.liked = !! data.data.IsPraise
 			},
 			async like() {
+				const nickname = wx.getStorageSync('user').nickname
 				const params = {
 					postID: this.$root.$mp.query.id
 				}
 				const url = ! this.liked ? '/api/clock-post/praise' : '/api/clock-post/unPraise'
 
 				this.liked = ! this.liked
+
+				if (this.liked) {
+					this.likeNameList.push({Nickname: nickname})
+				} else {
+					let index = -1
+
+					this.likeNameList.forEach((item, i) => {
+						if (item.Nickname === nickname) {
+							index = i
+						}
+					})
+
+					this.likeNameList.splice(index, 1)
+				}
 
 				const data = await fetch(url, params)
 

@@ -131,9 +131,9 @@ footer {
 		<div class="reply-list">
 			<div v-for="(item, $ii) of replyList" :key="item.ReplyID" @click="comment(item.ReplyID, item.Nickname)">
 				<template v-if="item.ReplyMemberID">
-					<span v-text="item.ReplyMemberNickname"></span>
-					<span class="reply-text">回复</span>
 					<span v-text="item.Nickname"></span>
+					<span class="reply-text">回复</span>
+					<span v-text="item.ReplyMemberNickname"></span>
 					：{{item.ReplyContent}}
 				</template>
 				<template v-else>

@@ -3,7 +3,7 @@
 <template>
 	<div class="detail-reply">
 		<header>
-			<img class="avatar" :src="item.Avatar" mode="aspectFill">
+			<img class="avatar" :src="item.Avatar || defaultAvatar" mode="aspectFill">
 			<div class="info">
 				<strong v-text="item.Nickname"></strong>
 				<span v-text="time"></span>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-	import {timeFormat} from '@/utils'
+	import {timeFormat, getDefaultAvatar} from '@/utils'
 
 	export default {
 		props: ['item'],
@@ -27,6 +27,9 @@
 		computed: {
 			time() {
 				return timeFormat(+ new Date(this.item.CreateTime))
+			},
+			defaultAvatar() {
+				return getDefaultAvatar()
 			}
 		},
 
