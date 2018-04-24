@@ -81,7 +81,7 @@ h1 {
 
 		        wx.hideLoading()
 
-		        this.title = data.data.Title
+		        this.title = data.data.ChapterTitle
 		        this.content = data.data.Content
 			}
 		}
