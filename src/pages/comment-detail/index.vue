@@ -3,7 +3,7 @@
 <template>
 	<div class="comment-detail-wrapper" :class="{commenting: isShowReplyBox}">
 		<div class="comment-box">
-			<header>
+			<header v-if="loaded">
 				<img class="avatar" :src="avatar || defaultAvatar" mode="aspectFill">
 				<div class="info">
 					<strong v-text="nickname"></strong>
@@ -53,11 +53,12 @@
 		data() {
 			return {
 				liked: false,
+				loaded: false,
 
 				avatar: '',
 				nickname: '',
 				content: '',
-				createTimeStamp: '',
+				createTimeStamp: 0,
 				isJoin: false,
 				images: [],
 				likeNameList: [],
@@ -96,6 +97,19 @@
 			wx.hideLoading()
 		},
 
+		onUnload() {
+			this.avatar = ''
+			this.nickname = ''
+			this.content = ''
+			this.createTimeStamp = 0
+			this.isJoin = false
+			this.images = []
+			this.likeNameList = []
+
+			this.loaded = false
+			this.replyList = []
+		},
+
 		methods: {
 			previewImage(e) {
 				const {index} = e.target.dataset
@@ -124,6 +138,8 @@
 
                     return
                 }
+
+                this.loaded = true
 
                 this.avatar = data.data.Avatar
                 this.nickname = data.data.Nickname

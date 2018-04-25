@@ -429,7 +429,9 @@
                         this.avatarList = data.data.AvatarList
                         this.intro = data.data.Description
 
-                        this.syllabusList = data.data.MenuList
+                        if (data.data.MenuList) {
+                            this.syllabusList = data.data.MenuList
+                        }
 
                         this.iszu = data.data.IsPlanOwner
                         this.isRead = data.data.IsRead
