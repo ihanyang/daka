@@ -66,6 +66,7 @@ footer {
 
 	& div {
 		margin-bottom: 15px;
+		word-break: break-all;
 	}
 
 	& span {
@@ -125,8 +126,11 @@ footer {
 		</div>
 		<footer>
 			<div class="time">{{time}}</div>
-			<div class="like-icon" :class="{liked: item.IsPraise}" @click="like"></div>
-			<div class="comment-icon" @click="comment"></div>
+
+			<template v-if="item.HasJoin">
+				<div class="like-icon" :class="{liked: item.IsPraise}" @click="like"></div>
+				<div class="comment-icon" @click="comment"></div>
+			</template>
 		</footer>
 		<div class="reply-list">
 			<div v-for="(item, $ii) of replyList" :key="item.ReplyID" @click="comment(item.ReplyID, item.Nickname)">

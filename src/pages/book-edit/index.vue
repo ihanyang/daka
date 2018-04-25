@@ -121,7 +121,7 @@
             del(index) {
             	this.list.splice(index, 1)
 
-            	getApp().contentList.splice(index, 1)
+            	//getApp().contentList.splice(index, 1)
             },
             async save() {
             	if (! this.list.length) {

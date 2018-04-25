@@ -39,6 +39,11 @@
             this.scroll()
         },
 
+        onUnload() {
+        	this.page = 1
+        	this.list = []
+        },
+
 		methods: {
 			async scroll() {
                 this.loadingScroll = true

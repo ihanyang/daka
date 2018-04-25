@@ -72,7 +72,7 @@
 		<div class="info">
 			<h2>
 				<span v-text="item.Title"></span>
-				<div class="del-icon" @click="del"></div>
+				<div class="del-icon" @click.stop="del"></div>
 			</h2>
 			<p v-text="item.Author"></p>
 			<p class="line-overflow" v-text="item.Abstract"></p>

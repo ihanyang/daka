@@ -141,6 +141,26 @@
         },
 
         async onLoad() {
+            if (! wx.getStorageSync('isDiscovered')) {
+                return
+            }
+
+            //if (! wx.getStorageSync('isAuthorization')) {
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
+
+                await this.getUserInfo()
+
+                wx.hideLoading()
+                //this.isLoading = false
+                //this.isLoadedHomeData = true
+
+                wx.setStorageSync('isLoadedHomeData', true)
+            //}
+
+            await this.getHomeData()
 
 
             //if (! this.isLoadedHomeData) {
@@ -178,24 +198,7 @@
         },
 
         async onShow() {
-            if (! wx.getStorageSync('isDiscovered')) {
-                return
-            }
 
-            if (! wx.getStorageSync('isAuthorization')) {
-                wx.showLoading({
-                    title: '正在加载',
-                    mask: true
-                })
-
-                await this.getUserInfo()
-
-                wx.hideLoading()
-                //this.isLoading = false
-                //this.isLoadedHomeData = true
-
-                wx.setStorageSync('isLoadedHomeData', true)
-            }
 
             const app = getApp()
 
@@ -276,83 +279,89 @@
         },
 
         methods: {
+            async getHomeData() {
+                const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
+
+                this.userInfo = {
+                    avatar: userInfo.data.Avatar || getDefaultAvatar(),
+                    nickname: userInfo.data.Nickname
+                }
+
+                //! wx.getStorageSync('isDakaRecord') &&
+
+                wx.setStorage({
+                    key: 'user',
+                    data: this.userInfo
+                })
+
+                this.learnHours = userInfo.data.StudyTime
+
+                //console.log(userInfo)
+
+                const app = getApp()
+
+                app.dakaTotalNum = + userInfo.data.ClockDay
+                app.dakaPlanNum = + userInfo.data.PlanNum
+
+                this.dakaTotalNum = app.dakaTotalNum
+                this.dakaPlanNum = app.dakaPlanNum
+
+                if (app.dakaPlanNum) {
+                    wx.setStorage({
+                        key: 'isDakaRecord',
+                        data: true
+                    })
+                }
+            },
             async getUserInfo() {
                 await login()
 
-                wx.getUserInfo({
-                    withCredentials: true,
-                    success: async (res) => {
-                        // 保存一个授权完成的标志 发现页面需要据此更新状态
-                        wx.setStorageSync('isAuthorization', true)
+                await this.getUserInfoWX()
+            },
+            getUserInfoWX() {
+                return new Promise((resolve, reject) => {
+                    wx.getUserInfo({
+                        withCredentials: true,
+                        success: async (res) => {
+                            // 保存一个授权完成的标志 发现页面需要据此更新状态
+                            wx.setStorageSync('isAuthorization', true)
 
-                        const data = await api.saveUserInfo({
-                            encryptedData: res.encryptedData,
-                            iv: res.iv
-                        })
-
-
-
-                        const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
-
-                        this.userInfo = {
-                            avatar: userInfo.data.Avatar || getDefaultAvatar(),
-                            nickname: userInfo.data.Nickname
-                        }
-
-                        //! wx.getStorageSync('isDakaRecord') &&
-
-                        wx.setStorage({
-                            key: 'user',
-                            data: this.userInfo
-                        })
-
-                        this.learnHours = userInfo.data.StudyTime
-
-                        //console.log(userInfo)
-
-                        const app = getApp()
-
-                        app.dakaTotalNum = + userInfo.data.ClockDay
-                        app.dakaPlanNum = + userInfo.data.PlanNum
-
-                        this.dakaTotalNum = app.dakaTotalNum
-                        this.dakaPlanNum = app.dakaPlanNum
-
-                        if (app.dakaPlanNum) {
-                            wx.setStorage({
-                                key: 'isDakaRecord',
-                                data: true
+                            const data = await api.saveUserInfo({
+                                encryptedData: res.encryptedData,
+                                iv: res.iv
                             })
+
+                            resolve()
+                        },
+                        fail: () => {
+                            const flag = wx.getStorageSync('flag')
+
+                            if (flag) {
+                                wx.removeStorageSync('flag')
+
+                                wx.switchTab({
+                                    url: '/pages/discover/index'
+                                })
+                            } else {
+                                wx.showModal({
+                                    content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
+                                    showCancel: false,
+                                    confirmText: '下一步',
+                                    success: (res) => {
+                                        //if (res.confirm) {
+                                            wx.setStorageSync('flag', true)
+
+                                            wx.openSetting({
+                                                success: () => {
+                                                    this.getUserInfo()
+                                                }
+                                            })
+                                        //}
+                                    }
+                                })
+                            }
                         }
-                    },
-                    fail: () => {
-                        const flag = wx.getStorageSync('flag')
-
-                        if (flag) {
-                            wx.removeStorageSync('flag')
-
-                            wx.switchTab({
-                                url: '/pages/discover/index'
-                            })
-                        } else {
-                            wx.showModal({
-                                content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
-                                showCancel: false,
-                                confirmText: '下一步',
-                                success: (res) => {
-                                    //if (res.confirm) {
-                                        wx.setStorageSync('flag', true)
-
-                                        wx.openSetting({
-                                            success: () => {
-                                                this.getUserInfo()
-                                            }
-                                        })
-                                    //}
-                                }
-                            })
-                        }
-                    }
+                    })
                 })
             },
             async getMyDaKaList(flag) {

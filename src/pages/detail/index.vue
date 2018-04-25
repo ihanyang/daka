@@ -191,11 +191,13 @@
                 return getDefaultAvatar()
             },
             isShowTable() {
-                if (this.iszu === 0 && ! this.todayCover) {
-                    return false
+                if (this.iszu) {
+                    return true
+                } else {
+                    if (this.syllabusList.length) {
+                        return true
+                    }
                 }
-
-                return true
             }
         },
 
@@ -267,6 +269,8 @@
 
                 wx.hideLoading()
             }
+
+            app.contentList = []
         },
 
         onReachBottom() {
@@ -446,9 +450,11 @@
                         // 更新 item
                         const app = getApp()
 
-                        if (app.item) {
-                            app.item.IsJoin = true
-                        }
+                        app.item.IsJoin = this.isJoin
+
+                        // if (app.item) {
+                        //     app.item.IsJoin = true
+                        // }
 
                         if (this.isJoin) {
                             wx.setStorageSync('isJoined', true)
@@ -643,15 +649,15 @@
                     duration: 2000
                 })
 
-                if (app.isRead) {
-                    app.isRead = false
+                //if (app.isRead) {
+                    //app.isRead = false
 
                     setTimeout(() => {
                         wx.navigateTo({
                             url: `/pages/post/index?id=${this.$root.$mp.query.id}`
                         })
                     })
-                }
+                //}
 
                 // 首页累计打卡天数自动更新
 

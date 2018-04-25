@@ -122,6 +122,7 @@
 		padding-left: 44px;
 		font-size: 16px;
 		line-height: 1.5;
+		word-break: break-all;
 
 		& span {
 			display: inline-block;

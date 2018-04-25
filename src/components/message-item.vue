@@ -58,7 +58,7 @@
 
 <template>
 	<div class="messages-item" @click="go">
-		<img class="avatar" :src="item.Avatar" mode="aspectFill">
+		<img class="avatar" :src="item.Avatar || defaultAvatar" mode="aspectFill">
 		<div class="info">
 
 			<template v-if="item.MessageType === 3">
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-	import {timeFormat} from '@/utils'
+	import {timeFormat, getDefaultAvatar} from '@/utils'
 
 	export default {
 		props: ['item'],
@@ -87,6 +87,9 @@
 		computed: {
 			time() {
 				return timeFormat(+ new Date(this.item.CreateTime))
+			},
+			defaultAvatar() {
+				return getDefaultAvatar()
 			}
 		},
 

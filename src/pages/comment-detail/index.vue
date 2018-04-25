@@ -22,7 +22,7 @@
 				</div>
 			</template>
 
-			<footer>
+			<footer v-if="isJoin">
 				<div class="like-icon" :class="{liked: liked}" @click="like"></div>
 				<div class="comment-icon" @click="comment"></div>
 			</footer>
@@ -58,6 +58,7 @@
 				nickname: '',
 				content: '',
 				createTime: '',
+				isJoin: false,
 				images: [],
 				likeNameList: [],
 
@@ -128,6 +129,7 @@
                 this.nickname = data.data.Nickname
                 this.content = data.data.Content
                 this.createTime = data.data.CreateTime
+                this.isJoin = data.data.HasJoin
 
                 this.replyList = data.data.ReplyList
                 this.likeNameList = data.data.PraiseList
