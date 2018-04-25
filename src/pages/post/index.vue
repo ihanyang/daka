@@ -97,7 +97,7 @@
 
 <template>
 	<div class="post-wrapper">
-		<textarea v-model.trim="experience" maxlength="500" placeholder-class="placeholder" placeholder="说说今天的心得和收获吧～"></textarea>
+		<textarea v-model.lazy="experience" maxlength="500" placeholder-class="placeholder" placeholder="说说今天的心得和收获吧～"></textarea>
 
 		<template v-if="previewImages.length">
 			<div class="post-preview-image">
@@ -171,7 +171,7 @@
 
                 wx.chooseImage({
                     success: (res) => {
-                    	this.previewImages = [... this.previewImages, ... res.tempFilePaths]
+                    	this.previewImages = [... this.previewImages, ... res.tempFilePaths].slice(0, 9)
                     },
                     fail() {
                         wx.showToast({
@@ -236,70 +236,72 @@
 
 	            return Promise.all(p)
             },
-			async post() {
-				if (! this.experience) {
-					wx.showToast({
-						title: '请先写下今天的心得，再发表吧',
-						icon: 'none'
+			post() {
+				setTimeout(async () => {
+					if (! this.experience.trim()) {
+						wx.showToast({
+							title: '请先写下今天的心得，再发表吧',
+							icon: 'none'
+						})
+
+						return
+					}
+
+					wx.showLoading({
+						title: '正在发表'
 					})
 
-					return
-				}
+					const imagesURL = await this.uploadImage()
 
-				wx.showLoading({
-					title: '正在发表'
-				})
+					const a = imagesURL.map((item) => ({url: item, width: 0, height: 0}))
 
-				const imagesURL = await this.uploadImage()
+					//const a = await Promise.all(this.getImageInfo(), this.uploadImage())
 
-				const a = imagesURL.map((item) => ({url: item, width: 0, height: 0}))
+					const params = {
+						clockPID: this.$root.$mp.query.id,
+						content: this.experience,
+						images: JSON.stringify(a)
+					}
 
-				//const a = await Promise.all(this.getImageInfo(), this.uploadImage())
+					//this.posting = true
 
-				const params = {
-					clockPID: this.$root.$mp.query.id,
-					content: this.experience,
-					images: JSON.stringify(a)
-				}
+					const data = await fetch('/api/clock-post/add', params)
 
-				//this.posting = true
+					wx.hideLoading()
 
-				const data = await fetch('/api/clock-post/add', params)
+					if (data.flag !== 1) {
+			            wx.showModal({
+			                title: '提示',
+			                content: data.msg,
+			                showCancel: false
+			            })
 
-				wx.hideLoading()
+			            return
+			        }
 
-				if (data.flag !== 1) {
-		            wx.showModal({
-		                title: '提示',
-		                content: data.msg,
-		                showCancel: false
-		            })
+			        wx.showToast({
+			        	title: '发布成功',
+			        	icon: 'none'
+			        })
 
-		            return
-		        }
+			        const app = getApp()
 
-		        wx.showToast({
-		        	title: '发布成功',
-		        	icon: 'none'
-		        })
+			        app.post = {
+			        	PostID: data.data.id,
+			        	Nickname: wx.getStorageSync('user').nickname,
+			        	Avatar: wx.getStorageSync('user').avatar,
+			        	ClockDay: 0,
+			        	Content: this.experience,
+			        	CreateTimeStamp: + new Date(),
+			        	IsPraise: 0,
+			        	ImageList: a.map((item) => ({ImageUrl: item.url})),
+			        	ReplyList: []
+			        }
 
-		        const app = getApp()
-
-		        app.post = {
-		        	PostID: data.data.id,
-		        	Nickname: wx.getStorageSync('user').nickname,
-		        	Avatar: wx.getStorageSync('user').avatar,
-		        	ClockDay: 0,
-		        	Content: this.experience,
-		        	CreateTime: + new Date(),
-		        	IsPraise: 0,
-		        	ImageList: a.map((item) => ({ImageUrl: item.url})),
-		        	ReplyList: []
-		        }
-
-		        wx.navigateBack({
-					delta: 1
-				})
+			        wx.navigateBack({
+						delta: 1
+					})
+				}, 70)
 			}
 		}
 	}

@@ -81,7 +81,7 @@ export function timeFormat(timestamp) {
     //     }
     // }
 
-    // 10天内
+    // 在本月内
     if (yearNow === yearAgo && monthNow === monthAgo) {
         return `${dateNow - dateAgo}天前`
     }
@@ -98,7 +98,7 @@ export function timeFormat(timestamp) {
 
     // 小于一年
     if (date.getFullYear() === agoDate.getFullYear()) {
-        return `${agoDate.getMonth() + 1}月${agoDate.getDate()}日 ${hourAgo}:${minutesAgo}`.replace(/\b(\w)\b/g, '0$1')
+        return `${agoDate.getMonth() + 1}月${agoDate.getDate()}日`
     }
 
     // 大于一年

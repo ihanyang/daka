@@ -74,7 +74,7 @@
             <div class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
         </div>
         <div class="experience-list" v-if="index === 0">
-            <experience-item :key="item.PostID" :item="item" v-for="item of experienceList" @showReplyBox="showReplyBox"></experience-item>
+            <experience-item :key="item.PostID" :item="item" v-for="item of experienceList"></experience-item>
         </div>
         <p class="no-data" v-if="index === 0 && ! experienceList.length">暂无打卡心得</p>
 
@@ -106,10 +106,10 @@
         <div class="go-home" v-if="isShowHome" @click="goHome"></div>
         <div class="post-comment-btn" v-if="isShowPostBtn" @click="goPost"></div>
 
-        <div class="reply-box" v-if="isShowReplyBox">
-            <textarea v-model="replyContent" auto-height :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
+        <!-- <div class="reply-box" v-if="isShowReplyBox">
+            <textarea v-model.lazy="replyContent" auto-height :show-confirm-bar="false" :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
             <div @click="reply">发表</div>
-        </div>
+        </div> -->
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
 
@@ -154,9 +154,9 @@
 
                 shareModalStatus: false,
 
-                placeholder: '说点啥',
-                isShowReplyBox: false,
-                replyContent: '',
+                //placeholder: '说点啥',
+                //isShowReplyBox: false,
+                //replyContent: '',
 
                 planType: 1,
                 isRead: 0,
@@ -492,7 +492,7 @@
                 })
             },
             blur() {
-                this.isShowReplyBox = false
+                //this.isShowReplyBox = false
             },
             async reply() {
                 const app = getApp()

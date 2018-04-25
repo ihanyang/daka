@@ -157,7 +157,7 @@ footer {
 				return this.item.ReplyList.slice(0, 5)
 			},
 			time() {
-				return timeFormat(+ new Date(this.item.CreateTime))
+				return timeFormat(this.item.CreateTimeStamp)
 			},
 			defaultAvatar() {
 				return getDefaultAvatar()
@@ -207,7 +207,17 @@ footer {
 
 				app.postItem = this.item
 
-				this.$emit('showReplyBox', {id, nickname})
+				if (typeof id !== 'object') {
+					app.replyID = id
+					app.replyNickname = nickname
+				}
+
+				wx.navigateTo({
+					url: '/pages/post-comment/index'
+				})
+
+				//this.$emit('showReplyBox', {id, nickname})
+
 			}
 		}
 	}
