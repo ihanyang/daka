@@ -66,7 +66,7 @@
 <template>
 	<li class="content-item" @click="go">
 		<div class="img-wrapper">
-			<span class="free" v-if="item.Price === 0">限时免费</span>
+			<span class="free" v-if="item.Price === 0.00">限时免费</span>
 			<img :src="item.Cover" mode="aspectFill">
 		</div>
 		<div class="info">
