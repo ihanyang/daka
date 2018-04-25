@@ -14,11 +14,11 @@
 
 
 			<template v-if="images.length === 1">
-				<img class="comment-image" :src="images[0].ImageUrl" mode="aspectFill">
+				<img class="comment-image" :src="images[0].ImageUrl" mode="aspectFill" @click="previewImage">
 			</template>
 			<template v-if="images.length > 1">
-				<div class="image-wrapper" :class="{four: images.length === 4}">
-					<img class="content-image" :src="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of images">
+				<div class="image-wrapper" :class="{four: images.length === 4}" @click="previewImage">
+					<img class="content-image" :key="item.ImageUrl" :src="item.ImageUrl" :data-index="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of images">
 				</div>
 			</template>
 
@@ -96,6 +96,18 @@
 		},
 
 		methods: {
+			previewImage(e) {
+				const {index} = e.target.dataset
+				const params = {
+					urls: this.images.map((item) => item.ImageUrl)
+				}
+
+				if (index) {
+					params.current = index
+				}
+
+				wx.previewImage(params)
+			},
 			async getDetail() {
 				const params = {
 					postID: this.$root.$mp.query.id

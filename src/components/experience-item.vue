@@ -121,7 +121,7 @@ footer {
 		</div>
 		<img class="content-image" :src="item.ImageList[0].ImageUrl" mode="aspectFill" v-if="item.ImageList.length === 1" @click="previewImage">
 		<div class="image-wrapper" :class="{four: item.ImageList.length === 4}" v-else @click="previewImage">
-			<img class="content-image" :key="item.ImageUrl" :src="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
+			<img class="content-image" :key="item.ImageUrl" :src="item.ImageUrl" :data-index="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
 		</div>
 		<footer>
 			<div class="time">{{time}}</div>
@@ -165,10 +165,17 @@ footer {
 		},
 
 		methods: {
-			previewImage() {
-				wx.previewImage({
+			previewImage(e) {
+				const {index} = e.target.dataset
+				const params = {
 					urls: this.item.ImageList.map((item) => item.ImageUrl)
-				})
+				}
+
+				if (index) {
+					params.current = index
+				}
+
+				wx.previewImage(params)
 			},
 			go() {
 				wx.navigateTo({
