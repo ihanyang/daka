@@ -26,7 +26,7 @@
 
 		computed: {
 			time() {
-				return timeFormat(+ new Date(this.item.CreateTime))
+				return timeFormat(this.item.CreateTimeStamp)
 			},
 			defaultAvatar() {
 				return getDefaultAvatar()

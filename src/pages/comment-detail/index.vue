@@ -57,7 +57,7 @@
 				avatar: '',
 				nickname: '',
 				content: '',
-				createTime: '',
+				createTimeStamp: '',
 				isJoin: false,
 				images: [],
 				likeNameList: [],
@@ -79,7 +79,7 @@
 				return this.likeNameList.map((item) => item.Nickname).join('、')
 			},
 			time() {
-				return timeFormat(+ new Date(this.createTime))
+				return timeFormat(this.createTimeStamp)
 			},
 			defaultAvatar() {
 				return getDefaultAvatar()
@@ -128,7 +128,7 @@
                 this.avatar = data.data.Avatar
                 this.nickname = data.data.Nickname
                 this.content = data.data.Content
-                this.createTime = data.data.CreateTime
+                this.createTimeStamp = data.data.CreateTimeStamp
                 this.isJoin = data.data.HasJoin
 
                 this.replyList = data.data.ReplyList
