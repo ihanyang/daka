@@ -179,6 +179,7 @@
 }
 .detail-tab-item {
 	margin-right: 20px;
+	font-weight: bold;
 }
 .detail-tab-item.selected {
 	color: #333;
