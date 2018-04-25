@@ -141,40 +141,27 @@
         },
 
         async onLoad() {
-            if (! wx.getStorageSync('isDiscovered')) {
-                return
-            }
 
-            if (! this.isLoadedHomeData) {
+
+            //if (! this.isLoadedHomeData) {
             //if (! this.isLoadedHomeData) {
                 //this.isLoading = true
 
-                wx.showLoading({
-                    title: '正在加载',
-                    mask: true
-                })
 
-                await this.getUserInfo()
+            //}
 
-                wx.hideLoading()
-                //this.isLoading = false
-                this.isLoadedHomeData = true
-
-                wx.setStorageSync('isLoadedHomeData', true)
-            }
-
-            return
+            //return
 
             //this.isDakaRecord = wx.getStorageSync('isJoined')
             //this.isDakaRecord = wx.getStorageSync('isDakaRecord')
 
-            if (wx.getStorageSync('isDakaRecord') || wx.getStorageSync('isJoined')) {
-                this.isDakaRecord = true
-            }
+            // if (wx.getStorageSync('isDakaRecord') || wx.getStorageSync('isJoined')) {
+            //     this.isDakaRecord = true
+            // }
 
             //console.log(this.isDakaRecord)
 
-            if (! this.isDakaRecord) {
+            //if (! this.isDakaRecord) {
                 //console.log(55)
                 // this.isLoading = true
 
@@ -186,11 +173,30 @@
                 //     url: '/pages/discover/index'
                 // })
 
-                this.noAuthorize = true
-            }
+                //this.noAuthorize = true
+            //}
         },
 
         async onShow() {
+            if (! wx.getStorageSync('isDiscovered')) {
+                return
+            }
+
+            if (! wx.getStorageSync('isAuthorization')) {
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
+
+                await this.getUserInfo()
+
+                wx.hideLoading()
+                //this.isLoading = false
+                //this.isLoadedHomeData = true
+
+                wx.setStorageSync('isLoadedHomeData', true)
+            }
+
             const app = getApp()
 
 

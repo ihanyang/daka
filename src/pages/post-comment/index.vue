@@ -27,7 +27,7 @@
 
 <template>
 	<div class="post-wrapper">
-		<textarea v-model.lazy="content" maxlength="300" focus placeholder-class="placeholder" :placeholder="placeholder"></textarea>
+		<textarea v-model.lazy="content" maxlength="300" focus :show-confirm-bar="false" placeholder-class="placeholder" :placeholder="placeholder"></textarea>
 
 		<div class="btn post-btn" @click="post">发表</div>
 	</div>
