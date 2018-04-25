@@ -141,9 +141,23 @@
 					//noClick: true
 				})
 
-				wx.navigateTo({
-					url: '/pages/book-edit/index'
+				let flag = false
+
+				getCurrentPages().forEach((item) => {
+					if (item.route.indexOf('book-edit') !== -1) {
+						flag = true
+					}
 				})
+
+				if (flag) {
+					wx.navigateBack({
+						delta: 1
+					})
+				} else {
+					wx.navigateTo({
+						url: '/pages/book-edit/index'
+					})
+				}
 			}
 		}
 	}
