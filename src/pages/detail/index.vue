@@ -674,7 +674,7 @@
 
                 const app = getApp()
 
-
+                app.day = this.day
                 app.item.HasClock = 1
 
                 if (typeof app.item.TodayClockNum !== 'undefined') {
