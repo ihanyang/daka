@@ -120,6 +120,16 @@
                     return
                 }
 
+                if (this.secretType === -1) {
+                    wx.showToast({
+                        title: '请选择公开或者私密',
+                        icon: 'none',
+                        duration: 2000
+                    })
+
+                    return
+                }
+
                 const app = getApp()
 
                 app.newlyBuild = {

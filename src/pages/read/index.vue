@@ -83,6 +83,10 @@ h1 {
 
 		        this.title = data.data.ChapterTitle
 		        this.content = data.data.Content
+
+		        wx.setNavigationBarTitle({
+		        	title: data.data.BookTitle
+		        })
 			}
 		}
 	}
