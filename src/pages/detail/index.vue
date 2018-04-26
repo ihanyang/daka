@@ -294,9 +294,9 @@
 
             // 自动更新首页我的计划列表
 
-            if (wx.getStorageSync('isLoadedHomeData') && app.tapJoin) {
-                app.dakaList.unshift(Object.assign({}, app.item))
-            }
+            // if (wx.getStorageSync('isLoadedHomeData') && app.tapJoin) {
+            //     app.dakaList.unshift(Object.assign({}, app.item))
+            // }
 
             app.tapJoin = false
 
