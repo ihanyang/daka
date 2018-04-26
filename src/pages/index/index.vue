@@ -153,21 +153,21 @@
             }
 
             //if (! wx.getStorageSync('isAuthorization')) {
-                wx.showLoading({
-                    title: '正在加载',
-                    mask: true
-                })
+                // wx.showLoading({
+                //     title: '正在加载',
+                //     mask: true
+                // })
 
-                await this.getUserInfo()
+                // await this.getUserInfo()
 
 
                 //this.isLoading = false
                 //this.isLoadedHomeData = true
 
-                wx.setStorageSync('isLoadedHomeData', true)
+                //wx.setStorageSync('isLoadedHomeData', true)
             //}
 
-            await this.getHomeData()
+            //await this.getHomeData()
 
 
             //if (! this.isLoadedHomeData) {
@@ -205,6 +205,10 @@
         },
 
         async onShow() {
+            if (! wx.getStorageSync('isDiscovered')) {
+                return
+            }
+
             if (! wx.getStorageSync('isAuthorization')) {
                 wx.showLoading({
                     title: '正在加载',
@@ -213,8 +217,10 @@
 
                 await this.getUserInfo()
 
-                await this.getHomeData()
+                wx.setStorageSync('isLoadedHomeData', true)
             }
+
+            await this.getHomeData()
 
             const app = getApp()
 
@@ -368,10 +374,16 @@
                         fail: () => {
                             wx.hideLoading()
 
-                            const flag = wx.getStorageSync('flag')
+                            //let flag = this.$flag  //getApp().sqFlag
+                            // wx.showModal({
+                            //     title: '23243',
+                            //     content: '' + flag
+                            // })
 
-                            if (flag) {
-                                wx.removeStorageSync('flag')
+                            console.log(this.$sqFlag)
+
+                            if (this.$sqFlag) {
+                                this.$sqFlag = false
 
                                 wx.switchTab({
                                     url: '/pages/discover/index'
@@ -383,7 +395,7 @@
                                     confirmText: '下一步',
                                     success: (res) => {
                                         //if (res.confirm) {
-                                            wx.setStorageSync('flag', true)
+                                            this.$sqFlag = true
 
                                             wx.openSetting({
                                                 success: () => {

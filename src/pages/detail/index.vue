@@ -434,7 +434,7 @@
 
 
                         const params = {
-                            clockPID: this.$root.$mp.query.id || this.$root.$mp.appOptions.scene
+                            clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
                         }
 
 
