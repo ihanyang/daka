@@ -197,7 +197,7 @@
                 return this.isJoin && ! this.isComplete
             },
             isShowPostBtn() {
-                return this.isJoin && ! this.isShowHome
+                return this.isJoin
             },
             defaultAvatar() {
                 return getDefaultAvatar()
