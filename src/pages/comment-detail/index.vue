@@ -190,10 +190,29 @@
 			blur() {
                 this.isShowReplyBox = false
             },
-            comment() {
-            	this.isShowReplyBox = true
+            comment(id, nickname) {
+            	//this.isShowReplyBox = true
+
+            	const app = getApp()
+
+				app.postItem = {
+					PostID: this.$root.$mp.query.id,
+					ReplyList: this.replyList
+				}
+
+				if (typeof id !== 'object') {
+					app.replyID = id
+					app.replyNickname = nickname
+				}
+
+				wx.navigateTo({
+					url: '/pages/post-comment/index'
+				})
             },
             replyHandler(id, nickname) {
+            	this.comment(id, nickname)
+
+            	return
             	this.isShowReplyBox = true
 
             	this.$id = id

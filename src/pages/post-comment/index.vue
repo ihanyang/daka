@@ -95,13 +95,16 @@
 	                    return
 	                }
 
-	                app.postItem.ReplyList = [{
+	                //app.postItem.ReplyList = [, ... app.postItem.ReplyList]
+	                app.postItem.ReplyList.unshift({
+	                    Avatar: wx.getStorageSync('user').avatar,
 	                    Nickname: wx.getStorageSync('user').nickname,
 	                    ReplyContent: this.content,
 	                    ReplyMemberID: app.replyID,
 	                    ReplyID: data.data.id,
+	                    CreateTimeStamp: + new Date(),
 	                    ReplyMemberNickname: app.replyNickname
-	                }, ... app.postItem.ReplyList]
+	                })
 
 	                app.postItem = null
 	                app.replyID = null
