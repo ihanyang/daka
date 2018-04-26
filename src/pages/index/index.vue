@@ -24,11 +24,18 @@
             </div>
         </header>
 
-        <div id="daka-create" class="btn create-daka-btn" :class="{dakaed: isDakaRecord}" @click="go" v-if="! isDakaRecord">创建我的打卡</div>
+        <form @submit="submit" :report-submit="true" v-if="! isDakaRecord">
+            <button form-type="submit" id="daka-create" class="btn create-daka-btn" :class="{dakaed: isDakaRecord}">创建我的打卡</button>
+        </form>
+
+
         <div class="daka-list-wrapper" v-else>
             <header>
                 <h1>我的计划</h1>
-                <div class="btn created-daka-btn" @click="go">创建我的打卡</div>
+                <!-- <div class="btn created-daka-btn" @click="go">创建我的打卡</div> -->
+                <form @submit="submit" :report-submit="true">
+                    <button form-type="submit" id="daka-create" class="btn created-daka-btn">创建我的打卡</button>
+                </form>
             </header>
             <ul>
                 <daka-item :item="item" :index="index" :key="item.url" v-for="item of dakaList"></daka-item>
@@ -43,7 +50,7 @@
     import dakaItem from '@/components/daka-item'
     import loading from '@/components/loading'
 
-    import api from '@/api'
+    import api, {fetch} from '@/api'
     import {login, sendTime, getDefaultAvatar} from '@/utils'
 
     export default {
@@ -279,6 +286,20 @@
         },
 
         methods: {
+            submit(e) {
+                //console.log(e)
+                this.sendFormId(e.target.formId)
+
+                this.go()
+            },
+            sendFormId(id) {
+                const params = {
+                    formId: id,
+                    type: 1
+                }
+
+                fetch('/wxapplib/wxapp/addFormId', params)
+            },
             async getHomeData() {
                 const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
 

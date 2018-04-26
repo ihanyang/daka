@@ -82,7 +82,8 @@ page {
 	& .created-daka-btn {
 		width: 100px;
 		line-height: 28px;
-		color: inherit;
+		color: #AAA;
+		font-size: inherit;
 		border-radius: 14px;
 		border: 2px solid #E6E6E6;
 	}

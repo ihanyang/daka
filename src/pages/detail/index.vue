@@ -49,7 +49,11 @@
             </template>
             <template v-else>
                 <div class="btn daka-btn disabled" v-if="isDaKa">已打卡</div>
-                <div id="daka-daka" class="btn daka-btn" @click="forDaka" v-else>打卡</div>
+
+                <form @submit="submit" :report-submit="true" v-else>
+                    <button form-type="submit" id="daka-daka" class="btn daka-btn">打卡</button>
+                </form>
+                <!-- <div id="daka-daka" class="btn daka-btn" @click="forDaka" v-else>打卡</div> -->
             </template>
         </template>
         <template v-else>
@@ -100,11 +104,19 @@
             </div>
         </template>
 
-        <div id="daka-join" class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div>
+        <!-- <div id="daka-join" class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div> -->
+        <form @submit="submitJoin" :report-submit="true" v-if="! isJoin && ! joining">
+            <button form-type="submit" id="daka-join" class="btn join-btn">加入该小组</button>
+        </form>
+
         <div class="btn join-btn" v-if="joining">加入中...</div>
 
         <div class="go-home" v-if="isShowHome" @click="goHome"></div>
-        <div class="post-comment-btn" v-if="isShowPostBtn" @click="goPost"></div>
+
+        <!-- <div class="post-comment-btn" v-if="isShowPostBtn" @click="goPost"></div> -->
+        <form @submit="submitPost" :report-submit="true" v-if="isShowPostBtn">
+            <button form-type="submit" class="post-comment-btn"></button>
+        </form>
 
         <!-- <div class="reply-box" v-if="isShowReplyBox">
             <textarea v-model.lazy="replyContent" auto-height :show-confirm-bar="false" :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
@@ -282,11 +294,11 @@
 
             // 自动更新首页我的计划列表
 
-            if (wx.getStorageSync('isLoadedHomeData') && wx.getStorageSync('tapJoin')) {
+            if (wx.getStorageSync('isLoadedHomeData') && app.tapJoin) {
                 app.dakaList.unshift(Object.assign({}, app.item))
             }
 
-            wx.removeStorageSync('tapJoin')
+            app.tapJoin = false
 
             this.isShowHome = false
 
@@ -306,6 +318,32 @@
         },
 
         methods: {
+            submit(e) {
+                //console.log(e)
+                this.sendFormId(e.target.formId)
+
+                this.forDaka()
+            },
+            submitJoin(e) {
+                //console.log(e)
+                this.sendFormId(e.target.formId)
+
+                this.join()
+            },
+            submitPost(e) {
+                //console.log(e)
+                this.sendFormId(e.target.formId)
+
+                this.goPost()
+            },
+            sendFormId(id) {
+                const params = {
+                    formId: id,
+                    type: 1
+                }
+
+                fetch('/wxapplib/wxapp/addFormId', params)
+            },
             showReplyBox({id, nickname}) {
                 if (nickname) {
                     this.$replyID = id
@@ -731,7 +769,8 @@
                 }
 
                 // 标记点击过加入按钮
-                wx.setStorageSync('tapJoin', true)
+                //wx.setStorageSync('tapJoin', true)
+                app.tapJoin = true
 
                 // if (! app.joins) {
                 //     app.joins = []
