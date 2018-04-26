@@ -217,7 +217,7 @@
             }
 
             this.page = 1
-            this.dakaList = []
+            //this.dakaList = []
 
                 await this.getUserInfo()
 
@@ -294,7 +294,7 @@
         },
 
         onReachBottom() {
-            this.scroll()
+            this.scroll(2)
         },
         async onPullDownRefresh() {
             this.page = 1
@@ -456,7 +456,7 @@
                 //getApp().dakaList = [... getApp().dakaList, ... data.data.Rows]
                 const app = getApp()
 
-                if (flag) {
+                if (flag === 1) {
                     app.dakaList = []
                     this.dakaList = []
                 }
@@ -466,7 +466,14 @@
 
                 // this.dakaList = app.dakaList
 
-                this.dakaList = this.dakaList.concat(data.data.Rows)
+                if (flag === 2) {
+                    this.dakaList = this.dakaList.concat(data.data.Rows)
+                } else {
+                    this.dakaList = data.data.Rows
+                }
+
+
+                //this.dakaList = this.dakaList.concat(data.data.Rows)
 
 
                 //console.log(this.dakaList)
@@ -479,10 +486,10 @@
                     url: '/pages/newly-build/index'
                 })
             },
-            async scroll() {
+            async scroll(flag) {
                 this.loadingScroll = true
 
-                ! this.isListLoaded && await this.getMyDaKaList()
+                ! this.isListLoaded && await this.getMyDaKaList(flag)
 
                 this.loadingScroll = false
             }
