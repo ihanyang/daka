@@ -1,7 +1,7 @@
 <style src="@/css/detail"></style>
 
 <template>
-    <div class="detail-wrapper">
+    <div class="detail-wrapper" :class="{a: ! isJoin && ! joining}">
         <template v-if="todayCover">
             <header class="detail-header" v-if="isDaKa">
                 <p>已坚持打卡（天）</p>
