@@ -160,7 +160,7 @@
 
                 await this.getUserInfo()
 
-                wx.hideLoading()
+
                 //this.isLoading = false
                 //this.isLoadedHomeData = true
 
@@ -344,6 +344,8 @@
                     wx.getUserInfo({
                         withCredentials: true,
                         success: async (res) => {
+                            wx.hideLoading()
+
                             // 保存一个授权完成的标志 发现页面需要据此更新状态
                             wx.setStorageSync('isAuthorization', true)
 
@@ -355,6 +357,8 @@
                             resolve()
                         },
                         fail: () => {
+                            wx.hideLoading()
+
                             const flag = wx.getStorageSync('flag')
 
                             if (flag) {
