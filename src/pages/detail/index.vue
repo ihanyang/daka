@@ -743,15 +743,18 @@
 
                 this.isJoin = true
 
-                if (this.avatarList.length < 3) {
-                    this.avatarList.unshift({
-                        Avatar: wx.getStorageSync('user').avatar
-                    })
-                } else {
-                    this.avatarList = [{
-                        Avatar: wx.getStorageSync('user').avatar
-                    }, ... this.avatarList.slice(0, 2)]
-                }
+                // if (this.avatarList.length < 3) {
+                //     this.avatarList.unshift({
+                //         Avatar: wx.getStorageSync('user').avatar
+                //     })
+                // } else {
+                //     this.avatarList = [{
+                //         Avatar: wx.getStorageSync('user').avatar
+                //     }, ... this.avatarList.slice(0, 2)]
+                // }
+
+                // 刷新
+                this.getDetailData()
 
                 const app = getApp()
 
