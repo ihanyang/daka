@@ -99,7 +99,7 @@
                     </div>
 
                     <!-- <div class="syllabus-chapter actived" :key="item.SECID" v-text="item.Title" v-if="item.Unlock === 0"></div> -->
-                    <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" @click="goChapterDetail(item.SECID, 0, item.Unlock)" v-for="(item, $ii) of item.ChapterList"></div>
+                    <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" @click="goChapterDetail(item.SECID, 1, item.Unlock)" v-for="(item, $ii) of item.ChapterList"></div>
                 </div>
             </div>
         </template>
@@ -490,6 +490,7 @@
                         // 更新 item
                         const app = getApp()
 
+                        app.day = this.day
                         app.item.IsJoin = this.isJoin
 
                         // if (app.item) {

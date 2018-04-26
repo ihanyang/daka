@@ -290,7 +290,7 @@
 			        	PostID: data.data.id,
 			        	Nickname: wx.getStorageSync('user').nickname,
 			        	Avatar: wx.getStorageSync('user').avatar,
-			        	ClockDay: 0,
+			        	ClockDay: app.day,
 			        	Content: this.experience,
 			        	CreateTimeStamp: + new Date(),
 			        	IsPraise: 0,
