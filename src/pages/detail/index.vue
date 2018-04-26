@@ -754,6 +754,8 @@
                 // }
 
                 // 刷新
+                this.page = 1
+                this.experienceList = []
                 this.getDetailData()
 
                 const app = getApp()

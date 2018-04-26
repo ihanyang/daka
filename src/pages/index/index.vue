@@ -205,7 +205,16 @@
         },
 
         async onShow() {
+            if (! wx.getStorageSync('isAuthorization')) {
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
 
+                await this.getUserInfo()
+
+                await this.getHomeData()
+            }
 
             const app = getApp()
 
