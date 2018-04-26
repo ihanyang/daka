@@ -216,6 +216,9 @@
                 })
             }
 
+            this.page = 1
+            this.dakaList = []
+
                 await this.getUserInfo()
 
                 await this.getHomeData()
@@ -231,11 +234,11 @@
             //     content: '' + JSON.stringify(app)
             // })
 
-            this.dakaList = app.dakaList
-            this.dakaPlanNum = app.dakaPlanNum
-            this.dakaTotalNum = app.dakaTotalNum
+            //this.dakaList = app.dakaList
+            //this.dakaPlanNum = app.dakaPlanNum
+            //this.dakaTotalNum = app.dakaTotalNum
 
-            this.isDakaRecord = app.dakaList.length
+            //this.isDakaRecord = app.dakaList.length
             //console.log(app.dakaList.length)
 
             // 更新状态
@@ -458,10 +461,12 @@
                     this.dakaList = []
                 }
 
-                app.dakaPlanNum = data.data.Total
-                app.dakaList.push(... data.data.Rows)
+                // app.dakaPlanNum = data.data.Total
+                // app.dakaList.push(... data.data.Rows)
 
-                this.dakaList = app.dakaList
+                // this.dakaList = app.dakaList
+
+                this.dakaList = this.dakaList.concat(data.data.Rows)
 
 
                 //console.log(this.dakaList)
