@@ -29,13 +29,13 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": -1,
 			"list": [
 				{
-					"id": -1,
+					"id": 0,
 					"name": "啊啊",
 					"pathName": "pages/detail/index",
-					"query": "id=276",
+					"query": "id=290",
 					"scene": "1001"
 				}
 			]

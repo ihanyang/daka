@@ -214,13 +214,14 @@
                     title: '正在加载',
                     mask: true
                 })
+            }
 
                 await this.getUserInfo()
 
-                wx.setStorageSync('isLoadedHomeData', true)
-            }
+                await this.getHomeData()
 
-            await this.getHomeData()
+                wx.setStorageSync('isLoadedHomeData', true)
+            //}
 
             const app = getApp()
 
