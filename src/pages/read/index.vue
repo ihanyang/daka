@@ -10,6 +10,7 @@ h1 {
 	font-weight: bold;
 }
 .content {
+	margin-bottom: 10px;
 	text-indent: 35px;
 	line-height: 1.7;
 }
@@ -36,7 +37,8 @@ h1 {
 	<div class="read-wrapper">
 		<h1 v-text="title"></h1>
 
-		<text class="content" v-text="content"></text>
+		<!-- <text class="content" v-text="content"></text> -->
+		<p class="content" v-for="item of contentList" v-text="item"></p>
 
 		<div class="tips">今日任务已阅</div>
 	</div>
@@ -49,7 +51,8 @@ h1 {
 		data() {
 			return {
 				title: '',
-				content: ''
+				content: '',
+				contentList: []
 			}
 		},
 
@@ -82,7 +85,9 @@ h1 {
 		        wx.hideLoading()
 
 		        this.title = data.data.ChapterTitle
-		        this.content = data.data.Content.replace(/<br>/g, '\n').replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, '')
+		        //this.content = data.data.Content.replace(/<br>/g, '\n').replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, '')
+
+		        this.contentList = data.data.Content.match(/<p>[^<>]*<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))
 
 		        wx.setNavigationBarTitle({
 		        	title: data.data.BookTitle
