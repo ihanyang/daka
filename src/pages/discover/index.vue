@@ -9,9 +9,13 @@
 
         <p class="no-data" v-if="noList">暂无计划</p>
 
-        <ul class="daka-list" v-else>
-            <daka-item :item="item" :key="item.url" v-for="item of dakaList"></daka-item>
-        </ul>
+        <div class="daka-list" v-else>
+            <form @submit="submit" :data-id="item.ClockPID" :report-submit="true" v-for="item of dakaList">
+                <button form-type="submit" >
+                    <daka-item :item="item" :type="1" :key="item.url" @navigate="navigate"></daka-item>
+                </button>
+            </form>
+        </div>
 
         <div class="loading-scroll" v-if="loadingScroll"></div>
 
@@ -23,7 +27,7 @@
     import loading from '@/components/loading'
     import dakaItem from '@/components/daka-item'
 
-    import api from '@/api'
+    import api, {fetch} from '@/api'
     import {sendTime} from '@/utils'
 
     export default {
@@ -97,6 +101,22 @@
         },
 
         methods: {
+            submit(e) {
+                //console.log(e)
+                this.sendFormId(e.target.formId)
+
+                wx.navigateTo({
+                    url: `/pages/detail/index?id=${e.target.dataset.id}`
+                })
+            },
+            sendFormId(id) {
+                const params = {
+                    formId: id,
+                    type: 1
+                }
+
+                fetch('/wxapplib/wxapp/addFormId', params)
+            },
             async getTagList() {
                 const data = await api.getDiscoverTagList()
 

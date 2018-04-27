@@ -1,5 +1,5 @@
 <style scoped>
-li {
+.li {
     display: flex;
     align-items: center;
     padding: 15px 20px;
@@ -72,7 +72,7 @@ span {
 </style>
 
 <template>
-    <li @click="go(item.ClockPID)">
+    <div class="li" @click="go(item.ClockPID)">
         <div class="figure" :class="{message: item.NewMessageNum}">
             <img mode="aspectFill" :src="item.Cover">
         </div>
@@ -102,14 +102,14 @@ span {
         <template v-else>
             <div class="btn daka-btn">加入</div>
         </template>
-    </li>
+    </div>
 </template>
 
 <script>
     import {getDefaultAvatar} from '@/utils'
 
     export default {
-        props: ['item', 'index'],
+        props: ['item', 'index', 'type'],
 
         computed: {
             defaultAvatar() {
@@ -123,9 +123,13 @@ span {
 
                 app.item = this.item
 
-                wx.navigateTo({
-                    url: `/pages/detail/index?id=${id}`
-                })
+                if (this.type === 1) {
+                    this.$emit('navigate', id)
+                } else {
+                    wx.navigateTo({
+                        url: `/pages/detail/index?id=${id}`
+                    })
+                }
             }
         }
     }

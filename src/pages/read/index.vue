@@ -36,7 +36,7 @@ h1 {
 	<div class="read-wrapper">
 		<h1 v-text="title"></h1>
 
-		<p class="content" v-text="content"></p>
+		<text class="content" v-text="content"></text>
 
 		<div class="tips">今日任务已阅</div>
 	</div>
@@ -82,7 +82,7 @@ h1 {
 		        wx.hideLoading()
 
 		        this.title = data.data.ChapterTitle
-		        this.content = data.data.Content
+		        this.content = data.data.Content.replace(/<br>/g, '\n').replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, '')
 
 		        wx.setNavigationBarTitle({
 		        	title: data.data.BookTitle
