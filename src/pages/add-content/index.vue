@@ -24,6 +24,14 @@
         margin-right: 0;
     }
 
+    & li:nth-child(4n) {
+        margin-right: 0;
+    }
+
+    & li:nth-child(n+5) {
+        margin-top: 10px;
+    }
+
     & .selected {
         color: #22CDCB;
     }
@@ -138,7 +146,12 @@
                 })
 
                 this.tagList = tagData.data.Rows
-                this.tagID = this.tagList[0].TagID
+
+                if (this.tagList.length) {
+                    this.tagID = this.tagList[0].TagID
+                }
+
+
             },
             async getContentList() {
                 const params = {
