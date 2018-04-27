@@ -38,7 +38,7 @@ h1 {
 		<h1 v-text="title"></h1>
 
 		<!-- <text class="content" v-text="content"></text> -->
-		<p class="content" v-for="item of contentList" v-text="item"></p>
+		<p class="content" :key="item" v-for="item of contentList" v-text="item"></p>
 
 		<div class="tips">今日任务已阅</div>
 	</div>
