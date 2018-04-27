@@ -217,6 +217,8 @@
                     AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
                 })
 
+                app.contentList = []
+
 		        wx.switchTab({
 		        	url: '/pages/index/index'
 		        })
