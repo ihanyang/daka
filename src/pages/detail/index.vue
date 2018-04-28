@@ -228,17 +228,6 @@
                 })
             }
 
-            // 用户点击分享进入
-            if (getCurrentPages()[0].route.indexOf('detail') !== -1) {
-                this.isShowHome = true
-
-                // 留个进入过发现页的标记 不是详情
-                wx.setStorage({
-                    key: 'isDiscovered',
-                    data: true
-                })
-            }
-
             wx.showLoading({
                 title: '正在加载',
                 mask: true
@@ -262,6 +251,17 @@
         },
 
         async onShow() {
+            // 用户点击分享进入
+            if (getCurrentPages()[0].route.indexOf('detail') !== -1) {
+                this.isShowHome = true
+
+                // 留个进入过发现页的标记 不是详情
+                wx.setStorage({
+                    key: 'isDiscovered',
+                    data: true
+                })
+            }
+
             const app = getApp()
 
             if (app.post) {

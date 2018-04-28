@@ -87,7 +87,7 @@ h1 {
 		        this.title = data.data.ChapterTitle
 		        //this.content = data.data.Content.replace(/<br>/g, '\n').replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, '')
 
-		        this.contentList = data.data.Content.match(/<p>[^<>]*<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))
+		        this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))
 
 		        wx.setNavigationBarTitle({
 		        	title: data.data.BookTitle
