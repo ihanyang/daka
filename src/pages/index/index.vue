@@ -205,6 +205,10 @@
         },
 
         async onShow() {
+            wx.setNavigationBarTitle({
+                title: '打卡'
+            })
+
             if (! wx.getStorageSync('isDiscovered')) {
                 return
             }

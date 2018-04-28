@@ -245,7 +245,7 @@
                 await this.getDetailData()
             }
 
-            wx.hideLoading()
+
 
 
         },
@@ -487,6 +487,8 @@
                         this.isDaKa = data.data.HasClock
                         this.isComplete = data.data.HasFinish
 
+                        wx.hideLoading()
+
                         // 更新 item
                         const app = getApp()
 
@@ -508,6 +510,8 @@
                         })
                     },
                     fail: () => {
+                        wx.hideLoading()
+
                         const flag = wx.getStorageSync('flag')
 
                         if (flag) {
