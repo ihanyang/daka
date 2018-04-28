@@ -10,7 +10,7 @@
         <p class="no-data" v-if="noList">暂无计划</p>
 
         <div class="daka-list" v-else>
-            <form @submit="submit" :data-id="item.ClockPID" :report-submit="true" v-for="item of dakaList">
+            <form @submit="submit" :data-id="item.ClockPID" :report-submit="true" :key="item.ClockPID" v-for="item of dakaList">
                 <button form-type="submit" >
                     <daka-item :item="item" :type="1" :key="item.url" @navigate="navigate"></daka-item>
                 </button>
