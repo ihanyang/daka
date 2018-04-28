@@ -14,6 +14,7 @@
                     <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
                 </div>
                 <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
+                <div class="header-setting-icon" @click="goSetting"></div>
             </header>
 
             <header class="detail-header-complete" v-else>
@@ -40,6 +41,7 @@
                     <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
                 </div>
                 <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
+                <div class="header-setting-icon" @click="goSetting"></div>
             </header>
         </template>
 
@@ -50,9 +52,12 @@
             <template v-else>
                 <div class="btn daka-btn disabled" v-if="isDaKa">已打卡</div>
 
-                <form @submit="submit" :report-submit="true" v-else>
-                    <button form-type="submit" id="daka-daka" class="btn daka-btn">打卡</button>
-                </form>
+                <div class="daka-btn-wrapper" v-else>
+                    <form @submit="submit" :report-submit="true">
+                        <button form-type="submit" id="daka-daka" class="btn daka-btn">打卡</button>
+                    </form>
+                    <i @click="goSetting" v-if="todayCover"></i>
+                </div>
                 <!-- <div id="daka-daka" class="btn daka-btn" @click="forDaka" v-else>打卡</div> -->
             </template>
         </template>
@@ -264,6 +269,14 @@
 
             const app = getApp()
 
+            if (app.isEdit === 2) {
+                this.page = 1
+                this.experienceList = []
+                this.getDetailData()
+
+                app.isEdit = 1
+            }
+
             if (app.post) {
                 this.index = 0
                 this.experienceList.unshift(app.post)
@@ -361,6 +374,11 @@
             goHome() {
                 wx.switchTab({
                     url: '/pages/index/index'
+                })
+            },
+            goSetting() {
+                wx.navigateTo({
+                    url: `/pages/setting/index?id=${this.$root.$mp.query.id}&type=${this.iszu}`
                 })
             },
             goMessage() {

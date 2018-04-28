@@ -45,6 +45,16 @@
 	background: url(~@/images/invite.png) no-repeat;
 	background-size: 100%;
 }
+.header-setting-icon {
+	width: 20px;
+	height: 20px;
+	padding: 9px 20px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: url(~@/images/setting.png) center no-repeat;
+	background-size: 20px;
+}
 
 .daka-btn {
 	width: 90%;
@@ -53,6 +63,33 @@
 	font-weight: bold;
 	line-height: 55px;
 	background-color: #22CDCB;
+}
+.daka-btn-wrapper {
+	display: flex;
+	width: 90%;
+	margin: 25px auto 0;
+	position: relative;
+	background-color: #22CDCB;
+
+	& form {
+		flex: 1;
+	}
+
+	& .daka-btn {
+		width: 100%;
+		margin: 0;
+		border-radius: 0;
+	}
+
+	& i {
+		width: 50px;
+		height: 55px;
+		position: absolute;
+		top: 0;
+		right: 0;
+		background: #20B6B4 url(~@/images/setting.png) center no-repeat;
+		background-size: 20px;
+	}
 }
 .detail-intro {
 	width: 66%;

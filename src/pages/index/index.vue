@@ -38,7 +38,7 @@
                 </form>
             </header>
             <ul>
-                <daka-item :item="item" :index="index" :key="item.url" v-for="item of dakaList"></daka-item>
+                <daka-item :item="item" :index="index" :key="item.ClockPID" v-for="item of dakaList"></daka-item>
             </ul>
         </div>
 
@@ -213,6 +213,18 @@
                 return
             }
 
+            if (getApp().isEdit === 1) {
+                getApp().isEdit = 0
+                // wx.startPullDownRefresh()
+                // return
+
+                this.page = 1
+
+                this.getMyDaKaList(1)
+
+                return
+            }
+
             if (! wx.getStorageSync('isAuthorization')) {
                 wx.showLoading({
                     title: '正在加载',
@@ -222,15 +234,21 @@
 
             this.page = 1
             //this.dakaList = []
+            const app = getApp()
 
+            if (! app.session) {
                 await this.getUserInfo()
 
                 await this.getHomeData()
 
                 wx.setStorageSync('isLoadedHomeData', true)
-            //}
+            } else {
+                await this.getHomeData()
 
-            const app = getApp()
+                wx.setStorageSync('isLoadedHomeData', true)
+            }
+
+
 
 
             // wx.showModal({
