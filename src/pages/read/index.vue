@@ -57,7 +57,13 @@ h1 {
 		},
 
 		onLoad() {
+			//console.log(111)
 			this.getContent()
+		},
+
+		onUnload() {
+			this.title = ''
+			this.contentList = []
 		},
 
 		methods: {
