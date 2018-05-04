@@ -41,7 +41,7 @@
                     <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
                 </div>
                 <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
-                <div class="header-setting-icon" @click="goSetting"></div>
+                <div class="header-setting-icon" @click="goSetting" v-if="isJoin"></div>
             </header>
         </template>
 
