@@ -122,6 +122,7 @@ li {
 		},
 
 		onUnload() {
+			this.time = ''
 			this.iszu = false
 		},
 

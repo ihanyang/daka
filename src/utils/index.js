@@ -26,6 +26,10 @@ export function login() {
 export function sendTime(time) {
     const app = getApp()
 
+    if (typeof app.enterTime !== 'number') {
+        return
+    }
+
     api.sendTime({
         studyTime: (+ new Date() - app.enterTime) / 1000
     })
