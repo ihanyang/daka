@@ -154,7 +154,8 @@ li {
                 }
 
                 this.isOpen = data.data.IsRemind
-                this.time = `${data.data.RemindTime.split(':')[0]}:${data.data.RemindTime.split(':')[1]}`
+                //this.time = `${data.data.RemindTime.split(':')[0]}:${data.data.RemindTime.split(':')[1]}`
+                this.time = data.data.RemindTime.slice(0, 5)
 
                 wx.setStorage({
                 	key: 'remindTime',
