@@ -183,7 +183,7 @@
                 todayAuthor: '',
 
                 newMessagesNum: 0,
-                newMessagesAvatar: 'http://p3.ifengimg.com/a/2018_16/03dd1d38d0713ae.jpg',
+                newMessagesAvatar: '',
                 experienceList: [],
                 syllabusList: []
             }
@@ -862,6 +862,7 @@
                 this.isRead = 0
 
                 this.page = 1
+                this.syllabusList = []
                 this.experienceList = []
 
                 this.planType = 1
