@@ -9,11 +9,12 @@
 }
 
 .figure {
+    height: 55px;
     position: relative;
 
     & img {
         width: 55px;
-        height: 55px;
+        height: 100%;
         border-radius: 5px;
     }
 }
@@ -35,9 +36,10 @@
     flex-direction: column;
     justify-content: space-between;
     padding-bottom: 5px;
-    margin: 0 20px;
+    margin: 0 15px;
     color: #AAA;
     font-size: 13px;
+    text-align: left;
 }
 
 h2 {

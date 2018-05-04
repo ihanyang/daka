@@ -18,7 +18,7 @@
             </header>
 
             <header class="detail-header-complete" v-else>
-                <div class="detail-header-book" @click="goChapterDetail(todayID, 1)">
+                <div id="daka-today-read" class="detail-header-book" @click="goChapterDetail(todayID, 1)">
                     <img :src="todayCover" mode="aspectFill">
                     <div class="detail-header-book-info">
                         <h3 v-text="todayTitle"></h3>
@@ -80,7 +80,7 @@
 
         <div class="detail-tab">
             <div class="detail-tab-item" :class="{selected: index === 0}" @click="index = 0">打卡心得</div>
-            <div class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
+            <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
         </div>
         <div class="experience-list" v-if="index === 0">
             <experience-item :key="item.PostID" :item="item" v-for="item of experienceList"></experience-item>
@@ -88,7 +88,7 @@
         <p class="no-data" v-if="index === 0 && ! experienceList.length">暂无打卡心得</p>
 
         <template v-if="index === 1">
-            <div class="resume-add-content-btn" @click="goAddContent" v-if="iszu">
+            <div id="daka-add-content" class="resume-add-content-btn" @click="goAddContent" v-if="iszu">
                 <span class="add-icon"></span>
                 添加内容
             </div>
@@ -120,7 +120,7 @@
 
         <!-- <div class="post-comment-btn" v-if="isShowPostBtn" @click="goPost"></div> -->
         <form @submit="submitPost" :report-submit="true" v-if="isShowPostBtn">
-            <button form-type="submit" class="post-comment-btn"></button>
+            <button form-type="submit" id="daka-post-comment" class="post-comment-btn"></button>
         </form>
 
         <!-- <div class="reply-box" v-if="isShowReplyBox">
@@ -511,7 +511,10 @@
                         const app = getApp()
 
                         app.day = this.day
-                        app.item.IsJoin = this.isJoin
+
+                        if (app.item) {
+                            app.item.IsJoin = this.isJoin
+                        }
 
                         // if (app.item) {
                         //     app.item.IsJoin = true

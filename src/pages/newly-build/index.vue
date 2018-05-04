@@ -34,10 +34,10 @@
         </div>
 
         <div class="generation-btn-wrapper">
-            <div class="btn" @click="goAddContent">下一步：添加打卡内容</div>
+            <!-- <div class="btn" @click="goAddContent">下一步：添加打卡内容</div> -->
 
             <template v-if="! generating">
-                <div id="daka-generation" class="btn generation-btn" @click="generationPlan">直接生成计划</div>
+                <div id="daka-generation" class="btn generation-btn" @click="generationPlan">生成计划</div>
             </template>
             <template v-else>
                 <div class="btn generation-btn">生成中...</div>

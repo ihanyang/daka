@@ -160,7 +160,7 @@
 }
 
 .generation-btn-wrapper {
-	display: flex;
+	/* display: flex; */
 	width: 100%;
 	position: fixed;
 	bottom: 0;
@@ -172,13 +172,13 @@
 	box-shadow: 0 0 15px rgba(46, 217, 208, .2);
 	background-color: #FFF;
 
-	& .btn:first-child {
+	/* & .btn:first-child {
 		flex: 1;
 		color: inherit;
-	}
+	} */
 
 	& .generation-btn {
-		width: 150px;
+		/* width: 150px; */
 		color: #FFF;
 		background-color: #22CDCB;
 	}
