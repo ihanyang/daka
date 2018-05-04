@@ -121,6 +121,10 @@ li {
 			this.getRemind()
 		},
 
+		onUnload() {
+			this.iszu = false
+		},
+
 		methods: {
 			go() {
 				wx.navigateTo({
