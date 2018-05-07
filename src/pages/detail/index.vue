@@ -608,7 +608,7 @@
             },
             async getNewMessage() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id
+                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
                 }
                 const data = await fetch('/api/clock/newMessageNum', params)
 
@@ -627,7 +627,7 @@
             },
             async getExperienceList() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id,
+                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene),
                     page: this.page,
                     pagesize: 10
                 }
@@ -674,7 +674,7 @@
             },
             async daka() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id
+                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
                 }
 
                 this.isDaKa = true
@@ -747,7 +747,7 @@
             },
             async join() {
                 const params = {
-                    clockPID: + this.$root.$mp.query.id
+                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
                 }
 
                 this.joining = true
