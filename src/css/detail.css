@@ -50,7 +50,7 @@
 	height: 20px;
 	padding: 9px 20px;
 	position: absolute;
-	top: 0;
+	top: 15px;
 	right: 0;
 	background: url(~@/images/setting.png) center no-repeat;
 	background-size: 20px;
