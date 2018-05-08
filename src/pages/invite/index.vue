@@ -2,21 +2,6 @@
 
 <template>
     <div class="invite-wrapper">
-        <!-- <div class="invite-content">
-            <div class="invite-user-info">
-                <img class="avatar" :src="user.avatar" mode="aspectFill">
-                <span v-text="user.nickname"></span>
-                <p>邀请你加入打卡计划</p>
-            </div>
-
-            <div class="invite-desc">发生地方读书书法大师大师啊书法大师大师大飒飒</div>
-
-            <div class="invite-qr">
-                <img :src="qr" mode="aspectFill">
-                <p>长按识别二维码与{{user.nickname}}一起打卡</p>
-            </div>
-        </div> -->
-
         <div class="invite-content">
             <img :src="qr" mode="aspectFill">
         </div>
@@ -31,19 +16,8 @@
     export default {
         data() {
             return {
-                user: {},
-
                 qr: ''
             }
-        },
-
-        created() {
-            wx.getStorage({
-                key: 'user',
-                success: (res) => {
-                    this.user = res.data
-                }
-            })
         },
 
         onLoad() {
@@ -52,7 +26,7 @@
 
         onShareAppMessage() {
             return {
-                title: `${this.user.nickname}邀请你加入打卡计划`,
+                title: `${getApp().user.nickname}邀请你加入打卡计划`,
                 path: '/pages/index/index'
             }
         },

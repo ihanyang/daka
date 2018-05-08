@@ -5,9 +5,11 @@
     position: fixed;
     left: 0;
     bottom: 0;
-    color: #FFF;
+    color: #22CDCB;
+    font-size: 15px;
     line-height: 60px;
-    background-color: #22CDCB;
+    box-shadow: 0 0 15px rgba(46, 217, 208, .2);
+    background-color: #FFF;
 }
 </style>
 
@@ -189,40 +191,6 @@
                     getApp().isEdit = 2
                 }, 300)
             },
-            goAddContent() {
-                if (! this.title.trim().length) {
-                    wx.showToast({
-                        title: '请填写打卡项目名称',
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
-
-                if (this.secretType === -1) {
-                    wx.showToast({
-                        title: '请选择公开或者私密',
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
-
-                const app = getApp()
-
-                app.newlyBuild = {
-                    title: this.title,
-                    cover: this.newlyBuildImage || this.newlyBuildImg,
-                    detail: this.detail,
-                    secretType: this.secretType
-                }
-
-                wx.navigateTo({
-                    url: '/pages/add-content/index'
-                })
-            },
             selectSecretType(value) {
                 this.secretType = value
             },
@@ -262,80 +230,6 @@
                             duration: 2000
                         })
                     }
-                })
-            },
-            async generationPlan() {
-                if (! this.title.trim().length) {
-                    wx.showToast({
-                        title: '请填写打卡项目名称',
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
-
-                if (this.secretType === -1) {
-                    wx.showToast({
-                        title: '请选择公开或者私密',
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
-
-                this.generating = true
-
-                const params = {
-                    planName: this.title,
-                    cover: this.newlyBuildImage || this.newlyBuildImg,
-                    description: this.detail,
-                    private: this.secretType,
-                    planType: 1
-                }
-
-                const timer = setTimeout(() => {
-                    wx.showLoading({
-                        title: '努力生成中',
-                        mask: true
-                    })
-                }, 1500)
-
-                const data = await api.createDaKa(params)
-
-                if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
-                    return
-                }
-
-                this.generating = false
-
-                const app = getApp()
-
-                app.dakaPlanNum++
-                app.dakaList.unshift({
-                    HasFinish: 0,
-                    HasClock: 0,
-                    ClockNum: 0,
-                    IsJoin: 1,
-                    ClockPID: data.data.id,
-                    PlanName: this.title,
-                    Cover: this.newlyBuildImage || this.newlyBuildImg,
-                    Description: this.detail,
-                    AvatarList: [{Avatar: app.user.avatar}]
-                })
-
-                // 清除掉定时器
-                clearTimeout(timer)
-
-                wx.switchTab({
-                    url: '/pages/index/index'
                 })
             }
         }

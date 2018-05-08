@@ -106,7 +106,7 @@ li {
 		watch: {
 			isOpen(value) {
 				if (value) {
-					this.time = wx.getStorageSync('remindTime')
+					this.time = this.$remindTime
 				}
 
 				this.ok && this.setRemind()
@@ -124,6 +124,8 @@ li {
 		onUnload() {
 			this.time = ''
 			this.iszu = false
+
+			this.$remindTime = ''
 		},
 
 		methods: {
@@ -154,26 +156,14 @@ li {
                 }
 
                 this.isOpen = data.data.IsRemind
-                //this.time = `${data.data.RemindTime.split(':')[0]}:${data.data.RemindTime.split(':')[1]}`
                 this.time = data.data.RemindTime.slice(0, 5)
 
-                wx.setStorage({
-                	key: 'remindTime',
-                	data: this.time
-                })
+                this.$remindTime = this.time
 			},
-			// change(e) {
-			// 	this.isOpen = e.target.value
-
-			// 	this.setRemind()
-			// },
 			changeTime(e) {
 				this.time = e.target.value
 
-				wx.setStorage({
-                	key: 'remindTime',
-                	data: this.time
-                })
+				this.$remindTime = this.time
 
 				this.setRemind()
 			},

@@ -94,14 +94,14 @@
         },
 
         watch: {
-            tagID(value) {
+            async tagID(value) {
                 this.page = 1
                 this.isListLoaded = false
 
                 this.isLodaded = false
                 this.list = []
 
-                this.getContentList()
+                await this.getContentList()
 
                 this.isLodaded = true
             }
@@ -150,8 +150,6 @@
                 if (this.tagList.length) {
                     this.tagID = this.tagList[0].TagID
                 }
-
-
             },
             async getContentList() {
                 const params = {
@@ -172,9 +170,8 @@
                     return
                 }
 
-                this.list = [... this.list, ... data.data.Rows]
-
                 this.page++
+                this.list.push(... data.data.Rows)
                 this.isListLoaded =  this.list.length === data.data.Total
             },
             async scroll() {

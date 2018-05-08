@@ -248,7 +248,9 @@
 
                                         wx.openSetting({
                                             success: () => {
-                                                this.getUserInfo()
+                                                this.getUserInfo().then(() => {
+                                                    this.getHomeData()
+                                                })
                                             }
                                         })
                                     }

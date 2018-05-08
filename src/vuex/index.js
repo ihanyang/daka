@@ -8,6 +8,8 @@ export default new Vuex.Store({
 		dakaTotalNum: 0,
 		dakaPlanNum: 0,
 		dakaList: [],
+
+		experienceList: []
 	},
 	mutations: {
 		setDakaList(state, value) {
@@ -18,7 +20,11 @@ export default new Vuex.Store({
 		},
 		setDakaPlanNum(state, value) {
 			state.dakaPlanNum = value
-		}
+		},
+
+		setExperienceList(state, value) {
+			state.experienceList = value
+		},
 	},
 	actions: {
 		setDakaList({commit}) {

@@ -86,11 +86,7 @@
 
 		methods: {
 			go() {
-				// if (this.item.noClick) {
-				// 	return
-				// }
-
-                wx.navigateTo({
+				wx.navigateTo({
 					url: `/pages/book-detail/index?id=${this.item.CCLID}`
 				})
             },

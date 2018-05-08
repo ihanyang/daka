@@ -72,7 +72,7 @@
                 }
 
                 this.page++
-                this.list = [... this.list, ... data.data.Rows]
+                this.list.push(... data.data.Rows)
 				this.isListLoaded =  this.list.length === data.data.Total
             }
 		}

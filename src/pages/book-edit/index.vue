@@ -80,8 +80,7 @@
 
         <p class="no-content" v-if="! list.length">暂无内容，快去添加吧</p>
 
-        <div class="btn resume-generator-btn" @click="save" v-if="type === 1">保存</div>
-        <div class="btn resume-generator-btn" @click="gen" v-else>生成打卡计划</div>
+        <div class="btn resume-generator-btn" @click="save">保存</div>
 	</div>
 </template>
 
@@ -120,8 +119,6 @@
             },
             del(index) {
             	this.list.splice(index, 1)
-
-            	//getApp().contentList.splice(index, 1)
             },
             async save() {
             	if (! this.list.length) {
@@ -156,72 +153,14 @@
 		            return
 		        }
 
-		        getApp().contentList = []
-		        getApp().newContent = 1
+		        const app = getApp()
+
+		        app.contentList = []
+		        app.newContent = true
 
 		        wx.navigateBack({
 					delta: 3
 				})
-		        // wx.redirectTo({
-		        // 	url: `/pages/detail/index?id=${getApp().$genID}`
-		        // })
-            },
-            async gen() {
-            	if (! this.list.length) {
-            		wx.showToast({
-            			title: '请先添加内容',
-            			icon: 'none'
-            		})
-
-            		return
-            	}
-
-            	const app = getApp()
-				const params = {
-					planName: app.newlyBuild.title,
-					cover: app.newlyBuild.cover,
-					description: app.newlyBuild.detail,
-					private: app.newlyBuild.secretType,
-					planType: 2,
-					CCLIDs: this.list.map((item) => item.CCLID)
-				}
-
-				wx.showLoading({
-					title: '正在生成'
-				})
-
-				const data = await fetch('/api/clock/addPlan', params)
-
-				wx.hideLoading()
-
-				if (data.flag !== 1) {
-		            wx.showModal({
-		                title: '提示',
-		                content: data.msg,
-		                showCancel: false
-		            })
-
-		            return
-		        }
-
-		        app.dakaPlanNum++
-                app.dakaList.unshift({
-                    HasFinish: 0,
-                    HasClock: 0,
-                    ClockNum: 0,
-                    IsJoin: 1,
-                    ClockPID: data.data.id,
-                    PlanName: app.newlyBuild.title,
-                    Cover: app.newlyBuild.cover,
-                    Description: app.newlyBuild.detail,
-                    AvatarList: [{Avatar: app.user.avatar}]
-                })
-
-                app.contentList = []
-
-		        wx.switchTab({
-		        	url: '/pages/index/index'
-		        })
             }
 		}
 	}

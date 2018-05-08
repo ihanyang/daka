@@ -1,7 +1,7 @@
 <style src="@/css/detail"></style>
 
 <template>
-    <div class="detail-wrapper" :class="{a: ! isJoin && ! joining}">
+    <div class="detail-wrapper" :class="{a: ! isJoin}">
         <template v-if="todayCover">
             <header class="detail-header" v-if="isDaKa">
                 <p>已坚持打卡（天）</p>
@@ -58,7 +58,6 @@
                     </form>
                     <i @click="goSetting" v-if="todayCover"></i>
                 </div>
-                <!-- <div id="daka-daka" class="btn daka-btn" @click="forDaka" v-else>打卡</div> -->
             </template>
         </template>
         <template v-else>
@@ -103,30 +102,20 @@
                         </div>
                     </div>
 
-                    <!-- <div class="syllabus-chapter actived" :key="item.SECID" v-text="item.Title" v-if="item.Unlock === 0"></div> -->
                     <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" @click="goChapterDetail(item.SECID, 1, item.Unlock)" v-for="(item, $ii) of item.ChapterList"></div>
                 </div>
             </div>
         </template>
 
-        <!-- <div id="daka-join" class="btn join-btn" v-if="! isJoin && ! joining" @click="join">加入该小组</div> -->
-        <form @submit="submitJoin" :report-submit="true" v-if="! isJoin && ! joining">
+        <form @submit="submitJoin" :report-submit="true" v-if="! isJoin">
             <button form-type="submit" id="daka-join" class="btn join-btn">加入该小组</button>
         </form>
 
-        <div class="btn join-btn" v-if="joining">加入中...</div>
-
         <div class="go-home" v-if="isShowHome" @click="goHome"></div>
 
-        <!-- <div class="post-comment-btn" v-if="isShowPostBtn" @click="goPost"></div> -->
-        <form @submit="submitPost" :report-submit="true" v-if="isShowPostBtn">
+        <form @submit="submitPost" :report-submit="true" v-if="isJoin">
             <button form-type="submit" id="daka-post-comment" class="post-comment-btn"></button>
         </form>
-
-        <!-- <div class="reply-box" v-if="isShowReplyBox">
-            <textarea v-model.lazy="replyContent" auto-height :show-confirm-bar="false" :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
-            <div @click="reply">发表</div>
-        </div> -->
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
 
@@ -139,7 +128,9 @@
     import experienceItem from '@/components/experience-item'
 
     import api, {fetch} from '@/api'
-    import {login, sendTime, getDefaultAvatar} from '@/utils'
+    import {login, getDefaultAvatar} from '@/utils'
+
+    import {mapState} from 'vuex'
 
     export default {
         data() {
@@ -151,29 +142,23 @@
                 isListLoaded: false,
 
                 isShowHome: false,
+
                 day: 0,
                 todayDaKa: 0,
+                totalDaKa: 0,
                 avatarList: [],
                 intro: '',
 
-                totalDaKa: 0,
                 isShrink: true,
                 taped: false,
 
-                isDaKaing: false,
                 isComplete: false,
                 isDaKa: false,
                 isJoin: false,
 
-                iszu: false,
-
-                joining: false,
+                iszu: 0,
 
                 shareModalStatus: false,
-
-                //placeholder: '说点啥',
-                //isShowReplyBox: false,
-                //replyContent: '',
 
                 planType: 1,
                 isRead: 0,
@@ -184,7 +169,7 @@
 
                 newMessagesNum: 0,
                 newMessagesAvatar: '',
-                experienceList: [],
+                //experienceList: [],
                 syllabusList: []
             }
         },
@@ -195,14 +180,13 @@
         },
 
         computed: {
+            ... mapState(['experienceList']),
+
             isLongIntro() {
                 return this.intro.length > 40
             },
             isShowInviteBtn() {
                 return this.isJoin && ! this.isComplete
-            },
-            isShowPostBtn() {
-                return this.isJoin
             },
             defaultAvatar() {
                 return getDefaultAvatar()
@@ -219,6 +203,8 @@
         },
 
         async onLoad() {
+            this.$detailID = this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
+
             const {item, session} = getApp()
 
             if (item) {
@@ -233,29 +219,25 @@
                 })
             }
 
+            if (! session) {
+                await this.getUserInfo()
+            }
+
             wx.showLoading({
                 title: '正在加载',
                 mask: true
             })
 
-            if (! session) {
-                await login()
-                await this.getDetailData()
+            Promise.all([this.getDetailData(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                wx.hideLoading()
+            }).catch((e) => {
+                wx.hideLoading()
 
-                //Promise.all([this.getNewMessage(), this.getExperienceList()]).then(() => {
-                //}).catch(() => {
-                    //wx.hideLoading()
-                //})
-            } else {
-                await this.getDetailData()
-            }
-
-
-
-
+                console.log(e)
+            })
         },
 
-        async onShow() {
+        onShow() {
             // 用户点击分享进入
             if (getCurrentPages()[0].route.indexOf('detail') !== -1) {
                 this.isShowHome = true
@@ -277,22 +259,11 @@
                 app.isEdit = 1
             }
 
-            if (app.post) {
-                this.index = 0
-                this.experienceList.unshift(app.post)
-
-                app.post = null
-            }
-
+            // 添加了新内容
             if (app.newContent) {
-                wx.showLoading({
-                    title: '正在加载',
-                    mask: true
-                })
+                app.newContent = false
 
-                await this.getDetailData()
-
-                wx.hideLoading()
+                this.getDetailData()
             }
 
             app.contentList = []
@@ -303,20 +274,7 @@
         },
 
         onUnload() {
-            const app = getApp()
-
-            // 自动更新首页我的计划列表
-
-            // if (wx.getStorageSync('isLoadedHomeData') && app.tapJoin) {
-            //     app.dakaList.unshift(Object.assign({}, app.item))
-            // }
-
-            app.tapJoin = false
-
-            this.isShowHome = false
-
             this.clear()
-
         },
 
         onHide() {
@@ -328,25 +286,22 @@
 
             return {
                 title: `${app.user.nickname}邀请你加入打卡计划#${app.planName}#`,
-                path: `/pages/detail/index?id=${this.$root.$mp.query.id}`
+                path: `/pages/detail/index?id=${this.$detailID}`
             }
         },
 
         methods: {
             submit(e) {
-                //console.log(e)
                 this.sendFormId(e.target.formId)
 
                 this.forDaka()
             },
             submitJoin(e) {
-                //console.log(e)
                 this.sendFormId(e.target.formId)
 
                 this.join()
             },
             submitPost(e) {
-                //console.log(e)
                 this.sendFormId(e.target.formId)
 
                 this.goPost()
@@ -359,20 +314,6 @@
 
                 fetch('/wxapplib/wxapp/addFormId', params)
             },
-            showReplyBox({id, nickname}) {
-                if (nickname) {
-                    this.$replyID = id
-                    this.$replyNickname = nickname
-                    this.placeholder = `回复${nickname}`
-
-                    this.isShowReplyBox = true
-
-                    return
-                }
-
-                this.placeholder = '说点啥'
-                this.isShowReplyBox = true
-            },
             goHome() {
                 wx.switchTab({
                     url: '/pages/index/index'
@@ -380,7 +321,7 @@
             },
             goSetting() {
                 wx.navigateTo({
-                    url: `/pages/setting/index?id=${this.$root.$mp.query.id}&type=${this.iszu}`
+                    url: `/pages/setting/index?id=${this.$detailID}&type=${this.iszu}`
                 })
             },
             goMessage() {
@@ -389,12 +330,12 @@
                 getApp().item.NewMessageNum = 0
 
                 wx.navigateTo({
-                    url: `/pages/messages/index?id=${this.$root.$mp.query.id}`
+                    url: `/pages/messages/index?id=${this.$detailID}`
                 })
             },
             goPost() {
                 wx.navigateTo({
-                    url: `/pages/post/index?id=${this.$root.$mp.query.id}`
+                    url: `/pages/post/index?id=${this.$detailID}`
                 })
             },
             goChapterDetail(id, isRead, lock) {
@@ -409,8 +350,10 @@
                 })
             },
             goAddContent() {
-                getApp().$genID = this.$root.$mp.query.id
-                getApp().$genType = 1
+                const app = getApp()
+
+                app.$genID = this.$detailID
+                app.$genType = 1
 
                 wx.navigateTo({
                     url: '/pages/add-content/index'
@@ -424,190 +367,135 @@
                 this.isShrink = true
                 this.taped = false
             },
-            async getDetailData() {
-                wx.getUserInfo({
-                    withCredentials: true,
-                    success: async (res) => {
-                        // 保存一个授权完成的标志 发现页面需要据此更新状态
-                        wx.setStorage({
-                            key: 'isAuthorization',
-                            data: true
-                        })
+            async getUserInfo() {
+                await login()
 
-                        const userInfo = {
-                            avatar: res.userInfo.avatarUrl || getDefaultAvatar(),
-                            nickname: res.userInfo.nickName
-                        }
+                await this.getUserInfoWX()
+            },
+            getUserInfoWX() {
+                return new Promise((resolve, reject) => {
+                    wx.getUserInfo({
+                        withCredentials: true,
+                        success: async (res) => {
+                            // 保存一个授权完成的标志 发现页面需要据此更新状态
+                            wx.setStorage({
+                                key: 'isAuthorization',
+                                data: true
+                            })
 
-                        getApp().user = userInfo
-
-
-                        await api.saveUserInfo({
-                            encryptedData: res.encryptedData,
-                            iv: res.iv
-                        })
-
-                        Promise.all([this.getNewMessage(), this.getExperienceList()])
-
-
-                        const params = {
-                            clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
-                        }
-
-
-                        const data = await api.getDetailData(params)
-
-                        if (data.flag !== 1) {
-
-                            // 需要重新登陆
-                            if (data.flag === -100) {
-                                const currentPage = getCurrentPages()[0]
-
-                                wx.reLaunch({
-                                    url: `/${currentPage.route}?id=${currentPage.options.id}`
-                                })
-
-                                return
+                            const userInfo = {
+                                avatar: res.userInfo.avatarUrl || getDefaultAvatar(),
+                                nickname: res.userInfo.nickName
                             }
 
-                            wx.showModal({
-                                title: '提示',
-                                content: data.msg
+                            getApp().user = userInfo
+
+                            const data = await api.saveUserInfo({
+                                encryptedData: res.encryptedData,
+                                iv: res.iv
                             })
 
-                            return
-                        }
+                            resolve()
+                        },
+                        fail: () => {
+                            if (this.$sqFlag) {
+                                this.$sqFlag = false
 
-                        this.day = data.data.ClockDay
-                        this.todayDaKa = data.data.TodayClockNum
-                        this.totalDaKa = data.data.TotalJoinNum
-                        this.avatarList = data.data.AvatarList
-                        this.intro = data.data.Description
-
-                        if (data.data.MenuList) {
-                            this.syllabusList = data.data.MenuList
-                        }
-
-                        this.iszu = data.data.IsPlanOwner
-                        this.isRead = data.data.IsRead
-                        this.planType = data.data.PlanType
-
-                        if (data.data.TodayData) {
-                            this.todayCover = data.data.TodayData.Cover
-                            this.todayAuthor = data.data.TodayData.Chapter.Title
-                            this.todayID = data.data.TodayData.Chapter.SECID
-                            this.todayTitle = data.data.TodayData.Title
-                        }
-
-                        // 获取详情之后需要再次设置，因为第一次进入时可能没授权
-                        this.isJoin = data.data.HasJoin
-                        this.isDaKa = data.data.HasClock
-                        this.isComplete = data.data.HasFinish
-
-                        wx.hideLoading()
-
-                        // 更新 item
-                        const app = getApp()
-
-                        app.day = this.day
-
-                        if (app.item) {
-                            app.item.IsJoin = this.isJoin
-                        }
-
-                        // if (app.item) {
-                        //     app.item.IsJoin = true
-                        // }
-
-                        if (this.isJoin) {
-                            wx.setStorageSync('isJoined', true)
-                        }
-
-                        app.planName = data.data.PlanName
-
-                        wx.setNavigationBarTitle({
-                            title: data.data.PlanName.length > 20 ? `${data.data.PlanName.slice(0, 20)}...` : data.data.PlanName
-                        })
-                    },
-                    fail: () => {
-                        wx.hideLoading()
-
-                        const flag = wx.getStorageSync('flag')
-
-                        if (flag) {
-                            wx.removeStorageSync('flag')
-
-                            wx.switchTab({
-                                url: '/pages/discover/index'
-                            })
-                        } else {
-                            wx.showModal({
-                                content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
-                                showCancel: false,
-                                confirmText: '下一步',
-                                success: (res) => {
-                                    //if (res.confirm) {
-                                        wx.setStorageSync('flag', true)
+                                wx.switchTab({
+                                    url: '/pages/discover/index'
+                                })
+                            } else {
+                                wx.showModal({
+                                    content: '为了保障您能正常使用，请您在接下来的微信授权中点击【允许】',
+                                    showCancel: false,
+                                    confirmText: '下一步',
+                                    success: (res) => {
+                                        this.$sqFlag = true
 
                                         wx.openSetting({
                                             success: () => {
-                                                this.getDetailData()
+                                                this.getUserInfo().then(() => {
+                                                    this.getDetailData()
+                                                })
                                             }
                                         })
-                                    //}
-                                }
-                            })
+                                    }
+                                })
+                            }
                         }
-
-                    }
+                    })
                 })
             },
-            blur() {
-                //this.isShowReplyBox = false
-            },
-            async reply() {
-                const app = getApp()
+            async getDetailData() {
                 const params = {
-                    postID: app.postItem.PostID,
-                    replyContent: this.replyContent
+                    clockPID: this.$detailID
                 }
 
-                if (this.$replyID) {
-                    params.replyID = this.$replyID
-                }
-
-                const data = await fetch('/api/clock-post/reply', params)
+                const data = await api.getDetailData(params)
 
                 if (data.flag !== 1) {
-                    wx.showToast({
-                        title: data.msg,
-                        icon: 'none',
-                        duration: 2000
+
+                    wx.showModal({
+                        title: '提示',
+                        content: data.msg,
+                        showCancel: false
                     })
 
                     return
                 }
 
-                app.postItem.ReplyList = [{
-                    Nickname: app.user.nickname,
-                    ReplyContent: this.replyContent,
-                    ReplyMemberID: this.$replyID,
-                    ReplyMemberNickname: this.$replyNickname
-                }, ... app.postItem.ReplyList]
+                this.day = data.data.ClockDay
+                this.todayDaKa = data.data.TodayClockNum
+                this.totalDaKa = data.data.TotalJoinNum
+                this.avatarList = data.data.AvatarList
+                this.intro = data.data.Description
 
-                app.postItem = null
+                if (data.data.MenuList) {
+                    this.syllabusList = data.data.MenuList
+                }
 
-                this.$replyID = null
-                this.$replyNickname = null
-                this.isShowReplyBox = false
-                this.replyContent = ''
+                this.iszu = data.data.IsPlanOwner
+                this.isRead = data.data.IsRead
+                this.planType = data.data.PlanType
 
+                if (data.data.TodayData) {
+                    this.todayCover = data.data.TodayData.Cover
+                    this.todayAuthor = data.data.TodayData.Chapter.Title
+                    this.todayID = data.data.TodayData.Chapter.SECID
+                    this.todayTitle = data.data.TodayData.Title
+                }
 
-                //this.experienceList = data.data.Rows
+                // 获取详情之后需要再次设置，因为第一次进入时可能没授权
+                this.isJoin = data.data.HasJoin
+                this.isDaKa = data.data.HasClock
+                this.isComplete = data.data.HasFinish
+
+                // 更新 item
+                const app = getApp()
+
+                app.day = this.day
+
+                if (app.item) {
+                    app.item.IsJoin = this.isJoin
+                }
+
+                // if (app.item) {
+                //     app.item.IsJoin = true
+                // }
+
+                if (this.isJoin) {
+                    wx.setStorageSync('isJoined', true)
+                }
+
+                app.planName = data.data.PlanName
+
+                wx.setNavigationBarTitle({
+                    title: data.data.PlanName.length > 20 ? `${data.data.PlanName.slice(0, 20)}...` : data.data.PlanName
+                })
             },
             async getNewMessage() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
+                    clockPID: this.$detailID
                 }
                 const data = await fetch('/api/clock/newMessageNum', params)
 
@@ -626,7 +514,7 @@
             },
             async getExperienceList() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene),
+                    clockPID: this.$detailID,
                     page: this.page,
                     pagesize: 10
                 }
@@ -644,14 +532,10 @@
                 }
 
                 this.page++
-
-                this.experienceList.push(... data.data.Rows)
-
-                //this.experienceList = data.data.Rows
+                this.$store.commit('setExperienceList', [... this.$store.state.experienceList, ... data.data.Rows])
                 this.isListLoaded =  this.experienceList.length === data.data.Total
             },
             forDaka() {
-                //if (this.planType === 2 && ! getApp().isRead) {
                 if (this.todayTitle && ! getApp().isRead) {
                     wx.showModal({
                         title: '提示',
@@ -673,7 +557,7 @@
             },
             async daka() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
+                    clockPID: this.$detailID
                 }
 
                 this.isDaKa = true
@@ -693,7 +577,6 @@
                 }
 
                 this.day++
-
                 this.todayDaKa = data.data.TodayClockNum
 
                 const app = getApp()
@@ -707,55 +590,30 @@
                     app.item.ClockNum++
                 }
 
-
                 wx.showToast({
                     title: '加油，你离梦想又近了一步！',
                     icon: 'none',
                     duration: 2000
                 })
 
-                //if (app.isRead) {
-                    //app.isRead = false
-
-                    setTimeout(() => {
-                        wx.navigateTo({
-                            url: `/pages/post/index?id=${this.$root.$mp.query.id}`
-                        })
+                setTimeout(() => {
+                    wx.navigateTo({
+                        url: `/pages/post/index?id=${this.$detailID}`
                     })
-                //}
-
-                // 首页累计打卡天数自动更新
-
-                const dakaDate = wx.getStorageSync('dakaDate')
-                const date = new Date()
-                const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-
-                if (! dakaDate || dakaDate !== dateString) {
-                    //app.isDakaNumChange = true
-
-                    //console.log(app.dakaTotalNum)
-                    app.dakaTotalNum++
-
-                    //console.log(app.dakaTotalNum)
-
-                    wx.setStorage({
-                        key: 'dakaDate',
-                        data: dateString
-                    })
-                }
+                })
             },
             async join() {
                 const params = {
-                    clockPID: this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
+                    clockPID: this.$detailID
                 }
 
-                this.joining = true
+                this.isJoin = true
 
                 const data = await api.joinGroup(params)
 
-                this.joining = false
-
                 if (data.flag !== 1) {
+                    this.isJoin = false
+
                     wx.showToast({
                         title: data.msg,
                         icon: 'none',
@@ -765,26 +623,26 @@
                     return
                 }
 
-                this.isJoin = true
+                const app = getApp()
 
-                // if (this.avatarList.length < 3) {
-                //     this.avatarList.unshift({
-                //         Avatar: wx.getStorageSync('user').avatar
-                //     })
-                // } else {
-                //     this.avatarList = [{
-                //         Avatar: wx.getStorageSync('user').avatar
-                //     }, ... this.avatarList.slice(0, 2)]
-                // }
+                if (this.avatarList.length < 3) {
+                    this.avatarList.unshift({
+                        Avatar: app.user.avatar
+                    })
+                } else {
+                    this.avatarList = [{
+                        Avatar: app.user.avatar
+                    }, ... this.avatarList.slice(0, 2)]
+                }
 
                 // 刷新
-                this.page = 1
-                this.experienceList = []
-                this.getDetailData()
+                // this.page = 1
+                // this.experienceList = []
+                // this.getDetailData()
 
 
 
-                const app = getApp()
+
 
                 if (app.item) {
                     app.item.IsJoin = 1
@@ -804,26 +662,8 @@
                     this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
                 }
 
-                // 标记点击过加入按钮
-                //wx.setStorageSync('tapJoin', true)
-                app.tapJoin = true
-
-                // if (! app.joins) {
-                //     app.joins = []
-                // }
-
-                // app.joins.push(app.item)
-
-                //getApp().joins.push(getApp().item)
-
-                // wx.setStorage({
-                //     key: 'isNeedUpdate',
-                //     data: true
-                // })
-
                 // 加入任意一个之后，再次进入就直接进入首页
                 wx.setStorageSync('isJoined', true)
-
 
                 wx.showToast({
                     title: '加入成功',
@@ -863,12 +703,12 @@
                 this.avatarList = []
 
                 this.index = 0
-                this.iszu = false
-                this.isRead = 0
+                this.iszu = 0
 
                 this.page = 1
                 this.syllabusList = []
-                this.experienceList = []
+
+                this.$store.commit('setExperienceList', [])
 
                 this.planType = 1
                 this.isRead = 0
@@ -880,9 +720,9 @@
                 this.taped = false
                 this.isShrink = true
                 this.isJoin = false
+                this.isShowHome = false
                 this.isComplete = false
                 this.isDaKa = false
-                this.isDaKaing = false
                 this.shareModalStatus = false
             }
         }

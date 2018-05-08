@@ -219,9 +219,6 @@ footer {
 				wx.navigateTo({
 					url: '/pages/post-comment/index'
 				})
-
-				//this.$emit('showReplyBox', {id, nickname})
-
 			}
 		}
 	}

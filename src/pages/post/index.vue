@@ -252,18 +252,12 @@
 					})
 
 					const imagesURL = await this.uploadImage()
-
 					const a = imagesURL.map((item) => ({url: item, width: 0, height: 0}))
-
-					//const a = await Promise.all(this.getImageInfo(), this.uploadImage())
-
 					const params = {
 						clockPID: this.$root.$mp.query.id,
 						content: this.experience,
 						images: JSON.stringify(a)
 					}
-
-					//this.posting = true
 
 					const data = await fetch('/api/clock-post/add', params)
 
@@ -286,7 +280,7 @@
 
 			        const app = getApp()
 
-			        app.post = {
+			        this.$store.commit('setExperienceList', [{
 			        	PostID: data.data.id,
 			        	Nickname: app.user.nickname,
 			        	Avatar: app.user.avatar,
@@ -296,7 +290,7 @@
 			        	IsPraise: 0,
 			        	ImageList: a.map((item) => ({ImageUrl: item.url})),
 			        	ReplyList: []
-			        }
+			        }, ... this.$store.state.experienceList])
 
 			        wx.navigateBack({
 						delta: 1

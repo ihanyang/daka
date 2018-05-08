@@ -53,6 +53,11 @@
 		},
 
 		onUnload() {
+			const app = getApp()
+
+			app.replyID = null
+			app.replyNickname = ''
+
 			this.content = ''
 			this.placeholder = '光看不如聊一句～'
 		},
@@ -95,10 +100,9 @@
 	                    return
 	                }
 
-	                //app.postItem.ReplyList = [, ... app.postItem.ReplyList]
 	                app.postItem.ReplyList.unshift({
-	                    Avatar: wx.getStorageSync('user').avatar,
-	                    Nickname: wx.getStorageSync('user').nickname,
+	                    Avatar: app.user.avatar,
+	                    Nickname: app.user.nickname,
 	                    ReplyContent: this.content,
 	                    ReplyMemberID: app.replyID,
 	                    ReplyID: data.data.id,
@@ -110,13 +114,11 @@
 	                app.replyID = null
 	                app.replyNickname = null
 
-	                //this.content = ''
-
 	                wx.navigateBack({
 	                	delta: 1
 	                })
 
-	            }, 70)
+	            }, 100)
 			}
 		}
 	}

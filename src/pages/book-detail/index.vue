@@ -26,7 +26,6 @@
 		</div>
 
 		<div class="btn add-book-btn" @click="add">添加</div>
-		<!-- <div class="btn add-book-btn disabled" v-else>已添加</div> -->
 	</div>
 </template>
 
@@ -38,7 +37,7 @@
 			return {
 				isShrink: true,
 				spreaded: false,
-				isAdd: true,
+				//isAdd: true,
 
 				cover: '',
 				title: '',
@@ -137,8 +136,7 @@
 					Cover: this.cover,
 					Title: this.title,
 					Author: this.author,
-					Abstract: this.intro,
-					//noClick: true
+					Abstract: this.intro
 				})
 
 				let flag = false

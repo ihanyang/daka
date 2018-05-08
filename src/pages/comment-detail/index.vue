@@ -1,7 +1,7 @@
 <style src="@/css/comment-detail"></style>
 
 <template>
-	<div class="comment-detail-wrapper" :class="{commenting: isShowReplyBox}">
+	<div class="comment-detail-wrapper">
 		<div class="comment-box">
 			<header v-if="loaded">
 				<img class="avatar" :src="avatar || defaultAvatar" mode="aspectFill">
@@ -34,11 +34,6 @@
 			</div>
 			<reply-item :key="item.CreateTime" :item="item" v-for="item of replyList" @reply="replyHandler"></reply-item>
 		</div>
-
-		<div class="reply-box" v-if="isShowReplyBox">
-            <textarea v-model="replyContent" auto-height :auto-focus="true" maxlength="300" placeholder-class="placeholder" :placeholder="placeholder" @blur="blur"></textarea>
-            <div @click="reply">发表</div>
-        </div>
 	</div>
 </template>
 
@@ -65,7 +60,6 @@
 
 				replyList: [],
 
-				isShowReplyBox: false,
 				placeholder: '说点啥',
                 replyContent: '',
 			}
@@ -187,12 +181,7 @@
                     return
                 }
 			},
-			blur() {
-                this.isShowReplyBox = false
-            },
             comment(id, nickname) {
-            	//this.isShowReplyBox = true
-
             	const app = getApp()
 
 				app.postItem = {
@@ -211,58 +200,6 @@
             },
             replyHandler(id, nickname) {
             	this.comment(id, nickname)
-
-            	return
-            	this.isShowReplyBox = true
-
-            	this.$id = id
-            	this.$nickname = nickname
-            	this.placeholder = `回复${nickname}：`
-            },
-            async reply() {
-                //const app = getApp()
-                const params = {
-                    postID: this.$root.$mp.query.id,
-                    replyContent: this.replyContent
-                }
-
-                if (this.$id) {
-                	params.replyID = this.$id
-                }
-
-                const data = await fetch('/api/clock-post/reply', params)
-
-                if (data.flag !== 1) {
-                    wx.showToast({
-                        title: data.msg,
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
-
-                const app = getApp()
-                const a = {
-                	Nickname: app.user.nickname,
-                	Avatar: app.user.avatar,
-                	ReplyContent: this.replyContent,
-                	CreateTime: + new Date()
-                }
-
-                if (this.$id) {
-                	a.ReplyMemberID = this.$id
-                	a.ReplyMemberNickname = this.$nickname
-                }
-
-                this.replyList.unshift(a)
-
-                this.$id = null
-                this.isShowReplyBox = false
-                this.replyContent = ''
-
-
-                //this.experienceList = data.data.Rows
             }
 		}
 	}
