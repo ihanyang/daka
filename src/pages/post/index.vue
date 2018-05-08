@@ -288,6 +288,7 @@
 			        	Content: this.experience,
 			        	CreateTimeStamp: + new Date(),
 			        	IsPraise: 0,
+			        	HasJoin: app.isJoin,
 			        	ImageList: a.map((item) => ({ImageUrl: item.url})),
 			        	ReplyList: []
 			        }, ... this.$store.state.experienceList])

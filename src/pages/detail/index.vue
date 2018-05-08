@@ -474,6 +474,7 @@
                 const app = getApp()
 
                 app.day = this.day
+                app.isJoin = this.isJoin
 
                 if (app.item) {
                     app.item.IsJoin = this.isJoin
