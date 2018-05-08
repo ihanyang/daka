@@ -18,13 +18,10 @@
         </div>
 
         <div class="loading-scroll" v-if="loadingScroll"></div>
-
-        <loading v-if="isLoading"></loading>
     </div>
 </template>
 
 <script>
-    import loading from '@/components/loading'
     import dakaItem from '@/components/daka-item'
 
     import api, {fetch} from '@/api'
@@ -34,7 +31,6 @@
         data() {
             return {
                 isLodaded: false,
-                isLoading: false,
 
                 tagID: 0,
                 tagList: [],
@@ -48,8 +44,7 @@
         },
 
         components: {
-            dakaItem,
-            loading
+            dakaItem
         },
 
         computed: {
@@ -59,23 +54,30 @@
         },
 
         watch: {
-            tagID(value) {
+            async tagID(value) {
                 this.page = 1
                 this.isListLoaded = false
 
                 this.isLodaded = false
                 this.dakaList = []
 
-                this.getList()
+                await this.getList()
 
                 this.isLodaded = true
             }
         },
 
-        onLoad() {
-            this.getTagList()
+        async onLoad() {
+            wx.showLoading({
+                title: '正在加载',
+                mask: true
+            })
 
-            this.getList()
+            Promise.all([this.getTagList(), this.getList()]).then(() => {
+                wx.hideLoading()
+            }).catch((e) => {
+                console.error(e)
+            })
         },
 
         onShow() {
@@ -102,7 +104,6 @@
 
         methods: {
             submit(e) {
-                //console.log(e)
                 this.sendFormId(e.target.formId)
 
                 wx.navigateTo({
@@ -120,25 +121,22 @@
             async getTagList() {
                 const data = await api.getDiscoverTagList()
 
-                let isShowErrowToast = false
-
-                if (data.flag === 1) {
-                    isShowErrowToast = true
-
-                    //this.tagList = [... this.tagList, ... tagData.data.Rows]
-                    this.tagList = data.data.Rows
-
-                    // 留个进入过发现页的标记
-                    wx.setStorage({
-                        key: 'isDiscovered',
-                        data: true
+                if (data.flag !== 1) {
+                    wx.showModal({
+                        title: '提示',
+                        content: data.msg,
+                        showCancel: false
                     })
+
+                    return
                 }
 
-                ! isShowErrowToast && wx.showModal({
-                    title: '提示',
-                    content: data.msg,
-                    showCancel: false
+                this.tagList = data.data.Rows
+
+                // 留个进入过发现页的标记
+                wx.setStorage({
+                    key: 'isDiscovered',
+                    data: true
                 })
             },
             async getList() {
@@ -148,26 +146,28 @@
                     pagesize: 10
                 }
 
-                this.isLoading = true
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
 
                 const data = await api.getDiscoverDaKaList(params)
 
-                this.isLoading = false
+                wx.hideLoading()
 
-                if (data.flag === 1) {
-                    this.dakaList.push(... data.data.Rows)
-
-                    this.page++
-                    this.isListLoaded =  this.dakaList.length === data.data.Total
+                if (data.flag !== 1) {
+                    wx.showModal({
+                        title: '提示',
+                        content: data.msg,
+                        showCancel: false
+                    })
 
                     return
                 }
 
-                wx.showModal({
-                    title: '出错',
-                    content: data.msg,
-                    showCancel: false
-                })
+                this.page++
+                this.dakaList.push(... data.data.Rows)
+                this.isListLoaded =  this.dakaList.length === data.data.Total
             },
             async scroll() {
                 this.loadingScroll = true

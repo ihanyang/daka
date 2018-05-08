@@ -328,7 +328,7 @@
                     PlanName: this.title,
                     Cover: this.newlyBuildImage || this.newlyBuildImg,
                     Description: this.detail,
-                    AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
+                    AvatarList: [{Avatar: app.user.avatar}]
                 })
 
                 // 清除掉定时器

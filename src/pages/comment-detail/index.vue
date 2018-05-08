@@ -153,7 +153,7 @@
                 this.liked = !! data.data.IsPraise
 			},
 			async like() {
-				const nickname = wx.getStorageSync('user').nickname
+				const {nickname} = getApp().user
 				const params = {
 					postID: this.$root.$mp.query.id
 				}
@@ -242,9 +242,10 @@
                     return
                 }
 
+                const app = getApp()
                 const a = {
-                	Nickname: wx.getStorageSync('user').nickname,
-                	Avatar: wx.getStorageSync('user').avatar,
+                	Nickname: app.user.nickname,
+                	Avatar: app.user.avatar,
                 	ReplyContent: this.replyContent,
                 	CreateTime: + new Date()
                 }

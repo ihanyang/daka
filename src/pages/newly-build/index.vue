@@ -64,12 +64,6 @@
             }
         },
 
-        computed: {
-            isDisabled() {
-                return this.title.trim()
-            }
-        },
-
         async onLoad() {
             const arr = ['http://jhsy-img.caizhu.com/daka/FmG4MSRzdulpZCtJHuGKtSBXon8P.gif', 'http://jhsy-img.caizhu.com/daka/FoyIKF2GBSJvxMzZWZlmmfiB2R1x.gif', 'http://jhsy-img.caizhu.com/daka/FpZmEjtse2nlTY5fhGXLGY2LvUy-.gif', 'http://jhsy-img.caizhu.com/daka/FvKzKmPpen_rEyQOqT_HBfAJHQxS.gif']
 
@@ -110,7 +104,7 @@
                 app.qiniu = data.data
             },
             goAddContent() {
-                if (! this.title.trim().length) {
+                if (! this.title.trim()) {
                     wx.showToast({
                         title: '请填写打卡项目名称',
                         icon: 'none',
@@ -185,7 +179,7 @@
                 })
             },
             async generationPlan() {
-                if (! this.title.trim().length) {
+                if (! this.title.trim()) {
                     wx.showToast({
                         title: '请填写打卡项目名称',
                         icon: 'none',
@@ -215,13 +209,6 @@
                     planType: 1
                 }
 
-                const timer = setTimeout(() => {
-                    wx.showLoading({
-                        title: '努力生成中',
-                        mask: true
-                    })
-                }, 1500)
-
                 const data = await api.createDaKa(params)
 
                 if (data.flag !== 1) {
@@ -236,10 +223,8 @@
 
                 this.generating = false
 
-                const app = getApp()
-
-                app.dakaPlanNum++
-                app.dakaList.unshift({
+                this.$store.commit('setDakaPlanNum', ++ this.$store.state.dakaPlanNum)
+                this.$store.commit('setDakaList', [{
                     HasFinish: 0,
                     HasClock: 0,
                     ClockNum: 0,
@@ -248,11 +233,8 @@
                     PlanName: this.title,
                     Cover: this.newlyBuildImage || this.newlyBuildImg,
                     Description: this.detail,
-                    AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
-                })
-
-                // 清除掉定时器
-                clearTimeout(timer)
+                    AvatarList: [{Avatar: getApp().user.avatar}]
+                }, ... this.$store.state.dakaList])
 
                 wx.switchTab({
                     url: '/pages/index/index'

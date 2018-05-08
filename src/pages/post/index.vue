@@ -288,8 +288,8 @@
 
 			        app.post = {
 			        	PostID: data.data.id,
-			        	Nickname: wx.getStorageSync('user').nickname,
-			        	Avatar: wx.getStorageSync('user').avatar,
+			        	Nickname: app.user.nickname,
+			        	Avatar: app.user.avatar,
 			        	ClockDay: app.day,
 			        	Content: this.experience,
 			        	CreateTimeStamp: + new Date(),

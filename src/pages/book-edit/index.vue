@@ -214,7 +214,7 @@
                     PlanName: app.newlyBuild.title,
                     Cover: app.newlyBuild.cover,
                     Description: app.newlyBuild.detail,
-                    AvatarList: [{Avatar: wx.getStorageSync('user').avatar}]
+                    AvatarList: [{Avatar: app.user.avatar}]
                 })
 
                 app.contentList = []

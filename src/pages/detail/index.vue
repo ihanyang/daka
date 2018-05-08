@@ -324,8 +324,10 @@
         },
 
         onShareAppMessage(res) {
+            const app = getApp()
+
             return {
-                title: `${wx.getStorageSync('user').nickname}邀请你加入打卡计划#${getApp().planName}#`,
+                title: `${app.user.nickname}邀请你加入打卡计划#${app.planName}#`,
                 path: `/pages/detail/index?id=${this.$root.$mp.query.id}`
             }
         },
@@ -433,14 +435,11 @@
                         })
 
                         const userInfo = {
-                            avatar: res.userInfo.avatarUrl,
+                            avatar: res.userInfo.avatarUrl || getDefaultAvatar(),
                             nickname: res.userInfo.nickName
                         }
 
-                        wx.setStorage({
-                            key: 'user',
-                            data: userInfo
-                        })
+                        getApp().user = userInfo
 
 
                         await api.saveUserInfo({
@@ -590,7 +589,7 @@
                 }
 
                 app.postItem.ReplyList = [{
-                    Nickname: wx.getStorageSync('user').nickname,
+                    Nickname: app.user.nickname,
                     ReplyContent: this.replyContent,
                     ReplyMemberID: this.$replyID,
                     ReplyMemberNickname: this.$replyNickname
@@ -783,6 +782,8 @@
                 this.experienceList = []
                 this.getDetailData()
 
+
+
                 const app = getApp()
 
                 if (app.item) {
@@ -790,13 +791,17 @@
 
                     if (app.item.AvatarList.length < 3) {
                         app.item.AvatarList.unshift({
-                            Avatar: wx.getStorageSync('user').avatar
+                            Avatar: app.user.avatar
                         })
                     } else {
                         app.item.AvatarList = [{
-                            Avatar: wx.getStorageSync('user').avatar
+                            Avatar: app.user.avatar
                         }, ... app.item.AvatarList.slice(0, 2)]
                     }
+                }
+
+                if (! this.isShowHome) {
+                    this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
                 }
 
                 // 标记点击过加入按钮

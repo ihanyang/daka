@@ -53,25 +53,19 @@
     import api, {fetch} from '@/api'
     import {login, sendTime, getDefaultAvatar} from '@/utils'
 
+    import {mapState} from 'vuex'
+
     export default {
         data() {
             return {
-                isLoadedHomeData: false,
-                //isLoaded: false,
-
                 userInfo: {},
-
-                isDakaRecord: false,
-                isListLoaded: false,
-                dakaList: [],
-
                 learnHours: 0,
-                dakaTotalNum: 0,
-                //learnPlan: 0,
-                dakaPlanNum: 0,
+
+                isLoadedHomeData: false,
+                isDakaRecord: false,
 
                 page: 1,
-
+                isListLoaded: false,
                 loadingScroll: false
             }
         },
@@ -82,12 +76,8 @@
         },
 
         computed: {
-            // dakaPlanNum() {
-            //     return getApp().dakaPlanNum
-            // },
-            // dakaList() {
-            //     return getApp().dakaList
-            // },
+            ... mapState(['dakaList', 'dakaTotalNum', 'dakaPlanNum']),
+
             learnHoursFormat() {
                 let str
                 const hours = 1 * 60 * 60
@@ -124,7 +114,6 @@
                     const h = ~~ ((time - (day * 24 * hours)) / hours)
                     const m = Math.round(Math.max(1, (time - ((day * 24 * hours) + (h * hours))) / 60))
 
-                    //console.log(h)
                     const hourStr = `${h}小时`
                     const minuteStr = `${m}分钟`
 
@@ -152,56 +141,15 @@
                 return
             }
 
-            //if (! wx.getStorageSync('isAuthorization')) {
-                // wx.showLoading({
-                //     title: '正在加载',
-                //     mask: true
-                // })
+            const app = getApp()
 
-                // await this.getUserInfo()
+            if (! app.session) {
+                await this.getUserInfo()
+            }
 
+            await this.getHomeData()
 
-                //this.isLoading = false
-                //this.isLoadedHomeData = true
-
-                //wx.setStorageSync('isLoadedHomeData', true)
-            //}
-
-            //await this.getHomeData()
-
-
-            //if (! this.isLoadedHomeData) {
-            //if (! this.isLoadedHomeData) {
-                //this.isLoading = true
-
-
-            //}
-
-            //return
-
-            //this.isDakaRecord = wx.getStorageSync('isJoined')
-            //this.isDakaRecord = wx.getStorageSync('isDakaRecord')
-
-            // if (wx.getStorageSync('isDakaRecord') || wx.getStorageSync('isJoined')) {
-            //     this.isDakaRecord = true
-            // }
-
-            //console.log(this.isDakaRecord)
-
-            //if (! this.isDakaRecord) {
-                //console.log(55)
-                // this.isLoading = true
-
-                // await this.getUserInfo()
-
-                // this.isLoading = false
-
-                // wx.switchTab({
-                //     url: '/pages/discover/index'
-                // })
-
-                //this.noAuthorize = true
-            //}
+            wx.setStorageSync('isLoadedHomeData', true)
         },
 
         async onShow() {
@@ -225,45 +173,8 @@
                 return
             }
 
-            if (! wx.getStorageSync('isAuthorization')) {
-                wx.showLoading({
-                    title: '正在加载',
-                    mask: true
-                })
-            }
-
-            this.page = 1
-            //this.dakaList = []
-            const app = getApp()
-
-            if (! app.session) {
-                await this.getUserInfo()
-
-                await this.getHomeData()
-
-                wx.setStorageSync('isLoadedHomeData', true)
-            } else {
-                await this.getHomeData()
-
-                wx.setStorageSync('isLoadedHomeData', true)
-            }
-
-
-
-
-            // wx.showModal({
-            //     title: '提示',
-            //     content: '' + JSON.stringify(app)
-            // })
-
-            //this.dakaList = app.dakaList
-            //this.dakaPlanNum = app.dakaPlanNum
-            //this.dakaTotalNum = app.dakaTotalNum
-
-            //this.isDakaRecord = app.dakaList.length
-            //console.log(app.dakaList.length)
-
             // 更新状态
+            const app = getApp()
             let index = -1
 
             app.item && this.dakaList.forEach((item, i) => {
@@ -274,61 +185,20 @@
 
             index !== -1 && (this.dakaList[index] = app.item)
 
-
-            // if (app.isLearningPlanNumChange) {
-            //     this.learnPlan++
-            //     app.isLearningPlanNumChange = false
-            // }
-
-            // if (app.isDakaNumChange) {
-            //     this.dakaTimes++
-            //     app.isDakaNumChange = false
-            // }
-
-            // 加入计划后自动更新
-
-            // if (app.joins && app.joins.length) {
-            //     this.learnPlan = + this.learnPlan + app.joins.length
-            //     this.dakaList = [... app.joins, ... this.dakaList]
-
-            //     app.joins = []
-            // }
-
-            if (this.noAuthorize) {
-                return
-            }
-
-            // if (this.isLoaded) {
-            //     return
-            // }
-
-            // this.isLoaded = true
-            // wx.showModal({
-            //     title: '提示',
-            //     content: '' + this.isLoadedHomeData
-            // })
-
-
-        },
-
-        onHide() {
-            this.noAuthorize = false
+            app.item = null
         },
 
         onReachBottom() {
-            this.scroll(2)
+            this.scroll()
         },
-        async onPullDownRefresh() {
+        onPullDownRefresh() {
             this.page = 1
 
-            await this.getMyDaKaList(1)
-
-            wx.stopPullDownRefresh()
+            this.getMyDaKaList(true)
         },
 
         methods: {
             submit(e) {
-                //console.log(e)
                 this.sendFormId(e.target.formId)
 
                 this.go()
@@ -341,40 +211,6 @@
 
                 fetch('/wxapplib/wxapp/addFormId', params)
             },
-            async getHomeData() {
-                const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
-
-                this.userInfo = {
-                    avatar: userInfo.data.Avatar || getDefaultAvatar(),
-                    nickname: userInfo.data.Nickname
-                }
-
-                //! wx.getStorageSync('isDakaRecord') &&
-
-                wx.setStorage({
-                    key: 'user',
-                    data: this.userInfo
-                })
-
-                this.learnHours = userInfo.data.StudyTime
-
-                //console.log(userInfo)
-
-                const app = getApp()
-
-                app.dakaTotalNum = + userInfo.data.ClockDay
-                app.dakaPlanNum = + userInfo.data.PlanNum
-
-                this.dakaTotalNum = app.dakaTotalNum
-                this.dakaPlanNum = app.dakaPlanNum
-
-                if (app.dakaPlanNum) {
-                    wx.setStorage({
-                        key: 'isDakaRecord',
-                        data: true
-                    })
-                }
-            },
             async getUserInfo() {
                 await login()
 
@@ -385,8 +221,6 @@
                     wx.getUserInfo({
                         withCredentials: true,
                         success: async (res) => {
-                            wx.hideLoading()
-
                             // 保存一个授权完成的标志 发现页面需要据此更新状态
                             wx.setStorageSync('isAuthorization', true)
 
@@ -398,16 +232,6 @@
                             resolve()
                         },
                         fail: () => {
-                            wx.hideLoading()
-
-                            //let flag = this.$flag  //getApp().sqFlag
-                            // wx.showModal({
-                            //     title: '23243',
-                            //     content: '' + flag
-                            // })
-
-                            console.log(this.$sqFlag)
-
                             if (this.$sqFlag) {
                                 this.$sqFlag = false
 
@@ -420,21 +244,41 @@
                                     showCancel: false,
                                     confirmText: '下一步',
                                     success: (res) => {
-                                        //if (res.confirm) {
-                                            this.$sqFlag = true
+                                        this.$sqFlag = true
 
-                                            wx.openSetting({
-                                                success: () => {
-                                                    this.getUserInfo()
-                                                }
-                                            })
-                                        //}
+                                        wx.openSetting({
+                                            success: () => {
+                                                this.getUserInfo()
+                                            }
+                                        })
                                     }
                                 })
                             }
                         }
                     })
                 })
+            },
+            async getHomeData() {
+                wx.showLoading({
+                    title: '正在加载',
+                    mask: true
+                })
+
+                const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
+
+                this.userInfo = {
+                    avatar: userInfo.data.Avatar || getDefaultAvatar(),
+                    nickname: userInfo.data.Nickname
+                }
+
+                getApp().user = this.userInfo
+
+                this.learnHours = userInfo.data.StudyTime
+
+                this.$store.commit('setDakaTotalNum', + userInfo.data.ClockDay)
+                this.$store.commit('setDakaPlanNum', + userInfo.data.PlanNum)
+
+                wx.hideLoading()
             },
             async getMyDaKaList(flag) {
                 const params = {
@@ -454,6 +298,12 @@
                     return
                 }
 
+                if (flag) {
+                    this.$store.commit('setDakaList', [])
+
+                    wx.stopPullDownRefresh()
+                }
+
                 this.page++
                 this.isDakaRecord = !! data.data.Total
 
@@ -461,45 +311,7 @@
                     item.IsJoin = true
                 })
 
-                // const ids = data.data.Rows.map((item) => item.ClockPID)
-                // const temp = this.dakaList.filter((item, index) => {
-                //     if (ids.indexOf(item.ClockPID) !== -1) {
-                //         return false
-                //     }
-
-                //     return true
-                // })
-
-                // getApp().dakaList = [... temp, ... data.data.Rows]
-
-                // this.dakaList = getApp().dakaList
-                //console.log(getApp().aa)
-                 //console.log(getApp().dakaList)
-                //getApp().dakaList = [... getApp().dakaList, ... data.data.Rows]
-                const app = getApp()
-
-                if (flag === 1) {
-                    app.dakaList = []
-                    this.dakaList = []
-                }
-
-                // app.dakaPlanNum = data.data.Total
-                // app.dakaList.push(... data.data.Rows)
-
-                // this.dakaList = app.dakaList
-
-                if (flag === 2) {
-                    this.dakaList = this.dakaList.concat(data.data.Rows)
-                } else {
-                    this.dakaList = data.data.Rows
-                }
-
-
-                //this.dakaList = this.dakaList.concat(data.data.Rows)
-
-
-                //console.log(this.dakaList)
-                //console.log(getApp().dakaList)
+                this.$store.commit('setDakaList', [... this.$store.state.dakaList, ... data.data.Rows])
 
                 this.isListLoaded =  this.dakaList.length === data.data.Total
             },
@@ -508,10 +320,10 @@
                     url: '/pages/newly-build/index'
                 })
             },
-            async scroll(flag) {
+            async scroll() {
                 this.loadingScroll = true
 
-                ! this.isListLoaded && await this.getMyDaKaList(flag)
+                ! this.isListLoaded && await this.getMyDaKaList()
 
                 this.loadingScroll = false
             }
