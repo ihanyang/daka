@@ -474,7 +474,6 @@
                 const app = getApp()
 
                 app.day = this.day
-                app.isJoin = this.isJoin
 
                 if (app.item) {
                     app.item.IsJoin = this.isJoin
@@ -660,6 +659,7 @@
                 }
 
                 if (! this.isShowHome) {
+                    this.$store.commit('setDakaPlanNum', ++ this.$store.state.dakaPlanNum)
                     this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
                 }
 
