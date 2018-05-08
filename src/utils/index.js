@@ -6,7 +6,7 @@ export function login() {
             success: async (res) => {
                 const data = await api.login({
                     code: res.code,
-                    flag: 'app02'
+                    flag: 'clock'
                 })
 
                 //console.log(response)
