@@ -198,7 +198,7 @@
         onPullDownRefresh() {
             this.page = 1
 
-            this.getMyDaKaList(true)
+            this.getHomeData(true)
         },
 
         methods: {
@@ -264,13 +264,13 @@
                     })
                 })
             },
-            async getHomeData() {
-                wx.showLoading({
+            async getHomeData(flag) {
+                ! flag && wx.showLoading({
                     title: '正在加载',
                     mask: true
                 })
 
-                const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList()])
+                const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList(flag)])
 
                 this.userInfo = {
                     avatar: userInfo.data.Avatar || getDefaultAvatar(),

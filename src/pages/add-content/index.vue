@@ -10,7 +10,7 @@
 
     & li {
         display: inline-block;
-        width: 75px;
+        width: 74px;
         margin-right: 12px;
         color: #333;
         font-size: 16px;
