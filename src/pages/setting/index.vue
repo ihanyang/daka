@@ -99,7 +99,7 @@ li {
 				ok: false,
 				isShowTimePicker: false,
 
-				time: ''
+				time: '20:00'
 			}
 		},
 
@@ -122,7 +122,7 @@ li {
 		},
 
 		onUnload() {
-			this.time = ''
+			this.time = this.$remindTime
 			this.iszu = false
 
 			this.$remindTime = ''
