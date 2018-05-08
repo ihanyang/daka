@@ -62,7 +62,7 @@
                 learnHours: 0,
 
                 isLoadedHomeData: false,
-                isDakaRecord: false,
+                //isDakaRecord: false,
 
                 page: 1,
                 isListLoaded: false,
@@ -77,6 +77,10 @@
 
         computed: {
             ... mapState(['dakaList', 'dakaTotalNum', 'dakaPlanNum']),
+
+            isDakaRecord() {
+                return this.dakaList.length
+            },
 
             learnHoursFormat() {
                 let str
@@ -307,7 +311,7 @@
                 }
 
                 this.page++
-                this.isDakaRecord = !! data.data.Total
+                //this.isDakaRecord = !! data.data.Total
 
                 data.data.Rows.forEach((item) => {
                     item.IsJoin = true
