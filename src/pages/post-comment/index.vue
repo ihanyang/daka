@@ -110,7 +110,7 @@
 	                    ReplyMemberNickname: app.replyNickname
 	                })
 
-	                app.postItem = null
+	                //app.postItem = null
 	                app.replyID = null
 	                app.replyNickname = null
 
