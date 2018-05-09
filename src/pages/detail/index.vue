@@ -135,6 +135,8 @@
     export default {
         data() {
             return {
+                checkStatus: true,
+
                 index: 0,
 
                 page: 1,
@@ -186,7 +188,7 @@
                 return this.intro.length > 40
             },
             isShowInviteBtn() {
-                return this.isJoin && ! this.isComplete
+                return ! this.checkStatus && this.isJoin && ! this.isComplete
             },
             defaultAvatar() {
                 return getDefaultAvatar()
@@ -235,6 +237,9 @@
 
                 console.log(e)
             })
+
+            // 审核开关
+            this.check()
         },
 
         onShow() {
@@ -291,6 +296,19 @@
         },
 
         methods: {
+            async check() {
+                const params = {
+                    flag: 'clock'
+                }
+
+                const data = await fetch('/api/system/getAppConfig', params)
+
+                if (data.flag === 1) {
+                    if (+ data.status01 === 1) {
+                        this.checkStatus = false
+                    }
+                }
+            },
             submit(e) {
                 this.sendFormId(e.target.formId)
 
