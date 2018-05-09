@@ -135,7 +135,7 @@
     export default {
         data() {
             return {
-                checkStatus: true,
+                checkStatus: false,
 
                 index: 0,
 
@@ -304,8 +304,10 @@
                 const data = await fetch('/api/system/getAppConfig', params)
 
                 if (data.flag === 1) {
-                    if (+ data.status01 === 1) {
+                    if (+ data.data.status01 === 1) {
                         this.checkStatus = false
+                    } else {
+                        this.checkStatus = true
                     }
                 }
             },
