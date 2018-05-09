@@ -640,7 +640,14 @@
                 // this.experienceList = []
                 // this.getDetailData()
 
+                // 刷新页面
+                this.getDetailData().catch((e) => {
+                    console.log(e)
+                })
 
+                this.experienceList.forEach((item) => {
+                    item.HasJoin = 1
+                })
 
 
 
