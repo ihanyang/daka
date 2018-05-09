@@ -182,6 +182,8 @@ footer {
 				wx.previewImage(params)
 			},
 			go() {
+				getApp().postItem = this.item
+
 				wx.navigateTo({
 					url: `/pages/comment-detail/index?id=${this.item.PostID}`
 				})

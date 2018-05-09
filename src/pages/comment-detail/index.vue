@@ -142,6 +142,8 @@
                 this.isJoin = data.data.HasJoin
 
                 this.replyList = data.data.ReplyList
+            	getApp().postItem.ReplyList = data.data.ReplyList
+
                 this.likeNameList = data.data.PraiseList
                 this.images = data.data.ImageList
                 this.liked = !! data.data.IsPraise
@@ -183,11 +185,6 @@
 			},
             comment(id, nickname) {
             	const app = getApp()
-
-				app.postItem = {
-					PostID: this.$root.$mp.query.id,
-					ReplyList: this.replyList
-				}
 
 				if (typeof id !== 'object') {
 					app.replyID = id
