@@ -144,12 +144,7 @@
                 this.isJoin = data.data.HasJoin
 
                 this.replyList = data.data.ReplyList
-
-            	const app = getApp()
-
-            	if (app.postItem) {
-            		app.postItem.ReplyList = data.data.ReplyList
-            	}
+            	getApp().postItem.ReplyList = data.data.ReplyList
 
                 this.likeNameList = data.data.PraiseList
                 this.images = data.data.ImageList
