@@ -327,7 +327,12 @@
             goMessage() {
                 // 去掉小红点
                 this.newMessagesNum = 0
-                getApp().item.NewMessageNum = 0
+
+                const app = getApp()
+
+                if (app.item) {
+                    app.item.NewMessageNum = 0
+                }
 
                 wx.navigateTo({
                     url: `/pages/messages/index?id=${this.$detailID}`
