@@ -4,8 +4,12 @@
 	height: 100vh;
 	position: fixed;
 	top: 0;
-	background-color: rgba(0, 0, 0, 0);
-	transition: all 1s;
+	opacity: 0;
+	background-color: rgba(0, 0, 0, .5);
+	transition: all .25s;
+}
+.modal.transition {
+	opacity: 1;
 }
 .modal-content {
 	width: 100%;
@@ -14,7 +18,7 @@
 	box-shadow: 0 0 15px rgba(46, 217, 208, .2);
 	background-color: #F5F5F5;
 	transform: translateY(100%);
-	transition: all .3s;
+	transition: all .25s;
 }
 .modal-content.transition {
 	transform: translateY(0);
@@ -32,7 +36,7 @@
 	margin-top: 5px;
 }
 button.modal-item {
-	opacity: 0;
+	opacity: 1;
 }
 .modal-item.share {
 	width: 100%;
@@ -40,24 +44,13 @@ button.modal-item {
 	top: 0;
 	pointer-events: none;
 }
-.a-enter-active {
-  transition: all .3s ease;
-}
-.a-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.a-enter, .a-leave-to
-/* .slide-fade-leave-active for below version 2.1.8 */ {
-  transform: translateX(10px);
-  opacity: 0;
-}
 </style>
 
 <template>
-	<div class="modal" @click="cancel">
+	<div class="modal" :class="{transition: isTransition}" @click="cancel" @touchmove.stop @transitionend="transitionend">
 		<div class="modal-content" :class="{transition: isTransition}">
 			<button class="modal-item" open-type="share">分享给朋友</button>
-			<div class="modal-item share" @click="go">分享给朋友</div>
+			<div class="modal-item share">分享给朋友</div>
 			<div class="modal-item" @click="go">生成卡片 保存分享</div>
 		</div>
 	</div>
@@ -80,12 +73,13 @@ button.modal-item {
 		},
 
 		methods: {
+			transitionend() {
+				if (! this.isTransition) {
+					this.$emit('cancel')
+				}
+			},
 			cancel() {
 				this.isTransition = false
-
-				setTimeout(() => {
-					this.$emit('cancel')
-				}, 366)
 			},
 			go() {
 				wx.navigateTo({
