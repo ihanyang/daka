@@ -24,7 +24,7 @@
             </div>
         </header>
 
-        <form @submit="submit" :report-submit="true" v-if="! isDakaRecord">
+        <form @submit="submit" :report-submit="true" v-if="! isDakaRecord && ! checkStatus">
             <button form-type="submit" id="daka-create" class="btn create-daka-btn" :class="{dakaed: isDakaRecord}">创建我的打卡</button>
         </form>
 
@@ -33,7 +33,7 @@
             <header>
                 <h1>我的计划</h1>
                 <!-- <div class="btn created-daka-btn" @click="go">创建我的打卡</div> -->
-                <form @submit="submit" :report-submit="true">
+                <form @submit="submit" :report-submit="true" v-if="! checkStatus">
                     <button form-type="submit" id="daka-create" class="btn created-daka-btn">创建我的打卡</button>
                 </form>
             </header>
@@ -58,6 +58,8 @@
     export default {
         data() {
             return {
+                checkStatus: false,
+
                 userInfo: {},
                 learnHours: 0,
 
@@ -153,6 +155,8 @@
 
             await this.getHomeData()
 
+            this.check()
+
             wx.setStorageSync('isLoadedHomeData', true)
         },
 
@@ -202,6 +206,21 @@
         },
 
         methods: {
+            async check() {
+                const params = {
+                    flag: 'clock'
+                }
+
+                const data = await fetch('/api/system/getAppConfig', params)
+
+                if (data.flag === 1) {
+                    if (+ data.data.status01 === 1) {
+                        this.checkStatus = false
+                    } else {
+                        this.checkStatus = true
+                    }
+                }
+            },
             submit(e) {
                 this.sendFormId(e.target.formId)
 

@@ -14,7 +14,7 @@
                     <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
                 </div>
                 <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
-                <div class="header-setting-icon" @click="goSetting"></div>
+                <div class="header-setting-icon" @click="goSetting" v-if="! checkStatus"></div>
             </header>
 
             <header class="detail-header-complete" v-else>
@@ -41,7 +41,7 @@
                     <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
                 </div>
                 <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
-                <div class="header-setting-icon" @click="goSetting" v-if="isJoin"></div>
+                <div class="header-setting-icon" @click="goSetting" v-if="isJoin && ! checkStatus"></div>
             </header>
         </template>
 
@@ -56,7 +56,7 @@
                     <form @submit="submit" :report-submit="true">
                         <button form-type="submit" id="daka-daka" class="btn daka-btn">打卡</button>
                     </form>
-                    <i @click="goSetting" v-if="todayCover"></i>
+                    <i @click="goSetting" v-if="todayCover && ! checkStatus"></i>
                 </div>
             </template>
         </template>
@@ -77,16 +77,16 @@
             你有{{newMessagesNum}}条消息
         </div>
 
-        <div class="detail-tab">
+        <div class="detail-tab" v-if="! checkStatus">
             <div class="detail-tab-item" :class="{selected: index === 0}" @click="index = 0">打卡心得</div>
             <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
         </div>
-        <div class="experience-list" v-if="index === 0">
+        <div class="experience-list" v-if="index === 0 && ! checkStatus">
             <experience-item :key="item.PostID" :item="item" v-for="item of experienceList"></experience-item>
         </div>
-        <p class="no-data" v-if="index === 0 && ! experienceList.length">暂无打卡心得</p>
+        <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus">暂无打卡心得</p>
 
-        <template v-if="index === 1">
+        <template v-if="index === 1 && ! checkStatus">
             <div id="daka-add-content" class="resume-add-content-btn" @click="goAddContent" v-if="iszu">
                 <span class="add-icon"></span>
                 添加内容
@@ -113,7 +113,7 @@
 
         <div class="go-home" v-if="isShowHome" @click="goHome"></div>
 
-        <form @submit="submitPost" :report-submit="true" v-if="isJoin">
+        <form @submit="submitPost" :report-submit="true" v-if="isJoin && ! checkStatus">
             <button form-type="submit" id="daka-post-comment" class="post-comment-btn"></button>
         </form>
 
@@ -257,8 +257,8 @@
             const app = getApp()
 
             if (app.isEdit === 2) {
-                this.page = 1
-                this.experienceList = []
+                //this.page = 1
+                //this.experienceList = []
                 this.getDetailData()
 
                 app.isEdit = 1
