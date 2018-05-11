@@ -127,7 +127,7 @@
     import actionSheet from '@/components/action-sheet'
     import experienceItem from '@/components/experience-item'
 
-    import api, {fetch} from '@/api'
+    import {getDetailData, getNewMessage, getExperienceList, daka, join, getCheckStatus, addFormId} from '@/api'
     import {login, getDefaultAvatar} from '@/utils'
 
     import {mapState} from 'vuex'
@@ -301,7 +301,11 @@
                     flag: 'clock'
                 }
 
-                const data = await fetch('/api/system/getAppConfig', params)
+                const data = await getCheckStatus(params)
+
+                if (! data) {
+                    return
+                }
 
                 if (data.flag === 1) {
                     if (+ data.data.status01 === 1) {
@@ -332,7 +336,7 @@
                     type: 1
                 }
 
-                fetch('/wxapplib/wxapp/addFormId', params)
+                addFormId(params)
             },
             goHome() {
                 wx.switchTab({
@@ -395,7 +399,7 @@
             async getUserInfo() {
                 await login()
 
-                await this.getUserInfoWX()
+                //await this.getUserInfoWX()
             },
             getUserInfoWX() {
                 return new Promise((resolve, reject) => {
@@ -456,16 +460,9 @@
                     clockPID: this.$detailID
                 }
 
-                const data = await api.getDetailData(params)
+                const data = await getDetailData(params)
 
-                if (data.flag !== 1) {
-
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
+                if (! data) {
                     return
                 }
 
@@ -522,15 +519,9 @@
                 const params = {
                     clockPID: this.$detailID
                 }
-                const data = await fetch('/api/clock/newMessageNum', params)
+                const data = await getNewMessage(params)
 
-                if (data.flag !== 1) {
-                    wx.showToast({
-                        title: data.msg,
-                        icon: 'none',
-                        duration: 2000
-                    })
-
+                if (! data) {
                     return
                 }
 
@@ -544,15 +535,9 @@
                     pagesize: 10
                 }
 
-                const data = await fetch('/api/clock-post/list', params)
+                const data = await getExperienceList(params)
 
-                if (data.flag !== 1) {
-                    wx.showToast({
-                        title: data.msg,
-                        icon: 'none',
-                        duration: 2000
-                    })
-
+                if (! data) {
                     return
                 }
 
@@ -587,17 +572,9 @@
 
                 this.isDaKa = true
 
-                const data = await api.daka(params)
+                const data = await daka(params)
 
-                if (data.flag !== 1) {
-                    this.isDaKa = false
-
-                    wx.showToast({
-                        title: data.msg,
-                        icon: 'none',
-                        duration: 2000
-                    })
-
+                if (! data) {
                     return
                 }
 
@@ -634,19 +611,7 @@
 
                 this.isJoin = true
 
-                const data = await api.joinGroup(params)
-
-                if (data.flag !== 1) {
-                    this.isJoin = false
-
-                    wx.showToast({
-                        title: data.msg,
-                        icon: 'none',
-                        duration: 2000
-                    })
-
-                    return
-                }
+                await join(params)
 
                 const app = getApp()
 

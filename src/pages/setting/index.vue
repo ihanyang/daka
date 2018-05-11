@@ -89,7 +89,7 @@ li {
 </template>
 
 <script>
-	import {fetch} from '@/api'
+	import {getDakaSetting, setDakaSetting} from '@/api'
 
 	export default {
 		data() {
@@ -143,19 +143,13 @@ li {
 					clockPID: this.$root.$mp.query.id
 				}
 
-				const data = await fetch('/api/clock/getPlanRemind', params)
+				const data = await getDakaSetting(params)
 
-				if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
+				if (! data) {
+					return
+				}
 
-                    return
-                }
-
-                this.isOpen = data.data.IsRemind
+				this.isOpen = data.data.IsRemind
                 this.time = data.data.RemindTime.slice(0, 5)
 
                 this.$remindTime = this.time
@@ -174,17 +168,7 @@ li {
 					clockPID: this.$root.$mp.query.id
 				}
 
-				const data = await fetch('/api/clock/setPlanRemind', params)
-
-				if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
-                    return
-                }
+				await setDakaSetting(params)
 			}
 		}
 	}

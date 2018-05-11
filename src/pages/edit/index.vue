@@ -51,7 +51,7 @@
 </template>
 
 <script>
-    import api, {fetch} from '@/api'
+    import {getDetailData, getQiNiuToken, editDetailData} from '@/api'
 
     export default {
         data() {
@@ -102,7 +102,11 @@
                     clockPID: this.$root.$mp.query.id
                 }
 
-                const data = await api.getDetailData(params)
+                const data = await getDetailData(params)
+
+                if (! data) {
+                    return
+                }
 
                 this.title = data.data.PlanName
                 this.detail = data.data.Description
@@ -118,15 +122,9 @@
                     return
                 }
 
-                const data = await api.getQiNiuToken()
+                const data = await getQiNiuToken()
 
-                if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
+                if (! data) {
                     return
                 }
 
@@ -168,17 +166,7 @@
                         private: this.secretType
                     }
 
-                    const data = await fetch('/api/clock/editPlan', params)
-
-                    if (data.flag !== 1) {
-                        wx.showModal({
-                            title: '提示',
-                            content: data.msg,
-                            showCancel: false
-                        })
-
-                        return
-                    }
+                    await editDetailData(params)
 
                     wx.showToast({
                         title: '修改成功',

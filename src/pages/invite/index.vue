@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import api from '@/api'
+    import {getInviteCard} from '@/api'
 
     export default {
         data() {
@@ -37,19 +37,17 @@
                     clockPID: + this.$root.$mp.query.id
                 }
 
-                const data = await api.getInviteCard(params)
+                const data = await getInviteCard(params)
+
+                if (! data) {
+                    return
+                }
 
                 if (data.flag === 1) {
                     this.qr = data.data.ImageUrl
 
                     return
                 }
-
-                wx.showModal({
-                    title: '提示',
-                    content: data.msg,
-                    showCancel: false
-                })
             },
             async save() {
                 wx.getSetting({

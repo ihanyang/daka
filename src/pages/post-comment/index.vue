@@ -34,7 +34,7 @@
 </template>
 
 <script>
-	import api, {fetch} from '@/api'
+	import {postExperience} from '@/api'
 
 	export default {
 		data() {
@@ -88,16 +88,10 @@
 	                    params.replyID = app.replyID
 	                }
 
-	                const data = await fetch('/api/clock-post/reply', params)
+	                const data = await postExperience(params)
 
-	                if (data.flag !== 1) {
-	                    wx.showToast({
-	                        title: data.msg,
-	                        icon: 'none',
-	                        duration: 2000
-	                    })
-
-	                    return
+	                if (! data) {
+	                	return
 	                }
 
 	                app.postItem.ReplyList.unshift({

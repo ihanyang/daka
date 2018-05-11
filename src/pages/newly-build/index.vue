@@ -47,7 +47,7 @@
 </template>
 
 <script>
-    import api from '@/api'
+    import {getQiNiuToken, addNewDaka} from '@/api'
 
     export default {
         data() {
@@ -89,7 +89,7 @@
                     return
                 }
 
-                const data = await api.getQiNiuToken()
+                const data = await getQiNiuToken()
 
                 if (data.flag !== 1) {
                     wx.showModal({
@@ -209,7 +209,7 @@
                     planType: 1
                 }
 
-                const data = await api.createDaKa(params)
+                const data = await addNewDaka(params)
 
                 if (data.flag !== 1) {
                     wx.showModal({

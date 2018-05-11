@@ -120,7 +120,7 @@
 </template>
 
 <script>
-	import api, {fetch} from '@/api'
+	import api, {fetch, getQiNiuToken} from '@/api'
 
 	export default {
 		data() {
@@ -152,7 +152,7 @@
                     return
                 }
 
-                const data = await api.getQiNiuToken()
+                const data = await getQiNiuToken()
 
                 if (data.flag !== 1) {
                     wx.showModal({

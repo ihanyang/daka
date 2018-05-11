@@ -64,7 +64,7 @@
 <script>
     import contentItem from '@/components/content-item'
 
-    import api, {fetch} from '@/api'
+    import {fetch} from '@/api'
     import {sendTime} from '@/utils'
 
     export default {
@@ -112,7 +112,11 @@
                 title: '正在加载'
             })
 
-            await this.getAddContentData()
+            try {
+                await this.getAddContentData()
+            } catch (e) {
+                console.log(e)
+            }
 
             wx.hideLoading()
         },

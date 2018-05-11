@@ -1,8 +1,9 @@
 import Fly from 'flyio/dist/npm/wx'
 
 const fly = new Fly()
+const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.jinghao.com' : 'http://jhtest.jinghao.com'
 
-fly.config.baseURL = process.env.NODE_ENV === 'production' ? 'https://api.jinghao.com' : 'http://jhtest.jinghao.com'
+fly.config.baseURL = baseURL
 
 fly.interceptors.request.use((request) => {
     let {body} = request
@@ -35,7 +36,7 @@ fly.interceptors.response.use((response) => {
     if (typeof data === 'string') {
         wx.showModal({
             title: '提示',
-            content: '系统错误',
+            content: '系统错误，请稍候重试',
             showCancel: false
         })
 
@@ -113,10 +114,76 @@ export function getDiscoverDaKaList(params) {
     })
 }
 
+// 新建打卡
+export function addNewDaka(params) {
+    return fly.post('/api/clock/addPlan', params).then((response) => {
+        return response
+    })
+}
+
+// 打卡详情页面
+export function getDetailData(params) {
+    return fly.post('/api/clock/planDetail', params).then((response) => {
+        return response
+    })
+}
+export function daka(params) {
+    return fly.post('/api/clock/clockIn', params).then((response) => {
+        return response
+    })
+}
+export function join(params) {
+    return fly.post('/api/clock/joinPlan', params).then((response) => {
+        return response
+    })
+}
+export function getExperienceList(params) {
+    return fly.post('/api/clock-post/list', params).then((response) => {
+        return response
+    })
+}
+export function getNewMessage(params) {
+    return fly.post('/api/clock/newMessageNum', params).then((response) => {
+        return response
+    })
+}
+
+// 邀请卡页面
+export function getInviteCard(params) {
+    return fly.post('/api/clock/getInviteCard', params).then((response) => {
+        return response
+    })
+}
+
+// 编辑详情
+export function editDetailData(params) {
+    return fly.post('/api/clock/editPlan', params).then((response) => {
+        return response
+    })
+}
+
+// 打卡心得评论页面
+export function postExperience(params) {
+    return fly.post('/api/clock-post/reply', params).then((response) => {
+        return response
+    })
+}
+
+// 设置页面
+export function getDakaSetting(params) {
+    return fly.post('/api/clock/getPlanRemind', params).then((response) => {
+        return response
+    })
+}
+export function setDakaSetting(params) {
+    return fly.post('/api/clock/setPlanRemind', params).then((response) => {
+        return response
+    })
+}
 
 //import {login} from '@/utils'
 
-function fetch(url, data = {}, method = 'POST') {
+export function fetch(url, data = {}, method = 'POST') {
     let header = {}
     const session = getApp().session
 
@@ -161,20 +228,3 @@ function fetch(url, data = {}, method = 'POST') {
         return data
     })
 }
-
-const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.jinghao.com' : 'http://jhtest.jinghao.com'
-
-const api = {
-
-    createDaKa: (params) => fetch('/api/clock/addPlan', params),
-
-    getDetailData: (params) => fetch('/api/clock/planDetail', params),
-    daka: (params) => fetch('/api/clock/clockIn', params),
-    joinGroup: (params) => fetch('/api/clock/joinPlan', params),
-
-    getInviteCard: (params) => fetch('/api/clock/getInviteCard', params),
-}
-
-export {fetch}
-
-export default api
