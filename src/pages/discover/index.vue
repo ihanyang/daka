@@ -24,7 +24,7 @@
 <script>
     import dakaItem from '@/components/daka-item'
 
-    import api, {fetch} from '@/api'
+    import api, {fetch, getDiscoverTagList, getDiscoverDaKaList} from '@/api'
     import {sendTime} from '@/utils'
 
     export default {
@@ -68,14 +68,7 @@
         },
 
         async onLoad() {
-            wx.showLoading({
-                title: '正在加载',
-                mask: true
-            })
-
-            Promise.all([this.getTagList(), this.getList()]).then(() => {
-                wx.hideLoading()
-            }).catch((e) => {
+            Promise.all([this.getTagList(), this.getList()]).catch((e) => {
                 console.error(e)
             })
         },
@@ -119,15 +112,9 @@
                 fetch('/wxapplib/wxapp/addFormId', params)
             },
             async getTagList() {
-                const data = await api.getDiscoverTagList()
+                const data = await getDiscoverTagList()
 
-                if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
+                if (! data) {
                     return
                 }
 
@@ -146,22 +133,9 @@
                     pagesize: 10
                 }
 
-                wx.showLoading({
-                    title: '正在加载',
-                    mask: true
-                })
+                const data = await getDiscoverDaKaList(params)
 
-                const data = await api.getDiscoverDaKaList(params)
-
-                wx.hideLoading()
-
-                if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
+                if (! data) {
                     return
                 }
 

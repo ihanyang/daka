@@ -42,15 +42,18 @@
             </ul>
         </div>
 
+        <auth v-if="authModalStatus" @userInfoHandler="userInfoHandler"></auth>
+
         <div class="loading-scroll" v-if="loadingScroll"></div>
     </div>
 </template>
 
 <script>
+    import auth from '@/components/auth'
     import dakaItem from '@/components/daka-item'
     import loading from '@/components/loading'
 
-    import api, {fetch} from '@/api'
+    import {getCheckStatus, addFormId, getHomeData, getHomeDaKaList} from '@/api'
     import {login, sendTime, getDefaultAvatar} from '@/utils'
 
     import {mapState} from 'vuex'
@@ -58,13 +61,13 @@
     export default {
         data() {
             return {
+                authModalStatus: false,
                 checkStatus: false,
 
                 userInfo: {},
                 learnHours: 0,
 
                 isLoadedHomeData: false,
-                //isDakaRecord: false,
 
                 page: 1,
                 isListLoaded: false,
@@ -73,6 +76,7 @@
         },
 
         components: {
+            auth,
             dakaItem,
             loading
         },
@@ -142,7 +146,11 @@
             }
         },
 
-        async onLoad() {
+        async onShow() {
+            wx.setNavigationBarTitle({
+                title: '打卡'
+            })
+
             if (! wx.getStorageSync('isDiscovered')) {
                 return
             }
@@ -153,24 +161,8 @@
                 await this.getUserInfo()
             }
 
-            await this.getHomeData()
-
-            this.check()
-
-            wx.setStorageSync('isLoadedHomeData', true)
-        },
-
-        async onShow() {
-            wx.setNavigationBarTitle({
-                title: '打卡'
-            })
-
-            if (! wx.getStorageSync('isDiscovered')) {
-                return
-            }
-
-            if (getApp().isEdit === 1) {
-                getApp().isEdit = 0
+            if (app.isEdit === 1) {
+                app.isEdit = 0
                 // wx.startPullDownRefresh()
                 // return
 
@@ -182,7 +174,6 @@
             }
 
             // 更新状态
-            const app = getApp()
             let index = -1
 
             app.item && this.dakaList.forEach((item, i) => {
@@ -202,7 +193,9 @@
         onPullDownRefresh() {
             this.page = 1
 
-            this.getHomeData(true)
+            Promise.all([this.getHomeData(), this.getMyDaKaList(true)]).catch((e) => {
+                console.error(e)
+            })
         },
 
         methods: {
@@ -211,7 +204,11 @@
                     flag: 'clock'
                 }
 
-                const data = await fetch('/api/system/getAppConfig', params)
+                const data = await getCheckStatus(params)
+
+                if (! data) {
+                    return
+                }
 
                 if (data.flag === 1) {
                     if (+ data.data.status01 === 1) {
@@ -232,12 +229,24 @@
                     type: 1
                 }
 
-                fetch('/wxapplib/wxapp/addFormId', params)
+                addFormId(params)
+            },
+            userInfoHandler() {
+                this.authModalStatus = false
+
+                Promise.all([this.getHomeData(), this.getMyDaKaList()]).catch((e) => {
+                    console.error(e)
+                })
+
+                this.check()
+
+                wx.setStorageSync('isLoadedHomeData', true)
             },
             async getUserInfo() {
                 await login()
 
-                await this.getUserInfoWX()
+                this.authModalStatus = true
+                //await this.getUserInfoWX()
             },
             getUserInfoWX() {
                 return new Promise((resolve, reject) => {
@@ -283,27 +292,24 @@
                     })
                 })
             },
-            async getHomeData(flag) {
-                ! flag && wx.showLoading({
-                    title: '正在加载',
-                    mask: true
-                })
+            async getHomeData() {
+                const data = await getHomeData()
 
-                const [userInfo] = await Promise.all([api.getHomeData(), this.getMyDaKaList(flag)])
+                if (! data) {
+                    return
+                }
 
                 this.userInfo = {
-                    avatar: userInfo.data.Avatar || getDefaultAvatar(),
-                    nickname: userInfo.data.Nickname
+                    avatar: data.data.Avatar || getDefaultAvatar(),
+                    nickname: data.data.Nickname
                 }
 
                 getApp().user = this.userInfo
 
-                this.learnHours = userInfo.data.StudyTime
+                this.learnHours = data.data.StudyTime
 
-                this.$store.commit('setDakaTotalNum', + userInfo.data.ClockDay)
-                this.$store.commit('setDakaPlanNum', + userInfo.data.PlanNum)
-
-                wx.hideLoading()
+                this.$store.commit('setDakaTotalNum', + data.data.ClockDay)
+                this.$store.commit('setDakaPlanNum', + data.data.PlanNum)
             },
             async getMyDaKaList(flag) {
                 const params = {
@@ -311,15 +317,9 @@
                     pagesize: 10
                 }
 
-                const data = await api.getMyDaKaList(params)
+                const data = await getHomeDaKaList(params)
 
-                if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
+                if (! data) {
                     return
                 }
 
@@ -330,7 +330,6 @@
                 }
 
                 this.page++
-                //this.isDakaRecord = !! data.data.Total
 
                 data.data.Rows.forEach((item) => {
                     item.IsJoin = true

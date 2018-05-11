@@ -1,10 +1,10 @@
-import api from '@/api'
+import api, {sendTime as sendTimes, login as l} from '@/api'
 
 export function login() {
     return new Promise((resolve, reject) => {
         wx.login({
             success: async (res) => {
-                const data = await api.login({
+                const data = await l({
                     code: res.code,
                     flag: 'clock'
                 })
@@ -30,7 +30,7 @@ export function sendTime(time) {
         return
     }
 
-    api.sendTime({
+    sendTimes({
         studyTime: (+ new Date() - app.enterTime) / 1000
     })
 

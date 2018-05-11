@@ -1,4 +1,120 @@
-import {login} from '@/utils'
+import Fly from 'flyio/dist/npm/wx'
+
+const fly = new Fly()
+
+fly.config.baseURL = process.env.NODE_ENV === 'production' ? 'https://api.jinghao.com' : 'http://jhtest.jinghao.com'
+
+fly.interceptors.request.use((request) => {
+    let {body} = request
+    const session = getApp().session
+
+    //console.log(request)
+
+    wx.showLoading({
+        title: '正在加载',
+        mask: true
+    })
+
+    if (! body) {
+        body = {}
+    }
+
+    session && (body.session = session)
+
+    request.body = Object.keys(body).map((item) => `${encodeURIComponent(item)}=${encodeURIComponent(body[item])}&`).join('').replace(/&$/, '')
+
+    //request.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+})
+
+fly.interceptors.response.use((response) => {
+    wx.hideLoading()
+    //console.log(response)
+
+    const {data} = response
+
+    if (typeof data === 'string') {
+        wx.showModal({
+            title: '提示',
+            content: '系统错误',
+            showCancel: false
+        })
+
+        return null
+    }
+
+    if (data.flag !== 1) {
+        wx.showModal({
+            title: '提示',
+            content: data.msg,
+            showCancel: false
+        })
+
+        return null
+    }
+
+    return data
+}, (error) => {
+    console.log(error)
+})
+
+// 全局
+export function login(params) {
+    return fly.post('/wxapplib/wxapp/login', params).then((response) => {
+        return response
+    })
+}
+export function saveUserInfo(params) {
+    return fly.post('/wxapplib/wxapp/saveUserInfo', params).then((response) => {
+        return response
+    })
+}
+export function addFormId(params) {
+    return fly.post('/wxapplib/wxapp/addFormId', params).then((response) => {
+        return response
+    })
+}
+export function getCheckStatus(params) {
+    return fly.post('/api/system/getAppConfig', params).then((response) => {
+        return response
+    })
+}
+export function getQiNiuToken(params) {
+    return fly.post('/api/system/getUploadToken', params).then((response) => {
+        return response
+    })
+}
+export function sendTime(params) {
+    return fly.post('/api/clock/studyTime', params).then((response) => {
+        return response
+    })
+}
+
+// 首页
+export function getHomeData(params) {
+    return fly.post('/api/clock/home', params).then((response) => {
+        return response
+    })
+}
+export function getHomeDaKaList(params) {
+    return fly.post('/api/clock/planList', params).then((response) => {
+        return response
+    })
+}
+
+// 发现页面
+export function getDiscoverTagList(params) {
+    return fly.post('/api/clock/tagList', params).then((response) => {
+        return response
+    })
+}
+export function getDiscoverDaKaList(params) {
+    return fly.post('/api/clock/pubPlanList', params).then((response) => {
+        return response
+    })
+}
+
+
+//import {login} from '@/utils'
 
 function fetch(url, data = {}, method = 'POST') {
     let header = {}
@@ -49,18 +165,6 @@ function fetch(url, data = {}, method = 'POST') {
 const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.jinghao.com' : 'http://jhtest.jinghao.com'
 
 const api = {
-    sendTime: (params) => fetch('/api/clock/studyTime', params),
-
-    getQiNiuToken: () => fetch('/api/system/getUploadToken'),
-
-    login: (params) => fetch('/wxapplib/wxapp/login', params),
-
-    saveUserInfo: (params) => fetch('/wxapplib/wxapp/saveUserInfo', params),
-    getHomeData: (params) => fetch('/api/clock/home', params),
-    getMyDaKaList: (params) => fetch('/api/clock/planList', params),
-
-    getDiscoverTagList: (params) => fetch('/api/clock/tagList', params),
-    getDiscoverDaKaList: (params) => fetch('/api/clock/pubPlanList', params),
 
     createDaKa: (params) => fetch('/api/clock/addPlan', params),
 
