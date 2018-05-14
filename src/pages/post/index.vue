@@ -120,7 +120,7 @@
 </template>
 
 <script>
-	import api, {fetch, getQiNiuToken} from '@/api'
+	import {postExperience, getQiNiuToken} from '@/api'
 
 	export default {
 		data() {
@@ -154,14 +154,8 @@
 
                 const data = await getQiNiuToken()
 
-                if (data.flag !== 1) {
-                    wx.showModal({
-                        title: '提示',
-                        content: data.msg,
-                        showCancel: false
-                    })
-
-                    return
+                if (! data) {
+                	return
                 }
 
                 app.qiniu = data.data
@@ -247,9 +241,9 @@
 						return
 					}
 
-					wx.showLoading({
-						title: '正在发表'
-					})
+					const app = getApp()
+
+					app.loadingText = '正在发表'
 
 					const imagesURL = await this.uploadImage()
 					const a = imagesURL.map((item) => ({url: item, width: 0, height: 0}))
@@ -259,26 +253,16 @@
 						images: JSON.stringify(a)
 					}
 
-					const data = await fetch('/api/clock-post/add', params)
+					const data = await postExperience(params)
 
-					wx.hideLoading()
-
-					if (data.flag !== 1) {
-			            wx.showModal({
-			                title: '提示',
-			                content: data.msg,
-			                showCancel: false
-			            })
-
-			            return
-			        }
+					if (! data) {
+						return
+					}
 
 			        wx.showToast({
 			        	title: '发布成功',
 			        	icon: 'none'
 			        })
-
-			        const app = getApp()
 
 			        this.$store.commit('setExperienceList', [{
 			        	PostID: data.data.id,

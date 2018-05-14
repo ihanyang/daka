@@ -34,7 +34,7 @@
 </template>
 
 <script>
-	import {postExperience} from '@/api'
+	import {postExperienceComment} from '@/api'
 
 	export default {
 		data() {
@@ -88,7 +88,7 @@
 	                    params.replyID = app.replyID
 	                }
 
-	                const data = await postExperience(params)
+	                const data = await postExperienceComment(params)
 
 	                if (! data) {
 	                	return

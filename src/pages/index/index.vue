@@ -193,6 +193,9 @@
         onPullDownRefresh() {
             this.page = 1
 
+            // 去掉全局的 loading
+            getApp().isShowLoading = true
+
             Promise.all([this.getHomeData(), this.getMyDaKaList(true)]).catch((e) => {
                 console.error(e)
             })

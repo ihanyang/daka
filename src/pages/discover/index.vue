@@ -74,6 +74,9 @@
         },
 
         onShow() {
+            wx.setNavigationBarTitle({
+                title: '发现'
+            })
             return
             const app = getApp()
 

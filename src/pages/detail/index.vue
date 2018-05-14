@@ -598,11 +598,11 @@
                     duration: 2000
                 })
 
-                setTimeout(() => {
-                    wx.navigateTo({
-                        url: `/pages/post/index?id=${this.$detailID}`
-                    })
-                })
+                // setTimeout(() => {
+                //     wx.navigateTo({
+                //         url: `/pages/post/index?id=${this.$detailID}`
+                //     })
+                // })
             },
             async join() {
                 const params = {
@@ -688,6 +688,8 @@
                 })
             },
             async scroll() {
+                getApp().isShowLoading = true
+
                 this.loadingScroll = true
 
                 ! this.isListLoaded && await this.getExperienceList()

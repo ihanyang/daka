@@ -45,7 +45,7 @@ h1 {
 </template>
 
 <script>
-	import {fetch} from '@/api'
+	import {getReadContent} from '@/api'
 
 	export default {
 		data() {
@@ -67,29 +67,17 @@ h1 {
 
 		methods: {
 			async getContent() {
-				wx.showLoading({
-					title: '正在加载'
-				})
-
 				const params = {
 					SECID: this.$root.$mp.query.id
 				}
 
-				const data = await fetch('/api/clock/chapterDetail', params)
+				const data = await getReadContent(params)
 
-				if (data.flag !== 1) {
-		            wx.showModal({
-		                title: '提示',
-		                content: data.msg,
-		                showCancel: false
-		            })
+				if (! data) {
+					return
+				}
 
-		            return
-		        }
-
-		        wx.hideLoading()
-
-		        this.title = data.data.ChapterTitle
+				this.title = data.data.ChapterTitle
 		        //this.content = data.data.Content.replace(/<br>/g, '\n').replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, '')
 
 		        this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))

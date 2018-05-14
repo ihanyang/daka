@@ -74,6 +74,7 @@ page {
 	}
 
 	& h1 {
+		width: 100px;
 		color: #333;
 		font-size: 18px;
 		font-weight: bold;

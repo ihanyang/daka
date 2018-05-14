@@ -7,12 +7,13 @@ fly.config.baseURL = baseURL
 
 fly.interceptors.request.use((request) => {
     let {body} = request
-    const session = getApp().session
+    const app = getApp()
+    const session = app.session
 
     //console.log(request)
 
-    wx.showLoading({
-        title: '正在加载',
+    ! app.isShowLoading && wx.showLoading({
+        title: app.loadingText || '正在加载',
         mask: true
     })
 
@@ -28,7 +29,11 @@ fly.interceptors.request.use((request) => {
 })
 
 fly.interceptors.response.use((response) => {
-    wx.hideLoading()
+    ! getApp().isShowLoading && wx.hideLoading()
+
+    getApp().loadingText = ''
+    getApp().isShowLoading = false
+
     //console.log(response)
 
     const {data} = response
@@ -66,6 +71,8 @@ export function login(params) {
 }
 export function saveUserInfo(params) {
     return fly.post('/wxapplib/wxapp/saveUserInfo', params).then((response) => {
+        getApp().save = true
+
         return response
     })
 }
@@ -163,8 +170,22 @@ export function editDetailData(params) {
 }
 
 // 打卡心得评论页面
-export function postExperience(params) {
+export function postExperienceComment(params) {
     return fly.post('/api/clock-post/reply', params).then((response) => {
+        return response
+    })
+}
+
+// 阅读页面
+export function getReadContent(params) {
+    return fly.post('/api/clock/chapterDetail', params).then((response) => {
+        return response
+    })
+}
+
+// 发表打卡心得页面
+export function postExperience(params) {
+    return fly.post('/api/clock-post/add', params).then((response) => {
         return response
     })
 }
