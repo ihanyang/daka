@@ -30,27 +30,25 @@ header {
 	word-break: break-all;
 }
 .content-image {
-	width: 100%;
-	height: 100px;
+	width: 100px;
+	height: 105px;
 	margin-bottom: 13px;
 	border-radius: 5px;
 }
 .like-icon {
-	width: 15px;
-	height: 20px;
+	padding-left: 28px;
 	margin-left: auto;
 	margin-right: 35px;
 	background: url(~@/images/like.png) no-repeat;
-	background-size: 100%;
+	background-size: 18px 16px;
 }
 .like-icon.liked {
 	background-image: url(~@/images/liked.png);
 }
 .comment-icon {
-	width: 18px;
-	height: 19px;
+	padding-left: 28px;
 	background: url(~@/images/comment.png) no-repeat;
-	background-size: 100%;
+	background-size: 17px 16px;
 }
 footer {
 	display: flex;
@@ -128,8 +126,8 @@ footer {
 			<div class="time">{{time}}</div>
 
 			<template v-if="item.HasJoin">
-				<div class="like-icon" :class="{liked: item.IsPraise}" @click="like"></div>
-				<div class="comment-icon" @click="comment"></div>
+				<div class="like-icon" :class="{liked: item.IsPraise}" @click="like" v-text="item.PraiseNum"></div>
+				<div class="comment-icon" @click="comment" v-text="item.ReplyNum"></div>
 			</template>
 		</footer>
 		<div class="reply-list">

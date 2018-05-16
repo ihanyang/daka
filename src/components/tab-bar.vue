@@ -64,7 +64,7 @@
 
 <template>
 	<div class="tab-bar-wrapper">
-		<div class="icon" :class="item.cname" :key="item" v-for="(item, index) of tabs" @click="go(item.path)">
+		<div class="icon" :class="item.cname" :key="item" v-for="(item, index) of tabs" @click="go(index)">
 			<template v-if="index === 1">
 				<section></section>
 				{{item.text}}
@@ -101,10 +101,28 @@
 		},
 
 		methods:{
-			go(path) {
-				wx.switchTab({
-					url: `/pages/${path}/index`
-				})
+			go(index) {
+				if (index === 0) {
+					wx.switchTab({
+						url: `/pages/index/index`
+					})
+
+					return
+				}
+
+				if (index === 1) {
+					this.$emit('daka')
+
+					return
+				}
+
+				if (index === 2) {
+					wx.navigateTo({
+						url: `/pages/post/index?id=${getApp().detailID}`
+					})
+
+					return
+				}
 			}
 		}
 	}

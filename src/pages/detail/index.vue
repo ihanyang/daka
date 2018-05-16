@@ -1,8 +1,8 @@
 <style src="@/css/detail"></style>
 
 <template>
-    <div class="detail-wrapper" :class="{a: ! isJoin}">
-        <template v-if="todayCover">
+    <div class="detail-wrapper a">
+        <!-- <template v-if="todayCover">
             <header class="detail-header" v-if="isDaKa">
                 <p>已坚持打卡（天）</p>
                 <strong v-text="day"></strong>
@@ -28,24 +28,24 @@
                 </div>
                 <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
             </header>
-        </template>
-        <template v-else>
+        </template> -->
             <header class="detail-header">
                 <p>已坚持打卡（天）</p>
                 <strong v-text="day"></strong>
 
-                <p v-if="isComplete">共有{{totalDaKa}}人完成打卡</p>
-                <p v-else>今日已有{{todayDaKa}}人打卡</p>
-
                 <div class="detail-avatar-list">
                     <img :key="item.Avatar" :src="item.Avatar || defaultAvatar" v-for="item of avatarList">
+                    <p>{{joinNum}}人已加入</p>
                 </div>
-                <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
-                <div class="header-setting-icon" @click="goSetting" v-if="isJoin && ! checkStatus"></div>
-            </header>
-        </template>
 
-        <template v-if="isJoin">
+                <div class="detail-tt-wrapper" v-if="isJoin">
+                    <div class="item adds-icon" v-if="iszu" @click="goAddContent">添加内容</div>
+                    <div class="item setting-icon" @click="goSetting">设置</div>
+                    <div class="item invite-icon" @click="showActionSheet">邀请好友</div>
+                </div>
+            </header>
+
+        <!-- <template v-if="isJoin">
             <template v-if="isComplete">
                 <div class="btn daka-btn disabled">已完成</div>
             </template>
@@ -62,13 +62,9 @@
         </template>
         <template v-else>
             <div class="btn daka-btn" @click="dakaPrompt">打卡</div>
-        </template>
+        </template> -->
 
-        <div class="detail-intro">
-            <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
-            <div class="btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
-            <div class="btn" @click="shrink" v-if="isLongIntro && taped">收起</div>
-        </div>
+
 
         <button open-type="share"></button>
 
@@ -77,16 +73,50 @@
             你有{{newMessagesNum}}条消息
         </div>
 
+        <div class="today-card-wrapper" v-if="todayCover">
+            <h1>
+                今日任务
+                <div class="btn ke-btn" @click="goKe">课程表</div>
+            </h1>
+            <div class="today-card" @click="goChapterDetail(todayID, 1)">
+                <img :src="todayCover">
+                <div class="today-card-info">
+                    <h3 v-text="todayTitle"></h3>
+                    <p v-text="todayAuthor"></p>
+                </div>
+            </div>
+        </div>
+
         <div class="detail-tab" v-if="! checkStatus && loaded">
-            <div class="detail-tab-item" :class="{selected: index === 0}" @click="index = 0">打卡心得</div>
-            <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
+            <div class="detail-tab-item" :class="{selected: index === i}" @click="index = i" v-text="item" v-for="(item, i) of tabs"></div>
+            <!-- <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div> -->
         </div>
         <div class="experience-list" v-if="index === 0 && ! checkStatus">
             <experience-item :key="item.PostID" :item="item" v-for="item of experienceList"></experience-item>
         </div>
         <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus && loaded">暂无打卡心得</p>
 
-        <template v-if="index === 1 && ! checkStatus">
+        <div class="detail-intro" v-if="index === 1">
+            <template v-if="intro">
+                <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
+                <div class="btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
+                <div class="btn" @click="shrink" v-if="isLongIntro && taped">收起</div>
+            </template>
+            <template v-else>
+                <p class="no">组长很懒，没有填写打卡描述~</p>
+            </template>
+        </div>
+
+        <div class="cc-list" v-if="index === 2">
+            <div class="cc-item" :class="{zu: item.IsPlanOwner == 1}" v-for="item of ccList">
+                <img :src="item.Avatar">
+                <p v-text="item.Nickname"></p>
+                <span>已坚持打卡{{item.ClockDay}}天</span>
+            </div>
+        </div>
+
+
+        <!-- <template v-if="index === 1 && ! checkStatus">
             <div id="daka-add-content" class="resume-add-content-btn" @click="goAddContent" v-if="iszu">
                 <span class="add-icon"></span>
                 添加内容
@@ -105,17 +135,15 @@
                     <div class="syllabus-chapter" :class="{actived: item.Unlock === 0}" :key="item.SECID" v-text="item.Title" @click="goChapterDetail(item.SECID, 1, item.Unlock)" v-for="(item, $ii) of item.ChapterList"></div>
                 </div>
             </div>
-        </template>
+        </template> -->
 
         <form @submit="submitJoin" :report-submit="true" v-if="! isJoin">
             <button form-type="submit" id="daka-join" class="btn join-btn">加入该小组</button>
         </form>
 
-        <div class="go-home" v-if="isShowHome" @click="goHome"></div>
-
-        <form @submit="submitPost" :report-submit="true" v-if="isJoin && ! checkStatus">
+        <!-- <form @submit="submitPost" :report-submit="true" v-if="isJoin && ! checkStatus">
             <button form-type="submit" id="daka-post-comment" class="post-comment-btn"></button>
-        </form>
+        </form> -->
 
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
 
@@ -123,7 +151,7 @@
 
         <auth v-if="authModalStatus" @userInfoHandler="userInfoHandler"></auth>
 
-        <tab-bar></tab-bar>
+        <tab-bar v-if="isJoin" @daka="forDaka"></tab-bar>
     </div>
 </template>
 
@@ -133,7 +161,7 @@
     import actionSheet from '@/components/action-sheet'
     import experienceItem from '@/components/experience-item'
 
-    import {getDetailData, getNewMessage, getExperienceList, daka, join, getCheckStatus, addFormId} from '@/api'
+    import {getDetailData, getCCList, getNewMessage, getExperienceList, daka, join, getCheckStatus, addFormId} from '@/api'
     import {login, getDefaultAvatar} from '@/utils'
 
     import {mapState} from 'vuex'
@@ -148,6 +176,8 @@
 
                 index: 0,
 
+                tabs: ['打卡心得', '打卡详情', '小组成员'],
+
                 page: 1,
                 loadingScroll: false,
                 isListLoaded: false,
@@ -159,6 +189,7 @@
                 totalDaKa: 0,
                 avatarList: [],
                 intro: '',
+                joinNum: 0,
 
                 isShrink: true,
                 taped: false,
@@ -181,7 +212,11 @@
                 newMessagesNum: 0,
                 newMessagesAvatar: '',
                 //experienceList: [],
-                syllabusList: []
+                syllabusList: [],
+
+                pageCC: 1,
+                isListLoadedCC: false,
+                ccList: []
             }
         },
 
@@ -217,6 +252,7 @@
 
         async onLoad() {
             this.$detailID = this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
+            getApp().detailID = this.$detailID
 
             const {item, session, save} = getApp()
 
@@ -233,7 +269,7 @@
             }
 
             if (save) {
-                Promise.all([this.getDetailData(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
                     //wx.hideLoading()
                     this.loaded = true
                 }).catch((e) => {
@@ -307,7 +343,7 @@
             userInfoHandler() {
                 this.authModalStatus = false
 
-                Promise.all([this.getDetailData(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
                     //wx.hideLoading()
                     this.loaded = true
                 }).catch((e) => {
@@ -365,6 +401,11 @@
             goHome() {
                 wx.switchTab({
                     url: '/pages/index/index'
+                })
+            },
+            goKe() {
+                wx.navigateTo({
+                    url: '/pages/ke/index'
                 })
             },
             goSetting() {
@@ -492,6 +533,7 @@
                 }
 
                 this.day = data.data.ClockDay
+                this.joinNum = data.data.JoinNum
                 this.todayDaKa = data.data.TodayClockNum
                 this.totalDaKa = data.data.TotalJoinNum
                 this.avatarList = data.data.AvatarList
@@ -499,6 +541,7 @@
 
                 if (data.data.MenuList) {
                     this.syllabusList = data.data.MenuList
+                    getApp().syllabusList = this.syllabusList
                 }
 
                 this.iszu = data.data.IsPlanOwner
@@ -570,7 +613,34 @@
                 this.$store.commit('setExperienceList', [... this.$store.state.experienceList, ... data.data.Rows])
                 this.isListLoaded =  this.experienceList.length === data.data.Total
             },
+            async getCCList() {
+                const params = {
+                    clockPID: this.$detailID,
+                    page: this.pageCC,
+                    pagesize: 10
+                }
+
+                const data = await getCCList(params)
+
+                if (! data) {
+                    return
+                }
+
+                this.pageCC++
+                this.ccList.push(... data.data.Rows)
+                this.isListLoadedCC =  this.ccList.length === data.data.Total
+            },
             forDaka() {
+                if (this.isDaKa) {
+                    wx.showToast({
+                        title: '已经打过了',
+                        icon: 'none',
+                        duration: 2000
+                    })
+
+                    return
+                }
+
                 if (this.todayTitle && ! getApp().isRead) {
                     wx.showModal({
                         title: '提示',
@@ -717,7 +787,15 @@
 
                 this.loadingScroll = true
 
-                ! this.isListLoaded && await this.getExperienceList()
+                if (this.index === 2) {
+                    if (! this.isListLoadedCC) {
+                        await this.getCCList()
+                    }
+                } else {
+                    if (! this.isListLoaded) {
+                        await this.getExperienceList()
+                    }
+                }
 
                 this.loadingScroll = false
             },

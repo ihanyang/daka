@@ -7,6 +7,7 @@
 	height: 100%;
 	position: fixed;
 	top: 0;
+	z-index: 10;
 	opacity: 0;
 	transition: all .25s;
 }
@@ -22,8 +23,8 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background:rgba(150,149,149,.5);
-	filter: blur(100px);
+	background: url(~@/images/blur.png) no-repeat;
+	background-size: 100%;
 }
 .auth-content {
 	width: 280px;
@@ -111,7 +112,7 @@ button {
 						                        withCredentials: true,
 						                        success: async (res) => {
 						                        	console.log(res)
-						                        	this.success(res.iv, res.encryptedData)
+						                        	this.success(res.iv, res.encryptedData, res.userInfo)
 						                        }
 						                    })
                                     		this.a = false
@@ -131,11 +132,11 @@ button {
 					return
 				}
 
-				const {iv, encryptedData} = e.mp.detail
+				const {iv, encryptedData, userInfo} = e.mp.detail
 
-				this.success(iv, encryptedData)
+				this.success(iv, encryptedData, userInfo)
 			},
-			async success(iv, encryptedData) {
+			async success(iv, encryptedData, userInfo) {
 				// 保存一个授权完成的标志 发现页面需要据此更新状态
 				wx.setStorageSync('isAuthorization', true)
 
@@ -144,6 +145,10 @@ button {
 	                encryptedData
 	            })
 
+				getApp().user = {
+					avatar: userInfo.avatarUrl,
+					nickname: userInfo.nickName
+				}
 				getApp().save = true
 
 	            this.$emit('userInfoHandler')

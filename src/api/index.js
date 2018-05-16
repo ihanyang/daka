@@ -38,8 +38,6 @@ fly.interceptors.response.use((response) => {
 
     const {data} = response
 
-    console.log(response)
-
     if (typeof data === 'string') {
         wx.showModal({
             title: '提示',
@@ -151,6 +149,11 @@ export function getExperienceList(params) {
 }
 export function getNewMessage(params) {
     return fly.post('/api/clock/newMessageNum', params).then((response) => {
+        return response
+    })
+}
+export function getCCList(params) {
+    return fly.post('/api/clock/planMemberList', params).then((response) => {
         return response
     })
 }
