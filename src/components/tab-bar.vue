@@ -93,7 +93,7 @@
 					},
 					{
 						text: '发表心得',
-						path: 'index',
+						path: 'post-comment',
 						cname: 'comment-icon'
 					}
 				]
