@@ -30,7 +30,7 @@
             </header>
         </template> -->
             <header class="detail-header">
-                <p>已坚持打卡（天）</p>
+                <p>已坚持打卡(天)</p>
                 <strong v-text="day"></strong>
 
                 <div class="detail-avatar-list">
@@ -87,7 +87,7 @@
             </div>
         </div>
 
-        <div class="detail-tab" v-if="! checkStatus && loaded">
+        <div class="detail-tab" :class="{m: ! todayCover}" v-if="! checkStatus && loaded">
             <div class="detail-tab-item" :class="{selected: index === i}" @click="index = i" v-text="item" v-for="(item, i) of tabs"></div>
             <!-- <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div> -->
         </div>

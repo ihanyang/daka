@@ -10,6 +10,7 @@
 	z-index: 10;
 	opacity: 0;
 	transition: all .25s;
+	background-color: rgba(0, 0, 0, .4);
 }
 .auth-wrapper.transition {
 	opacity: 1;
@@ -23,7 +24,7 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background: url(~@/images/blur.png) no-repeat;
+	background: url(~@/images/home-bg.jpg) no-repeat;
 	background-size: 100%;
 }
 .auth-content {
@@ -57,7 +58,6 @@ button {
 
 <template>
 	<div class="auth-wrapper" :class="{transition: status}" @touchmove.stop>
-		<div class="blur"></div>
 		<div class="auth-content" :class="{transition: status}">
 			<h1>为了给您提供更好的体验</h1>
 			<button open-type="getUserInfo" @getuserinfo="userInfoHandler" @click="aa">去授权</button>

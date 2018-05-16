@@ -12,25 +12,27 @@
 	padding-bottom: 60px;
 }
 .detail-header {
-	height: 200px;
+	height: 180px;
 	padding-top: 15px;
 	position: relative;
 	color: #FFF;
 	text-align: center;
 	font-size: 17px;
 	box-sizing: border-box;
-	background: #22cdcb url(http://jhsy-img.caizhu.com/daka/Frk8EjrzHMz_5SQ4jGGPzmEZTU6m.png) no-repeat;
-	background-size: 100%;
+	background: #22cdcb url(http://oocffpuei.bkt.clouddn.com/FjUrkjkhP-PGGURHdutFtK8UdY9z) no-repeat;
+	background-size: cover;
 
 	& strong {
 		display: block;
-		margin: 10px 0 6px;
 		font-size: 50px;
 		font-weight: bold;
 	}
+
+	& p {
+		letter-spacing: 1px;
+	}
 }
 .detail-avatar-list {
-	margin-top: 10px;
 	font-size: 0;
 
 	& img {
@@ -230,12 +232,16 @@
 .detail-tab {
 	display: flex;
 	justify-content: space-between;
-	margin: 60px 45px 38px;
+	margin: 35px 45px 38px;
 	color: #CCC;
 	font-size: 18px;
 }
+.detail-tab.m {
+	margin-top: 75px;
+}
 .detail-tab-item {
 	padding-bottom: 10px;
+	font-weight: bold;
 }
 .detail-tab-item.selected {
 	color: #02CECC;
@@ -305,7 +311,7 @@
 	padding: 10px 0;
 	position: absolute;
 	left: 50%;
-	bottom: -20%;
+	bottom: -22%;
 	box-sizing: border-box;
 	color: #22CDCB;
 	font-size: 14px;
@@ -386,7 +392,7 @@
 }
 
 .today-card-wrapper {
-	margin: 80px 20px 0;
+	margin: 69px 20px 0;
 
 	& h1 {
 		display: flex;
@@ -400,8 +406,8 @@
 
 	& .ke-btn {
 		width: 75px;
-		color: #E5E5E5;
-		font-size: 14px;
+		color: #AAA;
+		font-size: 13px;
 		line-height: 28px;
 		border-radius: 14px;
 		border: 2px solid #E5E5E5;
@@ -412,6 +418,7 @@
 	align-items: center;
 	padding: 20px;
 	border-radius: 5px;
+	box-shadow: 2px 4px 20px -9px rgba(179,248,247,1);
 	background-color: #FFF;
 
 	& img {
