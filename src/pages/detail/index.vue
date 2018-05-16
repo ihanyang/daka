@@ -122,11 +122,14 @@
         <div class="loading-scroll" v-if="loadingScroll"></div>
 
         <auth v-if="authModalStatus" @userInfoHandler="userInfoHandler"></auth>
+
+        <tab-bar></tab-bar>
     </div>
 </template>
 
 <script>
     import auth from '@/components/auth'
+    import tabBar from '@/components/tab-bar'
     import actionSheet from '@/components/action-sheet'
     import experienceItem from '@/components/experience-item'
 
@@ -184,6 +187,7 @@
 
         components: {
             auth,
+            tabBar,
             actionSheet,
             experienceItem
         },

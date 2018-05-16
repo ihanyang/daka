@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "wx934283132bdf2594",
+	"appid": "wx40f6e6a99fdc055f",
 	"projectname": "daka",
 	"condition": {
 		"search": {

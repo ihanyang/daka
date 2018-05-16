@@ -1,0 +1,111 @@
+<style scoped>
+.tab-bar-wrapper {
+	display: flex;
+	justify-content: space-around;
+	width: 100%;
+	padding: 8px 0 6px;
+	position: fixed;
+	bottom: 0;
+	box-sizing: border-box;
+	color: #22CDCB;
+	font-size: 15px;
+	filter: drop-shadow(0 0 4px rgba(34, 205, 203, .4));
+	background-color: #FFF;
+}
+.home-icon {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUiIGhlaWdodD0iMjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0iIzAyQ0VDQyIgZmlsbC1ydWxlPSJub256ZXJvIj48cGF0aCBkPSJNMjQuNjQxIDguNzc2TDEzLjE0Ni4yMWExLjExNiAxLjExNiAwIDAgMC0xLjMwNSAwTC4zNDUgOC43NzZjLS40MTUuMzItLjQ2Mi44NzUtLjEwNiAxLjI0Ni4zNTYuMzcyLjk4NC40MjQgMS40MTEuMTE2bDEuNTc3LTEuMTc1djkuNzcxYzAgLjYwMS4yNyAxLjE3OC43NTMgMS42MDNBMi43NTMgMi43NTMgMCAwIDAgNS43OTYgMjFoMTMuMzk1Yy42ODEgMCAxLjMzNC0uMjM5IDEuODE2LS42NjQuNDgyLS40MjUuNzUyLTEuMDAxLjc1Mi0xLjYwMnYtOS43N2wxLjU3NyAxLjE3NGMuNDI3LjMxOCAxLjA2NS4yNyAxLjQyNS0uMTA2LjM2LS4zNzYuMzA3LS45MzktLjEyLTEuMjU3em0tNS40NSAxMC40NEg1Ljc5NmEuNTg1LjU4NSAwIDAgMS0uMzg2LS4xNDEuNDU1LjQ1NSAwIDAgMS0uMTYtLjM0VjcuNDU1bDcuMjQzLTUuMzk2IDcuMjQ0IDUuMzk2djExLjI3OGMwIC4xMjgtLjA1OC4yNS0uMTYuMzRhLjU4NS41ODUgMCAwIDEtLjM4Ni4xNDJ6Ii8+PHBhdGggZD0iTTkgMTQuOTgzYzAgLjQ5Ni40NDguNTY1IDEuMDI2LjU2NWw1LjI5Mi4wMThjLjI3OCAwIC42ODItLjQyNi42ODItLjY2NGwtLjAxNy00LjQ4MWMwLS40OTctLjA5NS0uODUtLjY3My0uODVoLTUuMjYzQzkuNDcgOS41NzIgOSA5Ljk3NSA5IDEwLjQ3djQuNTEzem00Ljk4My0xLjQxOGwtMi45ODQuMDEzdi0yLjAxbDIuOTk1LS4wMDUtLjAwMiAxLjE5Ny0uMDEuODA1eiIvPjwvZz48L3N2Zz4=");
+	background-size: 25px 21px;
+}
+.daka-icon {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUiIGhlaWdodD0iMjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0iIzAyQ0VDQyIgZmlsbC1ydWxlPSJub256ZXJvIj48cGF0aCBkPSJNMjQuNjQxIDguNzc2TDEzLjE0Ni4yMWExLjExNiAxLjExNiAwIDAgMC0xLjMwNSAwTC4zNDUgOC43NzZjLS40MTUuMzItLjQ2Mi44NzUtLjEwNiAxLjI0Ni4zNTYuMzcyLjk4NC40MjQgMS40MTEuMTE2bDEuNTc3LTEuMTc1djkuNzcxYzAgLjYwMS4yNyAxLjE3OC43NTMgMS42MDNBMi43NTMgMi43NTMgMCAwIDAgNS43OTYgMjFoMTMuMzk1Yy42ODEgMCAxLjMzNC0uMjM5IDEuODE2LS42NjQuNDgyLS40MjUuNzUyLTEuMDAxLjc1Mi0xLjYwMnYtOS43N2wxLjU3NyAxLjE3NGMuNDI3LjMxOCAxLjA2NS4yNyAxLjQyNS0uMTA2LjM2LS4zNzYuMzA3LS45MzktLjEyLTEuMjU3em0tNS40NSAxMC40NEg1Ljc5NmEuNTg1LjU4NSAwIDAgMS0uMzg2LS4xNDEuNDU1LjQ1NSAwIDAgMS0uMTYtLjM0VjcuNDU1bDcuMjQzLTUuMzk2IDcuMjQ0IDUuMzk2djExLjI3OGMwIC4xMjgtLjA1OC4yNS0uMTYuMzRhLjU4NS41ODUgMCAwIDEtLjM4Ni4xNDJ6Ii8+PHBhdGggZD0iTTEwIDE0LjYzOGMwIC40MjYuMzg0LjQ4NC44OC40ODRsNC41MzUuMDE2Yy4yMzggMCAuNTg1LS4zNjUuNTg1LS41N2wtLjAxNC0zLjg0YzAtLjQyNi0uMDgyLS43MjgtLjU3OC0uNzI4aC00LjUxYy0uNDk2IDAtLjg5OC4zNDUtLjg5OC43N3YzLjg2OHptNC4yNzEtMS4yMTVsLTIuNTU4LjAxdi0xLjcyMmwyLjU2Ny0uMDA0LS4wMDEgMS4wMjYtLjAwOC42OXoiLz48L2c+PC9zdmc+");
+	background-size: 25px 21px;
+}
+.comment-icon {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUiIGhlaWdodD0iMjMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0iIzAyQ0VDQyIgZmlsbC1ydWxlPSJub256ZXJvIj48cGF0aCBkPSJNMTMuNjQ4IDIyLjI2Yy0uMjQgMC0uNDc1LS4wNDgtLjY5NS0uMTQzLS42MTUtLjI2My0uNzU0LS44MS0uNzczLTEuNDc2bC0uMTI1LTEuNjMtOC4wODktLjA0NUMxLjc3NyAxOC45NjQuMDAzIDE3LjIgMCAxNS4wMjJWMy41OThDLjAwMiAxLjQyIDEuNzggMCAzLjk3LS4wMDJoMTYuNDE0YzIuMTkuMDAzIDMuNjQ3IDEuNTUgMy42NDkgMy43MjlWMTUuMTVjLS4wMDMgMi4xNzgtMS40NjIgMy44MTQtMy42NTIgMy44MTZoLTEuMjU0Yy0uNjg4IDAtMS4zNTMuMjUtMS44NjkuNzAybC0yLjQ3MyAyLjE2NGExLjcyOSAxLjcyOSAwIDAgMS0xLjEzNy40Mjl6TTMuNTc1IDIuMDczYy0uODcuMDAxLTEuNTc0LjY4NC0xLjU3NSAxLjUyNnYxMS40MjRjLjAwMS44NDIuODE3IDEuOTggMS42ODcgMS45OGg4LjQ5NmMxLjEzMS0uMDA0IDEuODI1LjM1OSAxLjg1OCAxLjQ1NGwuMDEyIDEuNTI3IDEuNTE3LTIuMTMzYy45ODctLjgzOSAyLjI4NS0uNzk3IDMuNTk4LS43OThoMS4yODdjLjg3LS4wMDEgMS41NDQtMS4xODggMS41NDUtMi4wM1YzLjU5OGMtLjAwMS0uODQzLS43MDYtMS41MjUtMS41NzUtMS41MjdIMy41NzV6Ii8+PHBhdGggZD0iTTUuMjEgMTAuMDg3YTEuMzkzIDEuMzkzIDAgMSAwIDIuNzg2IDAgMS4zOTMgMS4zOTMgMCAwIDAtMi43ODUgMHpNMTAuNzgxIDEwLjA4N2ExLjM5MyAxLjM5MyAwIDEgMCAyLjc4NiAwIDEuMzkzIDEuMzkzIDAgMCAwLTIuNzg2IDB6TTE2LjM1MiAxMC4wODdhMS4zOTMgMS4zOTMgMCAxIDAgMi43ODUgMCAxLjM5MyAxLjM5MyAwIDAgMC0yLjc4NSAweiIvPjwvZz48L3N2Zz4=");
+	background-size: 25px 24px;
+}
+.daka-icon {
+	width: 55px;
+	padding-top: 0;
+	position: relative;
+	text-align: center;
+
+	& section {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 55px;
+		position: absolute;
+		top: -70%;
+		left: 50%;
+		box-sizing: border-box;
+		border: 7px solid #FFF;
+		border-radius: 50%;
+		background:linear-gradient(149.4deg,rgba(112,230,230,1),rgba(34,205,203,1));
+		transform: translateX(-50%);
+
+		&::after {
+			content: "";
+			width: 26px;
+			height: 23px;
+			background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0iI0ZGRiIgZmlsbC1ydWxlPSJub256ZXJvIj48cGF0aCBkPSJNMjEuMDgxIDIzSDQuOTJDMi4yMDIgMjMgMCAyMC43NjkgMCAxOC4wMTdWNi45ODNDMCA0LjIzMSAyLjIwMiAyIDQuOTE5IDJIMjEuMDhDMjMuNzk4IDIgMjYgNC4yMzEgMjYgNi45ODN2MTEuMDM0QzI2IDIwLjc2OSAyMy43OTggMjMgMjEuMDgxIDIzek01LjMzMyA0QTMuMzMzIDMuMzMzIDAgMCAwIDIgNy4zMzN2MTAuMzM0QTMuMzMzIDMuMzMzIDAgMCAwIDUuMzMzIDIxaDE1LjMzNEEzLjMzMyAzLjMzMyAwIDAgMCAyNCAxNy42NjdWNy4zMzNBMy4zMzMgMy4zMzMgMCAwIDAgMjAuNjY3IDRINS4zMzN6Ii8+PHBhdGggZD0iTTcgNS41NjVjLS4yNjUgMC0uNTItLjA3My0uNzA3LS4yMDRDNi4xMDUgNS4yMzEgNiA1LjA1NCA2IDQuODdWLjY5NkM2IC4zMSA2LjQ0OCAwIDcgMHMxIC4zMTEgMSAuNjk2VjQuODdjMCAuMTg0LS4xMDUuMzYxLS4yOTMuNDkxLS4xODcuMTMtLjQ0Mi4yMDQtLjcwNy4yMDR6bTExIDBjLS41NTIgMC0xLS4zMTEtMS0uNjk1Vi42OTZDMTcgLjMxIDE3LjQ0OCAwIDE4IDBzMSAuMzExIDEgLjY5NlY0Ljg3YzAgLjE4NC0uMTA1LjM2MS0uMjkzLjQ5MS0uMTg3LjEzLS40NDIuMjA0LS43MDcuMjA0em0tNy4wOTIgMTAuMjNsLTMuMjUtMy4xM2EuNjc3LjY3NyAwIDAgMSAuMDM3LS45NDUuNzQzLjc0MyAwIDAgMSAuOTgtLjAzN2wyLjQ5NiAyLjQ1OCA1LjMzNC00LjcxOGEuNzQzLjc0MyAwIDAgMSAuOTguMDM2LjY3Ny42NzcgMCAwIDEgLjAzOC45NDRsLTUuNTk3IDUuMzkyYS43MzYuNzM2IDAgMCAxLTEuMDE4IDB6Ii8+PC9nPjwvc3ZnPg==") center no-repeat;
+			background-size: 100%;
+		}
+	}
+}
+.icon {
+	padding-top: 25px;
+	box-sizing: border-box;
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+</style>
+
+<template>
+	<div class="tab-bar-wrapper">
+		<div class="icon" :class="item.cname" :key="item" v-for="(item, index) of tabs" @click="go(item.path)">
+			<template v-if="index === 1">
+				<section></section>
+				{{item.text}}
+			</template>
+			<template v-else>
+				{{item.text}}
+			</template>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				tabs: [
+					{
+						text: '首页',
+						path: 'index',
+						cname: 'home-icon'
+					},
+					{
+						text: '打卡',
+						path: 'detail',
+						cname: 'daka-icon'
+					},
+					{
+						text: '发表心得',
+						path: 'index',
+						cname: 'comment-icon'
+					}
+				]
+			}
+		},
+
+		methods:{
+			go(path) {
+				wx.switchTab({
+					url: `/pages/${path}/index`
+				})
+			}
+		}
+	}
+</script>

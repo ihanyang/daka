@@ -38,6 +38,8 @@ fly.interceptors.response.use((response) => {
 
     const {data} = response
 
+    console.log(response)
+
     if (typeof data === 'string') {
         wx.showModal({
             title: '提示',
