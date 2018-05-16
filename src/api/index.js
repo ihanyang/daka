@@ -71,8 +71,6 @@ export function login(params) {
 }
 export function saveUserInfo(params) {
     return fly.post('/wxapplib/wxapp/saveUserInfo', params).then((response) => {
-        getApp().save = true
-
         return response
     })
 }

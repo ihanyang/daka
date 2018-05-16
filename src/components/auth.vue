@@ -8,7 +8,6 @@
 	position: fixed;
 	top: 0;
 	opacity: 0;
-	background-color: rgba(0, 0, 0, .5);
 	transition: all .25s;
 }
 .auth-wrapper.transition {
@@ -17,13 +16,23 @@
 .auth-wrapper.a {
 	opacity: 0;
 }
+.blur {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background:rgba(150,149,149,.5);
+	filter: blur(100px);
+}
 .auth-content {
-	width: 90%;
-	height: 200px;
-	padding: 50px 0;
-	box-sizing: border-box;
+	width: 280px;
+	height: 240px;
+	padding: 54px 42px 47px;
+	font-size: 17px;
 	text-align: center;
-	border-radius: 10px;
+	border-radius: 20px;
+	box-sizing: border-box;
 	box-shadow: 0 0 10px rgba(0, 0, 0, .2);
 	background-color: #FFF;
 	transition: all .25s;
@@ -33,18 +42,21 @@
 	transform: scale(1);
 }
 h1 {
-	font-size: 20px;
+	color: #333;
 }
 button {
-	display: block;
-	margin: 30px;
-	color: #22CDCB;
-	border: 1px solid currentcolor;
+	margin-top: 70px;
+	line-height: 45px;
+	color: #FFF;
+	font-size: 17px;
+	border-radius: 23px;
+	background-color: #02CECC;
 }
 </style>
 
 <template>
 	<div class="auth-wrapper" :class="{transition: status}" @touchmove.stop>
+		<div class="blur"></div>
 		<div class="auth-content" :class="{transition: status}">
 			<h1>为了给您提供更好的体验</h1>
 			<button open-type="getUserInfo" @getuserinfo="userInfoHandler" @click="aa">去授权</button>
@@ -131,6 +143,8 @@ button {
 	                iv,
 	                encryptedData
 	            })
+
+				getApp().save = true
 
 	            this.$emit('userInfoHandler')
 			}

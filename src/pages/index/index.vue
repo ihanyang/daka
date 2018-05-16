@@ -24,7 +24,7 @@
             </div>
         </header>
 
-        <form @submit="submit" :report-submit="true" v-if="! isDakaRecord && ! checkStatus">
+        <form @submit="submit" :report-submit="true" v-if="loaded && ! isDakaRecord && ! checkStatus">
             <button form-type="submit" id="daka-create" class="btn create-daka-btn" :class="{dakaed: isDakaRecord}">创建我的打卡</button>
         </form>
 
@@ -33,7 +33,7 @@
             <header>
                 <h1>我的计划</h1>
                 <!-- <div class="btn created-daka-btn" @click="go">创建我的打卡</div> -->
-                <form @submit="submit" :report-submit="true" v-if="! checkStatus">
+                <form @submit="submit" :report-submit="true" v-if="loaded && ! checkStatus">
                     <button form-type="submit" id="daka-create" class="btn created-daka-btn">创建我的打卡</button>
                 </form>
             </header>
@@ -61,6 +61,7 @@
     export default {
         data() {
             return {
+                loaded: false,
                 authModalStatus: false,
                 checkStatus: false,
 
@@ -157,7 +158,11 @@
 
             const app = getApp()
 
-            if (! app.session) {
+            if (app.save) {
+                if (! this.loaded) {
+                    this.userInfoHandler()
+                }
+            } else {
                 await this.getUserInfo()
             }
 
@@ -201,6 +206,10 @@
             })
         },
 
+        onHide() {
+            this.authModalStatus = false
+        },
+
         methods: {
             async check() {
                 const params = {
@@ -237,7 +246,11 @@
             userInfoHandler() {
                 this.authModalStatus = false
 
-                Promise.all([this.getHomeData(), this.getMyDaKaList()]).catch((e) => {
+                Promise.all([this.getHomeData(), this.getMyDaKaList()]).then(() => {
+                    this.loaded = true
+                }).catch((e) => {
+                    this.loaded = true
+
                     console.error(e)
                 })
 

@@ -100,7 +100,7 @@
 
         methods: {
             submit(e) {
-                this.sendFormId(e.target.formId)
+                getApp().save && this.sendFormId(e.target.formId)
 
                 wx.navigateTo({
                     url: `/pages/detail/index?id=${e.target.dataset.id}`

@@ -77,14 +77,14 @@
             你有{{newMessagesNum}}条消息
         </div>
 
-        <div class="detail-tab" v-if="! checkStatus">
+        <div class="detail-tab" v-if="! checkStatus && loaded">
             <div class="detail-tab-item" :class="{selected: index === 0}" @click="index = 0">打卡心得</div>
             <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div>
         </div>
         <div class="experience-list" v-if="index === 0 && ! checkStatus">
             <experience-item :key="item.PostID" :item="item" v-for="item of experienceList"></experience-item>
         </div>
-        <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus">暂无打卡心得</p>
+        <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus && loaded">暂无打卡心得</p>
 
         <template v-if="index === 1 && ! checkStatus">
             <div id="daka-add-content" class="resume-add-content-btn" @click="goAddContent" v-if="iszu">
@@ -120,10 +120,13 @@
         <action-sheet @cancel="shareModalStatus = false" v-if="shareModalStatus"></action-sheet>
 
         <div class="loading-scroll" v-if="loadingScroll"></div>
+
+        <auth v-if="authModalStatus" @userInfoHandler="userInfoHandler"></auth>
     </div>
 </template>
 
 <script>
+    import auth from '@/components/auth'
     import actionSheet from '@/components/action-sheet'
     import experienceItem from '@/components/experience-item'
 
@@ -135,6 +138,9 @@
     export default {
         data() {
             return {
+                loaded: false,
+
+                authModalStatus: false,
                 checkStatus: false,
 
                 index: 0,
@@ -177,6 +183,7 @@
         },
 
         components: {
+            auth,
             actionSheet,
             experienceItem
         },
@@ -207,7 +214,7 @@
         async onLoad() {
             this.$detailID = this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
 
-            const {item, session} = getApp()
+            const {item, session, save} = getApp()
 
             if (item) {
                 this.isJoin = item.IsJoin
@@ -221,25 +228,22 @@
                 })
             }
 
-            if (! session) {
+            if (save) {
+                Promise.all([this.getDetailData(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                    //wx.hideLoading()
+                    this.loaded = true
+                }).catch((e) => {
+                    this.loaded = true
+                    //wx.hideLoading()
+
+                    console.log(e)
+                })
+
+                // 审核开关
+                this.check()
+            } else {
                 await this.getUserInfo()
             }
-
-            wx.showLoading({
-                title: '正在加载',
-                mask: true
-            })
-
-            Promise.all([this.getDetailData(), this.getNewMessage(), this.getExperienceList()]).then(() => {
-                wx.hideLoading()
-            }).catch((e) => {
-                wx.hideLoading()
-
-                console.log(e)
-            })
-
-            // 审核开关
-            this.check()
         },
 
         onShow() {
@@ -296,6 +300,22 @@
         },
 
         methods: {
+            userInfoHandler() {
+                this.authModalStatus = false
+
+                Promise.all([this.getDetailData(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                    //wx.hideLoading()
+                    this.loaded = true
+                }).catch((e) => {
+                    //wx.hideLoading()
+                    this.loaded = true
+
+                    console.log(e)
+                })
+
+                // 审核开关
+                this.check()
+            },
             async check() {
                 const params = {
                     flag: 'clock'
@@ -399,6 +419,7 @@
             async getUserInfo() {
                 await login()
 
+                this.authModalStatus = true
                 //await this.getUserInfoWX()
             },
             getUserInfoWX() {
@@ -704,6 +725,8 @@
 
                 this.index = 0
                 this.iszu = 0
+
+                this.authModalStatus = false
 
                 this.page = 1
                 this.syllabusList = []
