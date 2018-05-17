@@ -415,7 +415,7 @@
                 this.forDaka()
             },
             submitJoin(e) {
-                this.sendFormId(e.target.formId)
+                //this.sendFormId(e.target.formId)
 
                 this.join()
             },
@@ -741,25 +741,25 @@
 
                 this.isJoin = true
 
-                this.ccList.push({
-                    Avatar: app.user.avatar,
-                    Nickname: app.user.nickname,
-                    ClockDay: this.day,
-                    IsPlanOwner: 0
-                })
+                // this.ccList.push({
+                //     Avatar: app.user.avatar,
+                //     Nickname: app.user.nickname,
+                //     ClockDay: this.day,
+                //     IsPlanOwner: 0
+                // })
 
                 await join(params)
 
 
-                if (this.avatarList.length < 3) {
-                    this.avatarList.unshift({
-                        Avatar: app.user.avatar
-                    })
-                } else {
-                    this.avatarList = [{
-                        Avatar: app.user.avatar
-                    }, ... this.avatarList.slice(0, 2)]
-                }
+                // if (this.avatarList.length < 3) {
+                //     this.avatarList.unshift({
+                //         Avatar: app.user.avatar
+                //     })
+                // } else {
+                //     this.avatarList = [{
+                //         Avatar: app.user.avatar
+                //     }, ... this.avatarList.slice(0, 2)]
+                // }
 
                 // 刷新
                 // this.page = 1
@@ -767,7 +767,8 @@
                 // this.getDetailData()
 
                 // 刷新页面
-                this.getDetailData().catch((e) => {
+                this.pageCC = 1
+                Promise.all([this.getDetailData(), this.getCCList()]).catch((e) => {
                     console.log(e)
                 })
 
