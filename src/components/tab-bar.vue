@@ -9,7 +9,7 @@
 	bottom: 0;
 	box-sizing: border-box;
 	color: #22CDCB;
-	font-size: 15px;
+	font-size: 13px;
 	font-weight: bold;
 	filter: drop-shadow(0 0 4px rgba(34, 205, 203, .4));
 	background-color: #FFF;
@@ -43,7 +43,7 @@
 		width: 52px;
 		height: 52px;
 		position: absolute;
-		top: -74%;
+		top: -80%;
 		left: 50%;
 		border: 6px solid #FFF;
 		/* box-sizing: border-box; */
