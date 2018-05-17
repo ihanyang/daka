@@ -88,7 +88,7 @@
         </div>
 
         <div class="detail-tab" :class="{m: ! todayCover}" v-if="! checkStatus && loaded">
-            <div class="detail-tab-item" :class="{selected: index === i}" @click="index = i" v-text="item" v-for="(item, i) of tabs"></div>
+            <div class="detail-tab-item" :class="{selected: index === i}" @click="index = i" :key="i" v-text="item" v-for="(item, i) of tabs"></div>
             <!-- <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div> -->
         </div>
         <div class="experience-list" v-if="index === 0 && ! checkStatus">
@@ -352,7 +352,7 @@
                     this.loaded = true
                 }).catch(async (e) => {
                     //wx.hideLoading()
-                    this.loaded = true
+                    //this.loaded = true
 
                     if (e.code === -100) {
                         await login()

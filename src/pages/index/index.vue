@@ -254,7 +254,7 @@
                 Promise.all([this.getHomeData(), this.getMyDaKaList()]).then(() => {
                     this.loaded = true
                 }).catch(async (e) => {
-                    this.loaded = true
+                    //this.loaded = true
 
                     if (e.code === -100) {
                         await login()
