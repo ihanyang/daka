@@ -248,6 +248,13 @@
 
                 addFormId(params)
             },
+            getData() {
+                Promise.all([this.check(), this.getHomeData(), this.getMyDaKaList()]).then(() => {
+                    this.loaded = true
+                }).catch((e) => {
+                    console.error(e)
+                })
+            },
             userInfoHandler() {
                 this.authModalStatus = false
 
@@ -257,9 +264,17 @@
                     //this.loaded = true
 
                     if (e.code === -100) {
-                        await login()
+                        const data = await login()
 
-                        this.authModalStatus = true
+                        // 1 需要授权
+                        if (data.data.needAuth === 1) {
+                            this.authModalStatus = true
+                        } else {
+                            // 保存一个授权完成的标志 发现页面需要据此更新状态
+                            wx.setStorageSync('isAuthorization', true)
+
+                            this.getData()
+                        }
                     }
 
                     console.error(e)

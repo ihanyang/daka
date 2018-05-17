@@ -18,7 +18,7 @@ export function login() {
 
                 getApp().session = data.data.session
 
-                resolve()
+                resolve(data)
             },
             fail() {
                 reject()

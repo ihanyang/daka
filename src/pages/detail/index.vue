@@ -98,9 +98,10 @@
 
         <div class="detail-intro" v-if="index === 1">
             <template v-if="intro">
-                <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
+                <!-- <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
                 <div class="btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
-                <div class="btn" @click="shrink" v-if="isLongIntro && taped">收起</div>
+                <div class="btn" @click="shrink" v-if="isLongIntro && taped">收起</div> -->
+                <p v-text="intro"></p>
             </template>
             <template v-else>
                 <p class="no">组长很懒，没有填写打卡描述~</p>
@@ -344,6 +345,14 @@
         },
 
         methods: {
+            getData() {
+                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                    //wx.hideLoading()
+                    this.loaded = true
+                }).catch((e) => {
+                    console.error(e)
+                })
+            },
             userInfoHandler() {
                 this.authModalStatus = false
 
@@ -355,9 +364,17 @@
                     //this.loaded = true
 
                     if (e.code === -100) {
-                        await login()
+                        const data = await login()
 
-                        this.authModalStatus = true
+                        // 1 需要授权
+                        if (data.data.needAuth === 1) {
+                            this.authModalStatus = true
+                        } else {
+                            // 保存一个授权完成的标志 发现页面需要据此更新状态
+                            wx.setStorageSync('isAuthorization', true)
+
+                            this.getData()
+                        }
                     }
 
                     console.error(e)
