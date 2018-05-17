@@ -119,6 +119,10 @@ button {
                                     		//this.success()
                                     	} else {
                                     		this.a = false
+
+                                    		getApp().session = null
+                                    		wx.removeStorageSync('session')
+
                                     		wx.switchTab({
 					                            url: '/pages/discover/index'
 					                        })

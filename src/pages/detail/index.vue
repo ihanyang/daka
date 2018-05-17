@@ -360,7 +360,7 @@
                         this.authModalStatus = true
                     }
 
-                    console.log(e)
+                    console.error(e)
                 })
 
                 // 审核开关
