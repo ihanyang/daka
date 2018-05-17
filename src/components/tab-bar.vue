@@ -75,11 +75,31 @@
 		background-repeat: no-repeat;
 	}
 }
+button {
+	color: #22CDCB;
+	font-size: 13px;
+	line-height: normal;
+}
 </style>
 
 <template>
 	<div class="tab-bar-wrapper" :class="{d: isDaKa}">
-		<div class="icon" :class="item.cname" :key="item" v-for="(item, index) of tabs" @click="go(index)">
+		<div class="icon home-icon" @click="go(0)">首页</div>
+
+
+
+		<div class="icon daka-icon">
+			<section></section>
+			{{text}}
+		</div>
+
+		<form @submit="submit" :report-submit="true" class="icon comment-icon">
+            <button form-type="submit" id="daka-post-comment">发表心得</button>
+        </form>
+		<!-- <div class="icon comment-icon" @click="go(2)">发表心得</div> -->
+
+
+		<!-- <div class="icon" :class="item.cname" :key="item" v-for="(item, index) of tabs" @click="go(index)">
 			<template v-if="index === 1">
 				<section></section>
 				{{isDaKa ? item.t : item.text}}
@@ -87,11 +107,13 @@
 			<template v-else>
 				{{item.text}}
 			</template>
-		</div>
+		</div> -->
 	</div>
 </template>
 
 <script>
+	import {addFormId} from '@/api'
+
 	export default {
 		props: ['isDaKa'],
 
@@ -118,7 +140,28 @@
 			}
 		},
 
-		methods:{
+		computed: {
+			text() {
+				return this.isDaKa ? '已打卡' : '打卡'
+			}
+		},
+
+		methods: {
+			submit(e) {
+                this.sendFormId(e.target.formId)
+
+                wx.navigateTo({
+					url: `/pages/post/index?id=${getApp().detailID}`
+				})
+            },
+            sendFormId(id) {
+                const params = {
+                    formId: id,
+                    type: 1
+                }
+
+                addFormId(params)
+            },
 			go(index) {
 				if (index === 0) {
 					wx.switchTab({

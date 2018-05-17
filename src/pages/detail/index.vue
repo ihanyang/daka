@@ -97,11 +97,14 @@
         <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus && loaded">暂无打卡心得</p>
 
         <div class="detail-intro" v-if="index === 1">
-            <template v-if="intro">
+            <template v-if="introList.length">
                 <!-- <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
                 <div class="btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
                 <div class="btn" @click="shrink" v-if="isLongIntro && taped">收起</div> -->
-                <p v-text="intro"></p>
+                <!-- <p v-text="intro"></p> -->
+                <div class="intro-list">
+                    <p v-for="item of introList" :key="item" v-text="item"></p>
+                </div>
             </template>
             <template v-else>
                 <p class="no">组长很懒，没有填写打卡描述~</p>
@@ -231,6 +234,9 @@
         computed: {
             ... mapState(['experienceList']),
 
+            introList() {
+                return this.intro.split('\n')
+            },
             isLongIntro() {
                 return this.intro.length > 40
             },
