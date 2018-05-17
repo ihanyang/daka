@@ -87,7 +87,7 @@
             </div>
         </div>
 
-        <div class="detail-tab" :class="{m: ! todayCover}" v-if="! checkStatus && loaded">
+        <div class="detail-tab" :class="{m: ! todayCover, mm: ! isJoin}" v-if="! checkStatus && loaded">
             <div class="detail-tab-item" :class="{selected: index === i}" @click="index = i" :key="i" v-text="item" v-for="(item, i) of tabs"></div>
             <!-- <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div> -->
         </div>
@@ -108,7 +108,7 @@
         </div>
 
         <div class="cc-list" v-if="index === 2">
-            <div class="cc-item" :class="{zu: item.IsPlanOwner == 1}" v-for="item of ccList">
+            <div class="cc-item" :class="{zu: item.IsPlanOwner == 1}" :key="item.Avatar" v-for="item of ccList">
                 <img :src="item.Avatar">
                 <p v-text="item.Nickname"></p>
                 <span>已坚持打卡{{item.ClockDay}}天</span>
@@ -703,22 +703,29 @@
                     duration: 2000
                 })
 
-                // setTimeout(() => {
-                //     wx.navigateTo({
-                //         url: `/pages/post/index?id=${this.$detailID}`
-                //     })
-                // })
+                setTimeout(() => {
+                    wx.navigateTo({
+                        url: `/pages/post/index?id=${this.$detailID}`
+                    })
+                })
             },
             async join() {
                 const params = {
                     clockPID: this.$detailID
                 }
+                const app = getApp()
 
                 this.isJoin = true
 
+                this.ccList.push({
+                    Avatar: app.user.avatar,
+                    Nickname: app.user.nickname,
+                    ClockDay: this.day,
+                    IsPlanOwner: 0
+                })
+
                 await join(params)
 
-                const app = getApp()
 
                 if (this.avatarList.length < 3) {
                     this.avatarList.unshift({

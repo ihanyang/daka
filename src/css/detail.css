@@ -242,6 +242,9 @@
 .detail-tab.m {
 	margin-top: 75px;
 }
+.detail-tab.mm {
+	margin-top: 30px;
+}
 .detail-tab-item {
 	padding-bottom: 10px;
 	font-weight: bold;

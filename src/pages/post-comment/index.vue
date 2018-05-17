@@ -94,6 +94,7 @@
 	                	return
 	                }
 
+	                app.postItem.ReplyNum++
 	                app.postItem.ReplyList.unshift({
 	                    Avatar: app.user.avatar,
 	                    Nickname: app.user.nickname,

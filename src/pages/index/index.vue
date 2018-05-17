@@ -251,7 +251,7 @@
             userInfoHandler() {
                 this.authModalStatus = false
 
-                Promise.all([this.getHomeData(), this.getMyDaKaList()]).then(() => {
+                Promise.all([this.check(), this.getHomeData(), this.getMyDaKaList()]).then(() => {
                     this.loaded = true
                 }).catch(async (e) => {
                     //this.loaded = true
@@ -264,8 +264,6 @@
 
                     console.error(e)
                 })
-
-                this.check()
 
                 wx.setStorageSync('isLoadedHomeData', true)
             },

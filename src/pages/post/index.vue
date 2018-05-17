@@ -273,6 +273,8 @@
 			        	CreateTimeStamp: + new Date(),
 			        	IsPraise: 0,
 			        	HasJoin: 1,
+			        	PraiseNum: 0,
+			        	ReplyNum: 0,
 			        	ImageList: a.map((item) => ({ImageUrl: item.url})),
 			        	ReplyList: []
 			        }, ... this.$store.state.experienceList])
