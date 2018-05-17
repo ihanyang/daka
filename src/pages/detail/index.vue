@@ -68,12 +68,12 @@
 
         <button open-type="share"></button>
 
-        <div class="new-messages" @click="goMessage" v-if="newMessagesNum">
+        <div class="new-messages" :class="{n: newMessagesNum}" @click="goMessage" v-if="newMessagesNum">
             <img :src="newMessagesAvatar" mode="aspectFill">
             你有{{newMessagesNum}}条消息
         </div>
 
-        <div class="today-card-wrapper" v-if="todayCover">
+        <div class="today-card-wrapper" :class="{n: newMessagesNum}" v-if="todayCover">
             <h1>
                 今日任务
                 <div class="btn ke-btn" @click="goKe">课程表</div>
@@ -268,22 +268,26 @@
                 })
             }
 
-            if (save) {
-                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
-                    //wx.hideLoading()
-                    this.loaded = true
-                }).catch((e) => {
-                    this.loaded = true
-                    //wx.hideLoading()
-
-                    console.log(e)
-                })
-
-                // 审核开关
-                this.check()
-            } else {
-                await this.getUserInfo()
+            if (! this.loaded) {
+                this.userInfoHandler()
             }
+
+            // if (save) {
+            //     Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+            //         //wx.hideLoading()
+            //         this.loaded = true
+            //     }).catch((e) => {
+            //         this.loaded = true
+            //         //wx.hideLoading()
+
+            //         console.log(e)
+            //     })
+
+            //     // 审核开关
+            //     this.check()
+            // } else {
+            //     await this.getUserInfo()
+            // }
         },
 
         onShow() {
@@ -346,9 +350,15 @@
                 Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
                     //wx.hideLoading()
                     this.loaded = true
-                }).catch((e) => {
+                }).catch(async (e) => {
                     //wx.hideLoading()
                     this.loaded = true
+
+                    if (e.code === -100) {
+                        await login()
+
+                        this.authModalStatus = true
+                    }
 
                     console.log(e)
                 })

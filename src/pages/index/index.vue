@@ -158,12 +158,17 @@
 
             const app = getApp()
 
-            if (app.save) {
-                if (! this.loaded) {
-                    this.userInfoHandler()
-                }
-            } else {
-                await this.getUserInfo()
+            // if (app.session) {
+            //     if (! this.loaded) {
+            //         this.userInfoHandler()
+            //     }
+            // } else {
+            //     //await this.getUserInfo()
+            //     this.userInfoHandler()
+            // }
+
+            if (! this.loaded) {
+                this.userInfoHandler()
             }
 
             if (app.isEdit === 1) {
@@ -248,8 +253,14 @@
 
                 Promise.all([this.getHomeData(), this.getMyDaKaList()]).then(() => {
                     this.loaded = true
-                }).catch((e) => {
+                }).catch(async (e) => {
                     this.loaded = true
+
+                    if (e.code === -100) {
+                        await login()
+
+                        this.authModalStatus = true
+                    }
 
                     console.error(e)
                 })

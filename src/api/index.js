@@ -3,12 +3,25 @@ import Fly from 'flyio/dist/npm/wx'
 const fly = new Fly()
 const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.jinghao.com' : 'http://jhtest.jinghao.com'
 
+
+
 fly.config.baseURL = baseURL
 
 fly.interceptors.request.use((request) => {
     let {body} = request
     const app = getApp()
-    const session = app.session
+    let session = app.session
+
+    if (! session) {
+        const s = wx.getStorageSync('session')
+
+        if (s) {
+            if (+ new Date() - s.date < 24 * 60 * 60 * 1000) {
+                getApp().session = s.value
+                session = s.value
+            }
+        }
+    }
 
     //console.log(request)
 
@@ -46,6 +59,13 @@ fly.interceptors.response.use((response) => {
         })
 
         return null
+    }
+
+    if (data.flag === -100) {
+        return Promise.reject({
+            code: -100,
+            msg: '未授权'
+        })
     }
 
     if (data.flag !== 1) {

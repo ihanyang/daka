@@ -229,6 +229,9 @@
 		border-radius: 5px;
 	}
 }
+.new-messages.n {
+	margin-top: 70px;
+}
 .detail-tab {
 	display: flex;
 	justify-content: space-between;
@@ -412,6 +415,9 @@
 		border-radius: 14px;
 		border: 2px solid #E5E5E5;
 	}
+}
+.today-card-wrapper.n {
+	margin-top: 20px;
 }
 .today-card {
 	display: flex;
