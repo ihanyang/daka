@@ -106,7 +106,7 @@
                     <p v-for="item of introList" :key="item" v-text="item"></p>
                 </div>
             </template>
-            <template v-else>
+            <template v-if="! intro">
                 <p class="no">组长很懒，没有填写打卡描述~</p>
             </template>
         </div>
@@ -235,6 +235,7 @@
             ... mapState(['experienceList']),
 
             introList() {
+                console.log(!!this.intro)
                 return this.intro.split('\n')
             },
             isLongIntro() {
