@@ -88,7 +88,7 @@ button {
 
 
 
-		<div class="icon daka-icon">
+		<div class="icon daka-icon" @click="go(1)">
 			<section></section>
 			{{text}}
 		</div>
