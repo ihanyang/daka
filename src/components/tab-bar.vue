@@ -172,7 +172,7 @@ button {
 				}
 
 				if (index === 1) {
-					//this.$emit('daka')
+					this.$emit('daka')
 
 					return
 				}
