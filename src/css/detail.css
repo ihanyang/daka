@@ -346,6 +346,10 @@
 		background-size: 31px 29px;
 	}
 }
+.detail-tt-wrapper.tt {
+	justify-content: space-between;
+	padding: 10px 86px;
+}
 
 .cc-list {
 	margin: 0 20px;

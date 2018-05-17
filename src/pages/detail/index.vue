@@ -38,7 +38,7 @@
                     <p>{{joinNum}}人已加入</p>
                 </div>
 
-                <div class="detail-tt-wrapper" v-if="isJoin">
+                <div class="detail-tt-wrapper" :class="{tt: ! iszu}" v-if="isJoin">
                     <div class="item adds-icon" v-if="iszu" @click="goAddContent">添加内容</div>
                     <div class="item setting-icon" @click="goSetting">设置</div>
                     <div class="item invite-icon" @click="showActionSheet">邀请好友</div>
@@ -151,7 +151,7 @@
 
         <auth v-if="authModalStatus" @userInfoHandler="userInfoHandler"></auth>
 
-        <tab-bar v-if="isJoin" @daka="forDaka"></tab-bar>
+        <tab-bar :isDaKa="isDaKa" v-if="isJoin" @daka="forDaka"></tab-bar>
     </div>
 </template>
 
@@ -268,9 +268,9 @@
                 })
             }
 
-            if (! this.loaded) {
+            //if (! this.loaded) {
                 this.userInfoHandler()
-            }
+            //}
 
             // if (save) {
             //     Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
@@ -817,6 +817,8 @@
 
                 this.index = 0
                 this.iszu = 0
+
+                this.newMessagesNum = 0
 
                 this.authModalStatus = false
 

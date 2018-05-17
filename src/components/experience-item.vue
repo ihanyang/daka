@@ -194,6 +194,12 @@ footer {
 
 				this.item.IsPraise = ! this.item.IsPraise
 
+				if (this.item.IsPraise) {
+					this.item.PraiseNum++
+				} else {
+					this.item.PraiseNum--
+				}
+
 				const data = await fetch(url, params)
 
 				if (data.flag !== 1) {
