@@ -1,7 +1,7 @@
 <style src="@/css/detail"></style>
 
 <template>
-    <div class="detail-wrapper a">
+    <div class="detail-wrapper a" :class="{'hide-tabbar': checkStatus}">
         <!-- <template v-if="todayCover">
             <header class="detail-header" v-if="isDaKa">
                 <p>已坚持打卡（天）</p>
@@ -38,7 +38,7 @@
                     <p>{{joinNum}}人已加入</p>
                 </div>
 
-                <div class="detail-tt-wrapper" :class="{tt: ! iszu}" v-if="isJoin">
+                <div class="detail-tt-wrapper" :class="{tt: ! iszu}" v-if="isJoin && ! checkStatus">
                     <div class="item adds-icon" v-if="iszu" @click="goAddContent">添加内容</div>
                     <div class="item setting-icon" @click="goSetting">设置</div>
                     <div class="item invite-icon" @click="showActionSheet">邀请好友</div>
@@ -68,12 +68,12 @@
 
         <button open-type="share"></button>
 
-        <div class="new-messages" :class="{n: newMessagesNum}" @click="goMessage" v-if="newMessagesNum">
+        <div class="new-messages" :class="{n: newMessagesNum}" @click="goMessage" v-if="newMessagesNum && ! checkStatus">
             <img :src="newMessagesAvatar" mode="aspectFill">
             你有{{newMessagesNum}}条消息
         </div>
 
-        <div class="today-card-wrapper" :class="{n: newMessagesNum}" v-if="todayCover">
+        <div class="today-card-wrapper" :class="{n: newMessagesNum}" v-if="todayCover && ! checkStatus">
             <h1>
                 今日任务
                 <div class="btn ke-btn" @click="goKe">课程表</div>
@@ -96,7 +96,7 @@
         </div>
         <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus && loaded">暂无打卡心得</p>
 
-        <div class="detail-intro" v-if="index === 1">
+        <div class="detail-intro" v-if="index === 1 && ! checkStatus">
             <template v-if="introList.length">
                 <!-- <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
                 <div class="btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
@@ -111,7 +111,7 @@
             </template>
         </div>
 
-        <div class="cc-list" v-if="index === 2">
+        <div class="cc-list" v-if="index === 2 && ! checkStatus">
             <div class="cc-item" :class="{zu: item.IsPlanOwner == 1}" :key="item.Avatar" v-for="item of ccList">
                 <img :src="item.Avatar || defaultAvatar">
                 <p v-text="item.Nickname"></p>
@@ -713,12 +713,15 @@
                 const app = getApp()
 
                 app.day = this.day
-                app.item.HasClock = 1
 
-                if (typeof app.item.TodayClockNum !== 'undefined') {
-                    app.item.TodayClockNum = + app.item.TodayClockNum + 1
-                } else {
-                    app.item.ClockNum++
+                if (app.item) {
+                    app.item.HasClock = 1
+
+                    if (typeof app.item.TodayClockNum !== 'undefined') {
+                        app.item.TodayClockNum = + app.item.TodayClockNum + 1
+                    } else {
+                        app.item.ClockNum++
+                    }
                 }
 
                 wx.showToast({
@@ -727,7 +730,7 @@
                     duration: 2000
                 })
 
-                setTimeout(() => {
+                ! this.checkStatus && setTimeout(() => {
                     wx.navigateTo({
                         url: `/pages/post/index?id=${this.$detailID}`
                     })

@@ -12,6 +12,9 @@
 .detail-wrapper.a {
 	padding-bottom: 60px;
 }
+.detail-wrapper.hide-tabbar .tab-bar-wrapper .home-icon, .detail-wrapper.hide-tabbar .tab-bar-wrapper .comment-icon{
+	display: none;
+}
 .detail-header {
 	height: 180px;
 	padding-top: 15px;
