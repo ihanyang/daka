@@ -145,6 +145,8 @@
                             duration: 2000
                         })
 
+                        this.$saveing = false
+
                         return
                     }
 
@@ -154,6 +156,8 @@
                             icon: 'none',
                             duration: 2000
                         })
+
+                        this.$saveing = false
 
                         return
                     }

@@ -87,7 +87,7 @@
             </div>
         </div>
 
-        <div class="detail-tab" :class="{m: ! todayCover, mm: ! isJoin}" v-if="! checkStatus && loaded">
+        <div class="detail-tab" :class="{m: ! todayCover, mm: ! isJoin, c: newMessagesNum}" v-if="! checkStatus && loaded">
             <div class="detail-tab-item" :class="{selected: index === i}" @click="index = i" :key="i" v-text="item" v-for="(item, i) of tabs"></div>
             <!-- <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div> -->
         </div>
