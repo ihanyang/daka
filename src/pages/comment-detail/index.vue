@@ -23,8 +23,8 @@
 			</template>
 
 			<footer v-if="isJoin">
-				<div class="like-icon" :class="{liked: liked}" @click="like"></div>
-				<div class="comment-icon" @click="comment"></div>
+				<div class="like-icon" :class="{liked: liked}" @click="like" v-text="likeNum"></div>
+				<div class="comment-icon" @click="comment" v-text="replyNum"></div>
 			</footer>
 		</div>
 
@@ -70,6 +70,12 @@
 		},
 
 		computed: {
+			likeNum() {
+				return this.likeNameList.length
+			},
+			replyNum() {
+				return this.replyList.length
+			},
 			likeName() {
 				return this.likeNameList.map((item) => item.Nickname).join('、')
 			},
