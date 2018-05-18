@@ -87,8 +87,8 @@
             input(e) {
                 const value = e.mp.detail.value
 
-                if (value.length > 10) {
-                    this.maxlength = 10
+                if (value.length > 1000) {
+                    this.maxlength = 1000
 
                     wx.showToast({
                         title: '内容过长，最多1000字',
@@ -96,7 +96,7 @@
                     })
                 }
 
-                this.detail = value.slice(0, 10)
+                this.detail = value.slice(0, 1000)
             },
             async getQiNiuToken() {
                 const app = getApp()
