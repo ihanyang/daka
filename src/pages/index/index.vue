@@ -19,7 +19,7 @@
                 </div>
                 <div class="home-learn-item">
                     <strong>{{dakaPlanNum}}个</strong>
-                    <p>打卡计划1222222</p>
+                    <p>打卡计划122223433322</p>
                 </div>
             </div>
         </header>
