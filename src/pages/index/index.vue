@@ -15,7 +15,7 @@
                 </div>
                 <div class="home-learn-item">
                     <strong>{{dakaTotalNum}}天</strong>
-                    <p>累计打卡天数1111</p>
+                    <p>累计打卡天数111132132321</p>
                 </div>
                 <div class="home-learn-item">
                     <strong>{{dakaPlanNum}}个</strong>
