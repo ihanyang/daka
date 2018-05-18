@@ -11,15 +11,15 @@
             <div class="home-learn">
                 <div class="home-learn-item">
                     <strong>{{learnHoursFormat}}</strong>
-                    <p>累计时长</p>
+                    <p>累计时长11111</p>
                 </div>
                 <div class="home-learn-item">
                     <strong>{{dakaTotalNum}}天</strong>
-                    <p>累计打卡天数</p>
+                    <p>累计打卡天数1111</p>
                 </div>
                 <div class="home-learn-item">
                     <strong>{{dakaPlanNum}}个</strong>
-                    <p>打卡计划</p>
+                    <p>打卡计划111</p>
                 </div>
             </div>
         </header>
