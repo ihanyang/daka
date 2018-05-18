@@ -83,12 +83,13 @@ span {
             <p>
                 <img class="avatar" :src="item.Avatar || defaultAvatar" :key="item" v-for="item of item.AvatarList">
 
-                <template v-if="item.TodayClockNum !== undefined">
-                    <span>今天已有{{item.TodayClockNum}}人打卡</span>
+                <span>{{item.JoinNum}}人已加入</span>
+                <!-- <template v-if="item.TodayClockNum !== undefined">
+                    <span>{{item.TodayClockNum}}人已加入</span>
                 </template>
                 <template v-else>
-                    <span>今天已有{{item.ClockNum}}人打卡</span>
-                </template>
+                    <span>{{item.JoinNum}}人已加入</span>
+                </template> -->
             </p>
         </div>
 

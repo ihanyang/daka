@@ -1,10 +1,10 @@
 <style scoped>
 .tab-bar-wrapper {
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
 	width: 100%;
 	height: 58px;
-	padding: 7px 0 7px;
+	padding: 7px 49px 7px;
 	position: fixed;
 	bottom: 0;
 	box-sizing: border-box;
@@ -32,9 +32,13 @@
 }
 .daka-icon {
 	width: 55px;
+	height: 45px;
 	padding-top: 0;
-	position: relative;
+	position: absolute;
+	left: 50%;
+	bottom: 10%;
 	text-align: center;
+	transform: translateX(-50%);
 
 	& section {
 		display: flex;

@@ -177,7 +177,7 @@
 
                     // 标记是否编辑过
                     getApp().isEdit = 2
-                }, 300)
+                }, 500)
             },
             selectSecretType(value) {
                 this.secretType = value
