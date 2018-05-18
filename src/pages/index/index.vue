@@ -385,6 +385,8 @@
                 })
             },
             async scroll() {
+                getApp().isShowLoading = true
+
                 this.loadingScroll = true
 
                 ! this.isListLoaded && await this.getMyDaKaList()

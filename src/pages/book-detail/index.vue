@@ -7,7 +7,7 @@
 			<h1 v-text="title"></h1>
 			<span class="author" v-text="author"></span>
 			<p>
-				<img class="avatar" :src="item.Avatar" mode="aspectFill" :key="item" v-for="item of avatarList">
+				<img class="avatar" :src="item.Avatar || defaultAvatar" mode="aspectFill" :key="item" v-for="item of avatarList">
 				<span>{{num}}人已添加此内容</span>
 			</p>
 
@@ -31,6 +31,7 @@
 
 <script>
 	import {fetch} from '@/api'
+	import {getDefaultAvatar} from '@/utils'
 
 	export default {
 		data() {
@@ -54,7 +55,10 @@
 		computed: {
 			isLongIntro() {
 				return this.intro.length > 50
-			}
+			},
+			defaultAvatar() {
+                return getDefaultAvatar()
+            }
 		},
 
 		async onLoad() {
