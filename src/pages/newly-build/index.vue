@@ -16,7 +16,7 @@
 
         <div class="newly-build-box">
             <h2>打卡详细描述</h2>
-            <textarea v-model.lazy="detail" auto-height maxlength="1000" placeholder-class="placeholder" placeholder="请输入详细描述（选填 1000 字以内）"></textarea>
+            <textarea v-model.lazy="detail" auto-height @input="input" :maxlength="maxlength" placeholder-class="placeholder" placeholder="请输入详细描述（选填 1000 字以内）"></textarea>
         </div>
 
         <div class="newly-build-box">
@@ -55,6 +55,8 @@
                 title: '',
                 detail: '',
 
+                maxlength: -1,
+
                 newlyBuildImg: '',
                 newlyBuildImage: '',
 
@@ -82,6 +84,20 @@
         },
 
         methods: {
+            input(e) {
+                const value = e.mp.detail.value
+
+                if (value.length > 10) {
+                    this.maxlength = 10
+
+                    wx.showToast({
+                        title: '内容过长，最多1000字',
+                        icon: 'none'
+                    })
+                }
+
+                this.detail = value.slice(0, 10)
+            },
             async getQiNiuToken() {
                 const app = getApp()
 
