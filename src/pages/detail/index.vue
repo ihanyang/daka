@@ -768,6 +768,8 @@
 
                 // 刷新页面
                 this.pageCC = 1
+                this.ccList = []
+
                 Promise.all([this.getDetailData(), this.getCCList()]).catch((e) => {
                     console.log(e)
                 })
@@ -856,6 +858,9 @@
 
                 this.page = 1
                 this.syllabusList = []
+
+                this.pageCC = 1
+                this.ccList = []
 
                 this.$store.commit('setExperienceList', [])
 
