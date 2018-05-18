@@ -1,4 +1,4 @@
-import api, {sendTime as sendTimes, login as l} from '@/api'
+import api, {sendTime as sendTimes, login as l, getUserInfo} from '@/api'
 
 export function login() {
     return new Promise((resolve, reject) => {
@@ -16,7 +16,15 @@ export function login() {
                     value: data.data.session
                 })
 
+
                 getApp().session = data.data.session
+
+                const d = await getUserInfo()
+
+                getApp().user = {
+                    avatar: d.data.Avatar,
+                    nickname: d.data.Nickname
+                }
 
                 resolve(data)
             },

@@ -264,7 +264,8 @@
 			        	icon: 'none'
 			        })
 
-			        this.$store.commit('setExperienceList', [{
+			        try {
+			        	this.$store.commit('setExperienceList', [{
 			        	PostID: data.data.id,
 			        	Nickname: app.user.nickname,
 			        	Avatar: app.user.avatar,
@@ -278,6 +279,9 @@
 			        	ImageList: a.map((item) => ({ImageUrl: item.url})),
 			        	ReplyList: []
 			        }, ... this.$store.state.experienceList])
+			        } catch(e) {
+			        	console.log(e)
+			        }
 
 			        wx.navigateBack({
 						delta: 1

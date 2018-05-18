@@ -89,6 +89,11 @@ export function login(params) {
         return response
     })
 }
+export function getUserInfo(params) {
+    return fly.post('/api/user/info', params).then((response) => {
+        return response
+    })
+}
 export function saveUserInfo(params) {
     return fly.post('/wxapplib/wxapp/saveUserInfo', params).then((response) => {
         return response
