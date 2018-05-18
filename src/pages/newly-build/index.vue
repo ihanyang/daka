@@ -245,6 +245,7 @@
                     HasClock: 0,
                     ClockNum: 0,
                     IsJoin: 1,
+                    JoinNum: 0,
                     ClockPID: data.data.id,
                     PlanName: this.title,
                     Cover: this.newlyBuildImage || this.newlyBuildImg,
