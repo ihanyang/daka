@@ -61,7 +61,6 @@
 	}
 }
 .icon {
-	flex: 1;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -76,6 +75,7 @@
 	}
 }
 button {
+	height: 100%;
 	color: #22CDCB;
 	font-size: 13px;
 	line-height: normal;
@@ -93,8 +93,8 @@ button {
 			{{text}}
 		</div>
 
-		<form @submit="submit" :report-submit="true" class="icon comment-icon">
-            <button form-type="submit" id="daka-post-comment">发表心得</button>
+		<form @submit="submit" :report-submit="true">
+            <button form-type="submit" id="daka-post-comment" class="icon comment-icon">发表心得</button>
         </form>
 		<!-- <div class="icon comment-icon" @click="go(2)">发表心得</div> -->
 

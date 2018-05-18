@@ -113,7 +113,7 @@
 
         <div class="cc-list" v-if="index === 2">
             <div class="cc-item" :class="{zu: item.IsPlanOwner == 1}" :key="item.Avatar" v-for="item of ccList">
-                <img :src="item.Avatar">
+                <img :src="item.Avatar || defaultAvatar">
                 <p v-text="item.Nickname"></p>
                 <span>已坚持打卡{{item.ClockDay}}天</span>
             </div>
