@@ -797,7 +797,7 @@
                     }
                 }
 
-                if (! this.isShowHome) {
+                if (wx.getStorageSync('isLoadedHomeData')) {
                     this.$store.commit('setDakaPlanNum', ++ this.$store.state.dakaPlanNum)
                     this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
                 }
