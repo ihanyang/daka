@@ -11,7 +11,7 @@
             <div class="home-learn">
                 <div class="home-learn-item">
                     <strong>{{learnHoursFormat}}</strong>
-                    <p>累计时长1111</p>
+                    <p>累计时长2222</p>
                 </div>
                 <div class="home-learn-item">
                     <strong>{{dakaTotalNum}}天</strong>
