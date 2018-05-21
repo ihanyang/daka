@@ -35,7 +35,7 @@ export function sendTime(time) {
         return
     }
 
-    if (! app.save) {
+    if (! app.user) {
         return
     }
 

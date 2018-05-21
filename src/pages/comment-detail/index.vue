@@ -32,7 +32,7 @@
 			<div class="like-list">
 				{{likeName}}
 			</div>
-			<reply-item :class="{'no-join': ! isJoin}" :isJoin="isJoin" :key="item.CreateTime" :item="item" v-for="item of replyList" @reply="replyHandler"></reply-item>
+			<reply-item :isJoin="isJoin" :key="item.CreateTime" :item="item" v-for="item of replyList" @reply="replyHandler"></reply-item>
 		</div>
 	</div>
 </template>
