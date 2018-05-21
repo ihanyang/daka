@@ -213,6 +213,10 @@ footer {
                 }
 			},
 			comment(id, nickname) {
+				if (! this.item.HasJoin) {
+					return
+				}
+
 				const app = getApp()
 
 				app.postItem = this.item

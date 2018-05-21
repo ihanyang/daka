@@ -8,7 +8,7 @@
 				<strong v-text="item.Nickname"></strong>
 				<span v-text="time"></span>
 			</div>
-			<div class="reply-btn" @click="reply">回复</div>
+			<div class="reply-btn" @click="reply" v-if="isJoin">回复</div>
 		</header>
 		<p v-text="item.ReplyContent" v-if="! item.ReplyMemberID"></p>
 		<p v-else>
@@ -22,7 +22,7 @@
 	import {timeFormat, getDefaultAvatar} from '@/utils'
 
 	export default {
-		props: ['item'],
+		props: ['item', 'isJoin'],
 
 		computed: {
 			time() {
