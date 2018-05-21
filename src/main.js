@@ -2,8 +2,11 @@ import Vue from 'vue'
 import App from './App'
 
 import store from './vuex'
+import auth from '@/components/auth'
 
 import '@/css/common'
+
+Vue.component('auth', auth)
 
 Vue.config.productionTip = false
 App.mpType = 'app'

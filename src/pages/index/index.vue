@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import auth from '@/components/auth'
+    //import auth from '@/components/auth'
     import dakaItem from '@/components/daka-item'
     import loading from '@/components/loading'
 
@@ -77,7 +77,7 @@
         },
 
         components: {
-            auth,
+            //auth,
             dakaItem,
             loading
         },

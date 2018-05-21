@@ -160,7 +160,7 @@
 </template>
 
 <script>
-    import auth from '@/components/auth'
+    //import auth from '@/components/auth'
     import tabBar from '@/components/tab-bar'
     import actionSheet from '@/components/action-sheet'
     import experienceItem from '@/components/experience-item'
@@ -225,7 +225,7 @@
         },
 
         components: {
-            auth,
+            //auth,
             tabBar,
             actionSheet,
             experienceItem
