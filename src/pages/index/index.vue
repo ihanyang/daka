@@ -227,13 +227,7 @@
                     return
                 }
 
-                if (data.flag === 1) {
-                    if (+ data.data.status01 === 1) {
-                        this.checkStatus = false
-                    } else {
-                        this.checkStatus = true
-                    }
-                }
+                + data.data.status01 === 1 ? this.checkStatus = false : this.checkStatus = true
             },
             submit(e) {
                 this.sendFormId(e.target.formId)
