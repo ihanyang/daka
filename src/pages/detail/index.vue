@@ -165,7 +165,7 @@
     import actionSheet from '@/components/action-sheet'
     import experienceItem from '@/components/experience-item'
 
-    import {getDetailData, getCCList, getNewMessage, getExperienceList, daka, join, getCheckStatus, addFormId} from '@/api'
+    import {getDetailData, getCCList, getNewMessage, getExperienceList, daka, join, getCheckStatus, addFormId, getUserInfo} from '@/api'
     import {login, getDefaultAvatar} from '@/utils'
 
     import {mapState} from 'vuex'
@@ -353,7 +353,7 @@
 
         methods: {
             getData() {
-                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList(), this.getUserInfo()]).then(() => {
                     //wx.hideLoading()
                     this.loaded = true
                 }).catch((e) => {
@@ -363,7 +363,7 @@
             userInfoHandler() {
                 this.authModalStatus = false
 
-                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList()]).then(() => {
+                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList(), this.getUserInfo()]).then(() => {
                     //wx.hideLoading()
                     this.loaded = true
                 }).catch(async (e) => {
@@ -496,9 +496,19 @@
                 this.taped = false
             },
             async getUserInfo() {
-                await login()
+                const data = await getUserInfo()
 
-                this.authModalStatus = true
+                if (! data) {
+                    return
+                }
+
+                getApp().user = {
+                    avatar: data.data.Avatar,
+                    nickname: data.data.Nickname
+                }
+                //await login()
+
+                //this.authModalStatus = true
                 //await this.getUserInfoWX()
             },
             getUserInfoWX() {

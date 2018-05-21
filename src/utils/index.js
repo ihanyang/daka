@@ -19,13 +19,6 @@ export function login() {
 
                 getApp().session = data.data.session
 
-                const d = await getUserInfo()
-
-                getApp().user = {
-                    avatar: d.data.Avatar,
-                    nickname: d.data.Nickname
-                }
-
                 resolve(data)
             },
             fail() {
