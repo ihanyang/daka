@@ -155,7 +155,7 @@
 
         <auth v-if="authModalStatus" @userInfoHandler="userInfoHandler"></auth>
 
-        <tab-bar :isDaKa="isDaKa" v-if="isJoin" @daka="forDaka"></tab-bar>
+        <tab-bar :isDaKa="isDaKa" v-if="isJoin" @daka="submit"></tab-bar>
     </div>
 </template>
 

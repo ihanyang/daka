@@ -38,6 +38,7 @@
 	left: 50%;
 	bottom: 10%;
 	text-align: center;
+	overflow: visible;
 	transform: translateX(-50%);
 
 	& section {
@@ -47,7 +48,7 @@
 		width: 52px;
 		height: 52px;
 		position: absolute;
-		top: -80%;
+		top: -35%;
 		left: 50%;
 		border: 6px solid #FFF;
 		/* box-sizing: border-box; */
@@ -92,10 +93,17 @@ button {
 
 
 
-		<div class="icon daka-icon" @click="go(1)">
+		<!-- <div class="icon daka-icon" @click="go(1)">
 			<section></section>
 			{{text}}
-		</div>
+		</div> -->
+
+		<form @submit="submitDaka" :report-submit="true">
+            <button form-type="submit" id="daka-daka" class="icon daka-icon">
+            	<section></section>
+				{{text}}
+            </button>
+        </form>
 
 		<form @submit="submit" :report-submit="true">
             <button form-type="submit" id="daka-post-comment" class="icon comment-icon">发表心得</button>
@@ -151,6 +159,9 @@ button {
 		},
 
 		methods: {
+			submitDaka(e) {
+				this.$emit('daka', e)
+			},
 			submit(e) {
                 this.sendFormId(e.target.formId)
 
