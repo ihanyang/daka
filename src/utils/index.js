@@ -39,6 +39,10 @@ export function sendTime(time) {
         return
     }
 
+    if ((+ new Date() - app.enterTime) / 1000 < 1) {
+        return
+    }
+
     sendTimes({
         studyTime: (+ new Date() - app.enterTime) / 1000
     })
