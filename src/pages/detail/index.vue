@@ -809,7 +809,8 @@
 
                 if (wx.getStorageSync('isLoadedHomeData')) {
                     this.$store.commit('setDakaPlanNum', ++ this.$store.state.dakaPlanNum)
-                    this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
+
+                    app.item && this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
                 }
 
                 // 加入任意一个之后，再次进入就直接进入首页
