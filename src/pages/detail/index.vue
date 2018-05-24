@@ -402,7 +402,7 @@
                 }
 
                 if (data.flag === 1) {
-                    if (+ data.data.status01 === 1) {
+                    if (+ data.data.status02 === 1) {
                         this.checkStatus = false
                     } else {
                         this.checkStatus = true
