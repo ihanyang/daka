@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 .post-wrapper {
 	padding: 20px 18px 0;
 	color: #ABABAB;
@@ -15,11 +15,16 @@
 		color: #ABABAB;
 	}
 }
+.add-image-wrapper {
+	display: flex;
+}
 .add-image {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 90px;
+	width: 90px;
+	height: 80px;
+	margin-right: 15px;
 	border-radius: 5px;
 	background-color: #F2F2F2;
 }
@@ -30,6 +35,7 @@
 	background-size: 25px;
 }
 .post-preview-image {
+	margin-top: 38px;
 	font-size: 0;
 }
 .post-image-wrapper {
@@ -85,7 +91,7 @@
 		height: 41px;
 	}
 }
-.post-btn {
+.post-btn, .delete-btn {
 	width: 180px;
 	margin: 61px auto;
 	font-size: 18px;
@@ -93,11 +99,105 @@
 	border-radius: 5px;
 	background-color: #22CDCB;
 }
+.delete-btn {
+	width: 50px;
+	margin: 0 0 0 auto;
+	font-size: 13px;
+	line-height: 30px;
+}
+.post-audio-wrapper {
+	display: flex;
+	align-items: center;
+	margin-top: 30px;
+	color: #ABABAB;
+	font-size: 12px;
+
+	& .icon {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 55px;
+		height: 55px;
+		margin-right: 20px;
+		border-radius: 50%;
+		box-shadow: 0 0 15px rgba(46, 217, 208, .2);
+
+		&::after {
+			content: "";
+			width: 20px;
+			height: 20px;
+			border-radius: 8px;
+			background-color: #22CDCB;
+		}
+	}
+
+	& .icon.play {
+		background: url(~@/images/play.png) center no-repeat;
+		background-size: 22px;
+
+		&::after {
+			display: none;
+		}
+	}
+
+	& .icon.pause {
+		background: url(~@/images/pause.png) center no-repeat;
+		background-size: 10px 18px;
+
+		&::after {
+			display: none;
+		}
+	}
+
+	& p {
+		width: 220px;
+		margin-top: 10px;
+		line-height: 1.6;
+	}
+}
+
 </style>
 
 <template>
 	<div class="post-wrapper">
 		<textarea v-model.lazy="experience" maxlength="500" placeholder-class="placeholder" placeholder="说说今天的心得和收获吧～"></textarea>
+
+		<div class="add-image-wrapper">
+			<div class="add-image" @click="chooseImage" v-if="! previewImages.length">
+				<div class="add-image-icon">图片</div>
+			</div>
+			<div class="add-image post-audio" @click="chooseAudio" v-if="isRecording === 0">
+				<div class="add-image-icon">音频</div>
+			</div>
+		</div>
+
+		<div class="post-audio-wrapper" v-if="isRecording === 1">
+			<div class="icon" @click="stop"></div>
+			<div class="info">
+				<span>{{minute}}:{{second}}/10:00</span>
+				<p>录音结束前请勿进行其他操作，录音时长 10 分钟内</p>
+			</div>
+		</div>
+
+		<div class="post-audio-wrapper" v-if="isRecording === 2">
+			<div class="icon play" @click="play"></div>
+			<div class="info">
+				<span>{{minute}}:{{second}}</span>
+				<p>点击图标可播放音频</p>
+			</div>
+			<div class="btn delete-btn" @click="deleteAudio">删除</div>
+		</div>
+
+		<div class="post-audio-wrapper" v-if="isRecording === 3">
+			<div class="icon play" @click="play" v-if="isPause"></div>
+			<div class="icon pause" @click="pause" v-else></div>
+
+			<div class="info">
+				<span>{{minutePlay}}:{{secondPlay}}/{{minute}}:{{second}}</span>
+				<p>点击图标可播放音频</p>
+			</div>
+			<div class="btn delete-btn" @click="deleteAudio">删除</div>
+		</div>
 
 		<template v-if="previewImages.length">
 			<div class="post-preview-image">
@@ -107,11 +207,6 @@
 				</div>
 
 				<div class="post-image-wrapper resume-add-image" @click="chooseImage" v-if="previewImages.length < 9"></div>
-			</div>
-		</template>
-		<template v-else>
-			<div class="add-image" @click="chooseImage">
-				<div class="add-image-icon">添加图片</div>
 			</div>
 		</template>
 
@@ -129,7 +224,30 @@
 
 				experience: '',
 				previewImages: [],
-				images: []
+				images: [],
+
+				//minute: 0,
+				//second: 0,
+				time: 0,
+				timePlay: 0,
+				isRecording: 0,
+				waitPlay: false,
+				isPause: false
+			}
+		},
+
+		computed: {
+			minute() {
+				return `${~~ (this.time / 60)}`.replace(/\b(\w)\b/g, '0$1')
+			},
+			second() {
+				return `${this.time - (this.minute * 60)}`.replace(/\b(\w)\b/g, '0$1')
+			},
+			minutePlay() {
+				return `${~~ (this.timePlay / 60)}`.replace(/\b(\w)\b/g, '0$1')
+			},
+			secondPlay() {
+				return `${this.timePlay - (this.minutePlay * 60)}`.replace(/\b(\w)\b/g, '0$1')
 			}
 		},
 
@@ -141,6 +259,25 @@
 			this.experience = ''
 			this.previewImages = []
 			this.images = []
+
+			this.isRecording = 0
+			this.isPause = false
+
+			this.time = 0
+			this.timePlay = 0
+
+			console.log(this.$voice)
+			console.log(this.$recorder)
+
+			this.$voice && this.$voice.stop()
+			this.$recorder && this.$recorder.stop()
+
+			this.$voice = null
+			//this.$recorder = null
+			this.$recorderPath = null
+
+			clearTimeout(this.$timerPlay)
+			clearTimeout(this.$timer)
 		},
 
 		methods: {
@@ -159,6 +296,110 @@
                 }
 
                 app.qiniu = data.data
+            },
+            chooseAudio() {
+            	this.isRecording = 1
+
+            	this.$recorder = wx.getRecorderManager()
+            	console.log(this.$recorder)
+
+
+            	this.$recorder.onStop(({tempFilePath}) => {
+            		wx.showToast({
+            			title: '操'
+            		})
+            		this.$recorderPath = tempFilePath
+            	})
+
+            	this.$recorder.start({
+            		duration: 60000 * 10,
+            	})
+
+            	this.$timer = setTimeout(function go () {
+            		if (this.time >= 10 * 60) {
+            			this.isRecording = 2
+
+            			return
+            		}
+
+            		this.time++
+
+            		this.$timer = setTimeout(go.bind(this), 1000)
+            	}.bind(this), 1000)
+            },
+            deleteAudio() {
+            	this.time = 0
+            	this.timePlay = 0
+            	this.isRecording = 0
+            	this.isPause = false
+
+            	this.$voice.stop()
+
+            	this.$voice = null
+            	this.$recorder = null
+            	this.$recorderPath = null
+
+            	clearTimeout(this.$timerPlay)
+            },
+            stop() {
+            	clearTimeout(this.$timer)
+
+            	this.$recorder.stop()
+
+            	this.isRecording = 2
+            	//this.waitPlay = true
+            },
+            play() {
+            	// 说明当前是暂停状态
+            	if (this.timePlay) {
+            		this.$voice.play()
+
+            		this.isPause = false
+            		this.isRecording = 3
+
+            		this.$timerPlay = setTimeout(function go () {
+	            		if (this.timePlay >= this.time) {
+	            			this.timePlay = 0
+	            			this.isRecording = 2
+
+	            			return
+	            		}
+
+	            		this.timePlay++
+
+	            		this.$timerPlay = setTimeout(go.bind(this), 1000)
+	            	}.bind(this), 1000)
+
+            		return
+            	}
+
+            	const voice = wx.createInnerAudioContext()
+
+            	this.$voice = voice
+
+				voice.autoplay = true
+				voice.src = this.$recorderPath
+
+				this.isRecording = 3
+
+				this.$timerPlay = setTimeout(function go () {
+            		if (this.timePlay >= this.time) {
+            			this.timePlay = 0
+            			this.isRecording = 2
+
+            			return
+            		}
+
+            		this.timePlay++
+
+            		this.$timerPlay = setTimeout(go.bind(this), 1000)
+            	}.bind(this), 1000)
+            },
+            pause() {
+            	this.isPause = true
+            	this.$voice.pause()
+
+            	clearTimeout(this.$timerPlay)
             },
 			chooseImage() {
                 const app = getApp()
@@ -179,9 +420,9 @@
             deleteImage(index) {
             	this.previewImages.splice(index, 1)
             },
-            uploadImage() {
+            uploadImage(arr) {
             	const app = getApp()
-            	const p = this.previewImages.map((item) => {
+            	const p = arr.map((item) => {
             		return new Promise((resolve, reject) => {
             			wx.uploadFile({
 		                    url: 'https://up.qbox.me',
@@ -231,6 +472,9 @@
 	            return Promise.all(p)
             },
 			post() {
+				this.uploadImage([this.$recorderPath])
+				return
+
 				setTimeout(async () => {
 					if (! this.experience.trim()) {
 						wx.showToast({
@@ -245,7 +489,7 @@
 
 					app.loadingText = '正在发表'
 
-					const imagesURL = await this.uploadImage()
+					const imagesURL = await this.uploadImage(this.previewImages)
 					const a = imagesURL.map((item) => ({url: item, width: 0, height: 0}))
 					const params = {
 						clockPID: this.$root.$mp.query.id,

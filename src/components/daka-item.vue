@@ -2,19 +2,18 @@
 .li {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
+    padding: 15px;
     margin-bottom: 15px;
     border-radius: 5px;
     background-color: #FFF;
 }
 
 .figure {
-    height: 55px;
     position: relative;
 
     & img {
-        width: 55px;
-        height: 100%;
+        width: 70px;
+        height: 70px;
         border-radius: 5px;
     }
 }
@@ -35,7 +34,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding-bottom: 5px;
+    padding: 6px 0;
     margin: 0 15px;
     color: #AAA;
     font-size: 13px;

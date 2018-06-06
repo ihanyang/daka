@@ -229,6 +229,16 @@ export function setDakaSetting(params) {
         return response
     })
 }
+export function deletePlan(params) {
+    return fly.post('/api/clock/exitPlan', params).then((response) => {
+        return response
+    })
+}
+export function transPlan(params) {
+    return fly.post('/api/clock/transferPlan', params).then((response) => {
+        return response
+    })
+}
 
 //import {login} from '@/utils'
 

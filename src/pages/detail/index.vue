@@ -97,6 +97,8 @@
         <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus && loaded">暂无打卡心得</p>
 
         <div class="detail-intro" v-if="index === 1 && ! checkStatus">
+            <img class="detail-image" :src="item.MediaUrl" v-for="item of detailImages" mode="widthFix">
+
             <template v-if="introList.length">
                 <!-- <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
                 <div class="btn" @click="spread" v-if="isShrink && isLongIntro">展开</div>
@@ -220,7 +222,9 @@
 
                 pageCC: 1,
                 isListLoadedCC: false,
-                ccList: []
+                ccList: [],
+
+                detailImages: []
             }
         },
 
@@ -325,6 +329,17 @@
                 app.newContent = false
 
                 this.getDetailData()
+            }
+
+            // 删除了计划
+            if (app.isDeletePlan) {
+                app.isDeletePlan = false
+
+                this.$store.commit('setDakaPlanNum', -- this.$store.state.dakaPlanNum)
+                this.$store.commit('setDakaList', this.$store.state.dakaList.filter((item) => item.ClockPID !== this.$detailID))
+
+                this.clear()
+                this.getData()
             }
 
             app.contentList = []
@@ -582,6 +597,8 @@
                 this.totalDaKa = data.data.TotalJoinNum
                 this.avatarList = data.data.AvatarList
                 this.intro = data.data.Description
+
+                this.detailImages = data.data.DescImages
 
                 if (data.data.MenuList) {
                     this.syllabusList = data.data.MenuList

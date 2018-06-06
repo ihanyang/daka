@@ -122,6 +122,9 @@ footer {
 		<div class="image-wrapper" :class="{four: item.ImageList.length === 4}" v-else @click="previewImage">
 			<img class="content-image" :key="item.ImageUrl" :src="item.ImageUrl" :data-index="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
 		</div>
+
+		<music v-if="item.AudioInfo"></music>
+
 		<footer>
 			<div class="time">{{time}}</div>
 
@@ -150,9 +153,14 @@ footer {
 <script>
 	import {timeFormat, getDefaultAvatar} from '@/utils'
 	import {fetch} from '@/api'
+	import music from '@/components/music'
 
 	export default {
 		props: ['item'],
+
+		components: {
+			music
+		},
 
 		computed: {
 			replyList() {
