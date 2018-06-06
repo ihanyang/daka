@@ -306,7 +306,7 @@
 
             	this.$recorder.onStop(({tempFilePath}) => {
             		wx.showToast({
-            			title: '操'
+            			title: '344423'
             		})
             		this.$recorderPath = tempFilePath
             	})
