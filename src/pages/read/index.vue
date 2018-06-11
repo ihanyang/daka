@@ -1,8 +1,11 @@
 <style scoped>
 .read-wrapper {
+	min-height: 100vh;
 	padding: 40px 30px 0;
 	color: #333;
 	font-size: 18px;
+	box-sizing: border-box;
+	background-color: #FAFAFA;
 }
 h1 {
 	margin-bottom: 28px;
@@ -13,6 +16,7 @@ h1 {
 	margin-bottom: 10px;
 	text-indent: 35px;
 	line-height: 1.7;
+	word-break: break-all;
 }
 .tips {
 	margin-top: 30px;
@@ -31,11 +35,20 @@ h1 {
 		transform: translate(-50%, -50%);
 	}
 }
+video {
+	display: block;
+	width: 100%;
+	margin: 0 auto;
+}
 </style>
 
 <template>
 	<div class="read-wrapper">
 		<h1 v-text="title"></h1>
+
+		<video :src="video.MediaUrl" v-if="video"></video>
+
+		<music :id="id" :audio="audio" v-if="audio"></music>
 
 		<!-- <text class="content" v-text="content"></text> -->
 		<p class="content" :key="item" v-for="item of contentList" v-text="item"></p>
@@ -45,6 +58,7 @@ h1 {
 </template>
 
 <script>
+	import music from '@/components/music'
 	import {getReadContent} from '@/api'
 
 	export default {
@@ -52,17 +66,50 @@ h1 {
 			return {
 				title: '',
 				content: '',
-				contentList: []
+				contentList: [],
+
+				//url: '',
+				//duration: 0,
+				//audioTitle: '',
+
+				audio: null,
+
+				video: null,
+
+				time: 0,
+
+				id: '',
 			}
+		},
+
+		components: {
+			music
 		},
 
 		onLoad() {
 			this.getContent()
+
+			getApp().currentReadID = this.$root.$mp.query.id
 		},
 
 		onUnload() {
 			this.title = ''
 			this.contentList = []
+
+			// 背景音乐
+			// if (this.audio) {
+			// 	getApp().$audio = this.audio
+			// 	return
+			// }
+
+
+			// const app = getApp()
+
+			// app.bgmIsPlay = true
+			// app.bgm = wx.getBackgroundAudioManager()
+
+			// app.bgm.src = this.url
+			// app.bgm.seek(this.time)
 		},
 
 		methods: {
@@ -85,6 +132,33 @@ h1 {
 		        wx.setNavigationBarTitle({
 		        	title: data.data.BookTitle
 		        })
+
+		        this.video = data.data.VideoInfo
+
+
+		        // data.data.AudioInfo = {
+		        // 	MediaTitle: '哈哈哈',
+		        // 	MediaTime: 25,
+		        // 	MediaUrl: 'http://oocffpuei.bkt.clouddn.com/Fom47okucGUEST1WAYEXRi6dz-OK'
+		        // }
+
+		        if (! data.data.AudioInfo) {
+		        	return
+		        }
+
+		        const {MediaUrl, MediaTime, MediaTitle} = data.data.AudioInfo
+
+
+		        this.audio = {
+		        	url: MediaUrl,
+		        	duration: MediaTime,
+		        	title: MediaTitle
+		        }
+		        return
+
+		        this.audioTitle = data.data.AudioInfo.MediaTitle
+		        this.duration = data.data.AudioInfo.MediaTime
+		        this.url = data.data.AudioInfo.MediaUrl
 			}
 		}
 	}

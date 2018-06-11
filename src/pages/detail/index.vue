@@ -79,7 +79,7 @@
                 <div class="btn ke-btn" @click="goKe">课程表</div>
             </h1>
             <div class="today-card" @click="goChapterDetail(todayID, 1)">
-                <img :src="todayCover">
+                <img :src="todayCover" mode="aspectFill">
                 <div class="today-card-info">
                     <h3 v-text="todayTitle"></h3>
                     <p v-text="todayAuthor"></p>
@@ -158,16 +158,20 @@
         <auth v-if="authModalStatus" @userInfoHandler="userInfoHandler"></auth>
 
         <tab-bar :isDaKa="isDaKa" v-if="isJoin" @daka="submit"></tab-bar>
+
+        <music-icon @close="musicClose"></music-icon>
+
+        <canvas class="canvas" canvas-id="ccc"/>
     </div>
 </template>
 
 <script>
-    //import auth from '@/components/auth'
+    import musicIcon from '@/components/music-icon'
     import tabBar from '@/components/tab-bar'
     import actionSheet from '@/components/action-sheet'
     import experienceItem from '@/components/experience-item'
 
-    import {getDetailData, getCCList, getNewMessage, getExperienceList, daka, join, getCheckStatus, addFormId, getUserInfo} from '@/api'
+    import {getDetailData, getCCList, getNewMessage, getExperienceList, daka, join, getCheckStatus, addFormId, getUserInfo, getQiNiuToken} from '@/api'
     import {login, getDefaultAvatar} from '@/utils'
 
     import {mapState} from 'vuex'
@@ -175,6 +179,8 @@
     export default {
         data() {
             return {
+                canvasId: 'mycanvas',
+
                 loaded: false,
 
                 authModalStatus: false,
@@ -224,13 +230,16 @@
                 isListLoadedCC: false,
                 ccList: [],
 
-                detailImages: []
+                detailImages: [],
+
+                //isShowMusicIcon: false
             }
         },
 
         components: {
             //auth,
             tabBar,
+            musicIcon,
             actionSheet,
             experienceItem
         },
@@ -300,6 +309,8 @@
             // } else {
             //     await this.getUserInfo()
             // }
+
+            //this.getQiNiuToken()
         },
 
         onShow() {
@@ -332,15 +343,20 @@
             }
 
             // 删除了计划
-            if (app.isDeletePlan) {
-                app.isDeletePlan = false
+            // if (app.isDeletePlan) {
+            //     app.isDeletePlan = false
 
-                this.$store.commit('setDakaPlanNum', -- this.$store.state.dakaPlanNum)
-                this.$store.commit('setDakaList', this.$store.state.dakaList.filter((item) => item.ClockPID !== this.$detailID))
+            //     this.$store.commit('setDakaPlanNum', -- this.$store.state.dakaPlanNum)
+            //     this.$store.commit('setDakaList', this.$store.state.dakaList.filter((item) => item.ClockPID !== this.$detailID))
 
-                this.clear()
-                this.getData()
-            }
+            //     this.clear()
+            //     this.getData()
+            // }
+
+            // 背景音乐
+            // if (app.bgm) {
+            //     this.isShowMusicIcon = true
+            // }
 
             app.contentList = []
         },
@@ -359,16 +375,37 @@
 
         onShareAppMessage(res) {
             const app = getApp()
+            console.log(this.$shareURL)
 
             return {
                 title: `${app.user.nickname}邀请你加入打卡计划#${app.planName}#`,
-                path: `/pages/detail/index?id=${this.$detailID}`
+                path: `/pages/detail/index?id=${this.$detailID}`,
+                imageUrl: this.$shareURL
             }
         },
 
         methods: {
+            musicClose() {
+                this.isShowMusicIcon = false
+            },
+            async getQiNiuToken() {
+                const app = getApp()
+
+                if (app.qiniu) {
+
+                    return
+                }
+
+                const data = await getQiNiuToken()
+
+                if (! data) {
+                    return
+                }
+
+                app.qiniu = data.data
+            },
             getData() {
-                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList(), this.getUserInfo()]).then(() => {
+                Promise.all([this.getDetailData(), this.getQiNiuToken(), this.getCCList(), this.getNewMessage(), this.getExperienceList(), this.getUserInfo()]).then(() => {
                     //wx.hideLoading()
                     this.loaded = true
                 }).catch((e) => {
@@ -378,7 +415,7 @@
             userInfoHandler() {
                 this.authModalStatus = false
 
-                Promise.all([this.getDetailData(), this.getCCList(), this.getNewMessage(), this.getExperienceList(), this.getUserInfo()]).then(() => {
+                Promise.all([this.getDetailData(), this.getQiNiuToken(), this.getCCList(), this.getNewMessage(), this.getExperienceList(), this.getUserInfo()]).then(() => {
                     //wx.hideLoading()
                     this.loaded = true
                 }).catch(async (e) => {
@@ -482,6 +519,8 @@
                 })
             },
             goChapterDetail(id, isRead, lock) {
+                getApp().currentCover = this.todayCover
+
                 if (lock === 0) {
                     return
                 }
@@ -621,6 +660,10 @@
                 this.isDaKa = data.data.HasClock
                 this.isComplete = data.data.HasFinish
 
+                // 自定义分享图片
+
+                //this.toImage(data)
+
                 // 更新 item
                 const app = getApp()
 
@@ -642,6 +685,93 @@
 
                 wx.setNavigationBarTitle({
                     title: data.data.PlanName.length > 20 ? `${data.data.PlanName.slice(0, 20)}...` : data.data.PlanName
+                })
+            },
+            downloadImage(url) {
+                return new Promise((resolve, reject) => {
+                    wx.downloadFile({
+                        url,
+                        success({tempFilePath}) {
+                            resolve(tempFilePath)
+                        }
+                    })
+                })
+            },
+            async toImage(data) {
+                const arr = ['http://oocffpuei.bkt.clouddn.com/FmHeVs4Wkn6zw2x3Yoq3hky9LCHy', ... data.data.AvatarList.map((item) => item.Avatar)].map((item) => this.downloadImage(item))
+                const result = await Promise.all(arr)
+
+                const ctx = wx.createCanvasContext('ccc')
+
+                ctx.drawImage(result[0], 0, 0, 300, 240)
+
+                ctx.save()
+                ctx.setFillStyle('#FFF')
+                ctx.fillRect(32, 26, 236, 188)
+                ctx.fill()
+                ctx.save()
+
+                const start = 32 + (236 - (data.data.AvatarList.length * 14) - 5 - ((`${data.data.joinNum}`.length + 4) * 10)  )
+
+                data.data.AvatarList.forEach((item, index) => {
+                    ctx.beginPath()
+                    ctx.arc(start + (index * 14) + 7, 139 + 7, 7, 0, Math.PI * 2)
+                    ctx.clip()
+                    ctx.drawImage(result[index + 1], start + (index * 14), 139, 14, 14)
+                    ctx.restore()
+                })
+
+                ctx.setFontSize(8)
+                ctx.setFillStyle('#333')
+                ctx.fillText('今日热门打卡', 126, 55)
+
+                ctx.setFontSize(18)
+                ctx.setFillStyle('#1D2C2F')
+
+                const str = data.data.PlanName.length > 10 ? `${data.data.PlanName.slice(0, 10)}...` : data.data.PlanName
+
+                ctx.fillText(str, 32 + ((236 - (str.length * 18)) / 2), 100)
+
+                ctx.setFontSize(10)
+                ctx.setFillStyle('#1D2C2F')
+                ctx.fillText(`${data.data.JoinNum}人已加入`, (start + (data.data.AvatarList.length * 14)) + 5, 150)
+
+                ctx.draw(false, () => {
+                    //return
+                    wx.canvasToTempFilePath({
+                        canvasId: 'ccc',
+                        success: ({tempFilePath}) => {
+                            //console.log(tempFilePath)
+                            const app = getApp()
+
+                            wx.uploadFile({
+                                url: 'https://up.qbox.me',
+                                filePath: tempFilePath,
+                                name: 'file',
+                                formData: {
+                                    token: app.qiniu.token
+                                },
+                                success: (res) => {
+                                    const data = JSON.parse(res.data)
+
+                                    if (res.statusCode !== 200) {
+                                        wx.showModal({
+                                            title: '提示',
+                                            content: '上传失败',
+                                            showCancel: false
+                                        })
+
+                                        reject()
+
+                                        return
+                                    }
+
+                                    console.log(`${app.qiniu.domain}${data.key}`)
+                                    this.$shareURL = `${app.qiniu.domain}${data.key}`
+                                }
+                            })
+                        }
+                    })
                 })
             },
             async getNewMessage() {

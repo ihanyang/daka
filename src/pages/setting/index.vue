@@ -278,6 +278,8 @@
 
 			this.ccList = []
 			this.$remindTime = ''
+
+			this.$memberID = null
 		},
 
 		methods: {
@@ -382,10 +384,13 @@
 
 				this.selectZUModalStatus = false
 
-				getApp().isDeletePlan = true
+				//getApp().isDeletePlan = true
 
-				wx.navigateBack({
-					delta: 1
+				this.$store.commit('setDakaPlanNum', -- this.$store.state.dakaPlanNum)
+    			this.$store.commit('setDakaList', this.$store.state.dakaList.filter((item) => item.ClockPID !== this.$root.$mp.query.id))
+
+				wx.switchTab({
+					url: '/pages/index/index'
 				})
 			},
 			go() {

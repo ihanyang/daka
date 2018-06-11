@@ -97,6 +97,7 @@
             this.detail = ''
 
             this.secretType = -1
+            this.previewImages = []
         },
 
         methods: {

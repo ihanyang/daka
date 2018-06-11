@@ -34,6 +34,10 @@
 	background: url(~@/images/image-icon.png) center top no-repeat;
 	background-size: 25px;
 }
+.microphone {
+	background-image: url(~@/images/microphone.png);
+	background-size: 18px 27px;
+}
 .post-preview-image {
 	margin-top: 38px;
 	font-size: 0;
@@ -167,7 +171,7 @@
 				<div class="add-image-icon">图片</div>
 			</div>
 			<div class="add-image post-audio" @click="chooseAudio" v-if="isRecording === 0">
-				<div class="add-image-icon">音频</div>
+				<div class="add-image-icon microphone">音频</div>
 			</div>
 		</div>
 
@@ -232,7 +236,9 @@
 				timePlay: 0,
 				isRecording: 0,
 				waitPlay: false,
-				isPause: false
+				isPause: false,
+				isCanStop: true,
+				stoped: false
 			}
 		},
 
@@ -262,21 +268,31 @@
 
 			this.isRecording = 0
 			this.isPause = false
+			this.posting = false
 
 			this.time = 0
 			this.timePlay = 0
+			this.state = 0
 
 			console.log(this.$voice)
 			console.log(this.$recorder)
 
 			this.$voice && this.$voice.stop()
-			this.$recorder && this.$recorder.stop()
+
+
+			if (this.$recorder) {
+				this.isCanStop = false
+				! this.stoped && this.$recorder.stop()
+			}
+
+			this.isCanStop = true
+			this.stoped = false
 
 			this.$voice = null
 			//this.$recorder = null
 			this.$recorderPath = null
 
-			clearTimeout(this.$timerPlay)
+			//clearTimeout(this.$timerPlay)
 			clearTimeout(this.$timer)
 		},
 
@@ -284,12 +300,14 @@
 			async getQiNiuToken() {
                 const app = getApp()
 
-                if (app.qiniu) {
+                // if (app.qiniu) {
 
-                    return
-                }
+                //     return
+                // }
 
-                const data = await getQiNiuToken()
+                const data = await getQiNiuToken({
+                	mediaType: 1
+                })
 
                 if (! data) {
                 	return
@@ -298,17 +316,38 @@
                 app.qiniu = data.data
             },
             chooseAudio() {
-            	this.isRecording = 1
+            	//this.isRecording = 1
 
             	this.$recorder = wx.getRecorderManager()
-            	console.log(this.$recorder)
 
+            	this.$recorder.onStart(() => {
+            		this.isRecording = 1
+            	})
+
+            	// this.$recorder.onPause(() => {
+
+            	// })
 
             	this.$recorder.onStop(({tempFilePath}) => {
-            		wx.showToast({
-            			title: '344423'
-            		})
+            		if (! this.isCanStop) {
+            			return
+            		}
+
+            		clearTimeout(this.$timer)
+
+            		this.isRecording = 2
             		this.$recorderPath = tempFilePath
+            	})
+
+            	this.$recorder.onError((e) => {
+            		wx.showToast({
+            			title: '系统错误',
+            			icon: 'none',
+            		})
+
+            		this.isRecording = 0
+
+            		clearTimeout(this.$timer)
             	})
 
             	this.$recorder.start({
@@ -339,14 +378,12 @@
             	this.$recorder = null
             	this.$recorderPath = null
 
-            	clearTimeout(this.$timerPlay)
+            	//clearTimeout(this.$timerPlay)
             },
             stop() {
-            	clearTimeout(this.$timer)
-
+            	// 只能调用 stop 一次
+            	this.stoped = true
             	this.$recorder.stop()
-
-            	this.isRecording = 2
             	//this.waitPlay = true
             },
             play() {
@@ -357,18 +394,18 @@
             		this.isPause = false
             		this.isRecording = 3
 
-            		this.$timerPlay = setTimeout(function go () {
-	            		if (this.timePlay >= this.time) {
-	            			this.timePlay = 0
-	            			this.isRecording = 2
+            		// this.$timerPlay = setTimeout(function go () {
+	            	// 	if (this.timePlay >= this.time) {
+	            	// 		this.timePlay = 0
+	            	// 		this.isRecording = 2
 
-	            			return
-	            		}
+	            	// 		return
+	            	// 	}
 
-	            		this.timePlay++
+	            	// 	this.timePlay++
 
-	            		this.$timerPlay = setTimeout(go.bind(this), 1000)
-	            	}.bind(this), 1000)
+	            	// 	this.$timerPlay = setTimeout(go.bind(this), 1000)
+	            	// }.bind(this), 1000)
 
             		return
             	}
@@ -382,24 +419,43 @@
 
 				this.isRecording = 3
 
-				this.$timerPlay = setTimeout(function go () {
-            		if (this.timePlay >= this.time) {
-            			this.timePlay = 0
-            			this.isRecording = 2
+				voice.onPlay((e) => {
+					console.log('音乐播放')
+				})
 
-            			return
-            		}
+				voice.onTimeUpdate(() => {
+					// wx.showToast({
+					// 	title: '' + (~~ voice.currentTime)
+					// })
+					this.timePlay = ~~ voice.currentTime
 
-            		this.timePlay++
+				})
 
-            		this.$timerPlay = setTimeout(go.bind(this), 1000)
-            	}.bind(this), 1000)
+				voice.onEnded((e) => {
+					console.log('录音播放完成')
+
+					this.timePlay = 0
+            		this.isRecording = 2
+				})
+
+				// this.$timerPlay = setTimeout(function go () {
+    //         		if (this.timePlay >= this.time) {
+    //         			this.timePlay = 0
+    //         			this.isRecording = 2
+
+    //         			return
+    //         		}
+
+    //         		this.timePlay++
+
+    //         		this.$timerPlay = setTimeout(go.bind(this), 1000)
+    //         	}.bind(this), 1000)
             },
             pause() {
             	this.isPause = true
             	this.$voice.pause()
 
-            	clearTimeout(this.$timerPlay)
+            	//clearTimeout(this.$timerPlay)
             },
 			chooseImage() {
                 const app = getApp()
@@ -432,6 +488,10 @@
 		                        token: app.qiniu.token
 		                    },
 		                    success: (res) => {
+		                    	// wx.showModal({
+		                    	// 	title:'sdfsdfds',
+		                    	// 	content: JSON.stringify(res.data)
+		                    	// })
 		                        const data = JSON.parse(res.data)
 
 		                        if (res.statusCode !== 200) {
@@ -472,8 +532,33 @@
 	            return Promise.all(p)
             },
 			post() {
-				this.uploadImage([this.$recorderPath])
-				return
+				if (this.posting) {
+					return
+				}
+
+				this.posting = true
+
+				if (this.isRecording === 1) {
+					wx.showToast({
+						title: '正在录音',
+						icon: 'none'
+					})
+
+					this.posting = false
+
+					return
+				}
+
+				if (this.isRecording === 3) {
+					wx.showToast({
+						title: '正在播放',
+						icon: 'none'
+					})
+
+					this.posting = false
+
+					return
+				}
 
 				setTimeout(async () => {
 					if (! this.experience.trim()) {
@@ -481,6 +566,8 @@
 							title: '请先写下今天的心得，再发表吧',
 							icon: 'none'
 						})
+
+						this.posting = false
 
 						return
 					}
@@ -491,10 +578,28 @@
 
 					const imagesURL = await this.uploadImage(this.previewImages)
 					const a = imagesURL.map((item) => ({url: item, width: 0, height: 0}))
+
+					let audioURL
+
+					if (this.$recorderPath) {
+						[audioURL] = await this.uploadImage([this.$recorderPath])
+					}
+
+
+					//return
+
 					const params = {
 						clockPID: this.$root.$mp.query.id,
 						content: this.experience,
 						images: JSON.stringify(a)
+					}
+
+					//audioURL = 'http://oocffpuei.bkt.clouddn.com/Fom47okucGUEST1WAYEXRi6dz-OK'
+
+					if (audioURL) {
+						params.audioUrl = audioURL
+						params.audioTime = this.time
+						//params.processID = ''
 					}
 
 					const data = await postExperience(params)
@@ -508,7 +613,7 @@
 			        	icon: 'none'
 			        })
 
-			        this.$store.commit('setExperienceList', [{
+			        const item = {
 			        	PostID: data.data.id,
 			        	Nickname: app.user.nickname,
 			        	Avatar: app.user.avatar,
@@ -521,7 +626,16 @@
 			        	ReplyNum: 0,
 			        	ImageList: a.map((item) => ({ImageUrl: item.url})),
 			        	ReplyList: []
-			        }, ... this.$store.state.experienceList])
+			        }
+
+			        if (audioURL) {
+			        	item.AudioInfo = {
+			        		MediaTime: this.time,
+			        		MediaUrl: audioURL
+			        	}
+			        }
+
+			        this.$store.commit('setExperienceList', [item, ... this.$store.state.experienceList])
 
 			        wx.navigateBack({
 						delta: 1

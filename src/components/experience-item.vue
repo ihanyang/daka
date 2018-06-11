@@ -123,7 +123,7 @@ footer {
 			<img class="content-image" :key="item.ImageUrl" :src="item.ImageUrl" :data-index="item.ImageUrl" mode="aspectFill" v-for="(item, $ii) of item.ImageList">
 		</div>
 
-		<music v-if="item.AudioInfo"></music>
+		<music-e :audio="item.AudioInfo" v-if="item.AudioInfo"></music-e>
 
 		<footer>
 			<div class="time">{{time}}</div>
@@ -153,13 +153,13 @@ footer {
 <script>
 	import {timeFormat, getDefaultAvatar} from '@/utils'
 	import {fetch} from '@/api'
-	import music from '@/components/music'
+	import musicE from '@/components/music-e'
 
 	export default {
 		props: ['item'],
 
 		components: {
-			music
+			musicE
 		},
 
 		computed: {
