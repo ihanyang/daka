@@ -21,7 +21,7 @@
             <div class="newly-build-img-wrapper">
                 <img :src="newlyBuildImage" class="selected" mode="aspectFill" v-if="newlyBuildImage">
                 <img :src="newlyBuildImg" mode="aspectFill" v-else>
-                <div class="newly-build-input" @click="chooseImage">
+                <div class="newly-build-input" @click="chooseImageCover">
                     <span>本地上传图片</span>
                 </div>
             </div>
@@ -30,6 +30,20 @@
         <div class="newly-build-box">
             <h2>打卡详细描述</h2>
             <textarea v-model.lazy="detail" auto-height maxlength="1000" placeholder-class="placeholder" placeholder="请输入详细描述（选填 1000 字以内）"></textarea>
+        </div>
+
+        <div class="newly-build-box">
+            <div class="preview-image" v-if="previewImages.length">
+                <div class="n-image-wrapper" :key="item" v-for="(item, index) of previewImages">
+                    <span class="del" @click="deleteImage(index)"></span>
+                    <img :src="item" mode="aspectFill">
+                </div>
+
+                <!-- <div class="n-image-wrapper resume-add-image" @click="chooseImage" v-if="previewImages.length < 9"></div> -->
+            </div>
+            <div class="add-image" @click="chooseImage" v-if="previewImages.length < 10">
+                <div class="add-image-icon">添加图片</div>
+            </div>
         </div>
 
         <div class="newly-build-box">
@@ -62,6 +76,8 @@
                 newlyBuildImg: '',
                 newlyBuildImage: '',
 
+                previewImages: [],
+
                 secretType: -1,
 
                 generating: false
@@ -93,6 +109,61 @@
         },
 
         methods: {
+            chooseImage() {
+                const app = getApp()
+
+                wx.chooseImage({
+                    success: (res) => {
+                        this.previewImages = [... this.previewImages, ... res.tempFilePaths].slice(0, 9)
+                    },
+                    fail() {
+                        wx.showToast({
+                            title: '选择图片失败请重试',
+                            icon: 'none',
+                            duration: 2000
+                        })
+                    }
+                })
+            },
+            deleteImage(index) {
+                this.previewImages.splice(index, 1)
+            },
+            uploadImage() {
+                const app = getApp()
+                const p = this.previewImages.filter((item) => {
+                    return item.indexOf('oocffpuei.bkt.clouddn.com') === -1
+                }).map((item) => {
+                    return new Promise((resolve, reject) => {
+                        wx.uploadFile({
+                            url: 'https://up.qbox.me',
+                            filePath: item,
+                            name: 'file',
+                            formData: {
+                                token: app.qiniu.token
+                            },
+                            success: (res) => {
+                                const data = JSON.parse(res.data)
+
+                                if (res.statusCode !== 200) {
+                                    wx.showModal({
+                                        title: '提示',
+                                        content: '上传失败',
+                                        showCancel: false
+                                    })
+
+                                    reject()
+
+                                    return
+                                }
+
+                                resolve(`${app.qiniu.domain}${data.key}`)
+                            }
+                        })
+                    })
+                })
+
+                return Promise.all(p)
+            },
             async getDetail() {
                 wx.showLoading({
                     title: '正在加载'
@@ -112,6 +183,8 @@
                 this.detail = data.data.Description
                 this.secretType = data.data.Private
                 this.newlyBuildImage = data.data.Cover
+
+                this.previewImages = data.data.DescImages.map((item) => item.MediaUrl)
 
                 wx.hideLoading()
             },
@@ -162,6 +235,14 @@
                         return
                     }
 
+                    let imagesURL = await this.uploadImage()
+
+
+                    imagesURL = [... this.previewImages.filter((item) => item.indexOf('oocffpuei.bkt.clouddn.com') !== -1), ... imagesURL]
+
+                    const a = imagesURL.map((item) => ({MediaUrl: item, Width: 0, Height: 0}))
+
+
                     const params = {
                         clockPID: this.$root.$mp.query.id,
                         planName: this.title,
@@ -169,6 +250,12 @@
                         description: this.detail,
                         private: this.secretType
                     }
+
+                    a.forEach((item, index) => {
+                        params[`descImages[${index}][MediaUrl]`] = item.MediaUrl
+                        params[`descImages[${index}][Width]`] = item.Width
+                        params[`descImages[${index}][Height]`] = item.Height
+                    })
 
                     await editDetailData(params)
 
@@ -186,7 +273,7 @@
             selectSecretType(value) {
                 this.secretType = value
             },
-            chooseImage() {
+            chooseImageCover() {
                 const app = getApp()
 
                 wx.chooseImage({
