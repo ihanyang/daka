@@ -130,7 +130,11 @@
 	}
 
 	& .nickname {
+		width: 100px;
 		font-size: 14px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	& span:last-child {
@@ -182,6 +186,10 @@
 		transform: translate(-50%, -50%) rotate(-45deg);
 	}
 }
+.day {
+	flex-shrink: 0;
+	margin-left: auto;
+}
 </style>
 
 <template>
@@ -216,7 +224,7 @@
 						<li :class="{actived: item.actived}" :dataIndex="item.index" :dataId="item.MemberID" v-for="(item, index) of ccList" :key="item.MemberID" @click="select(item)">
 							<img class="avatar" :src="item.Avatar || defaultAvatar" mode="aspectFill">
 							<span class="nickname" v-text="item.Nickname"></span>
-							<span>已坚持打卡{{item.ClockDay}}天</span>
+							<span class="day">已坚持打卡{{item.ClockDay}}天</span>
 							<span class="dui"></span>
 						</li>
 					</ul>

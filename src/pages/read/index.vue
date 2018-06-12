@@ -129,6 +129,9 @@ video {
 
 		        this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))
 
+		        console.log( data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "")) )
+		        console.log(data.data.Content.match(/<p>.*?<\/p>/g))
+
 		        wx.setNavigationBarTitle({
 		        	title: data.data.BookTitle
 		        })

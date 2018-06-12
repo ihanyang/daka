@@ -29,7 +29,7 @@
 
         <div class="newly-build-box">
             <h2>打卡详细描述</h2>
-            <textarea v-model.lazy="detail" auto-height maxlength="1000" placeholder-class="placeholder" placeholder="请输入详细描述（选填 1000 字以内）"></textarea>
+            <textarea v-model.lazy="detail" maxlength="1000" placeholder-class="placeholder" placeholder="请输入详细描述（选填 1000 字以内）"></textarea>
         </div>
 
         <div class="newly-build-box">

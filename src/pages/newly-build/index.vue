@@ -28,7 +28,7 @@
 
                 <!-- <div class="n-image-wrapper resume-add-image" @click="chooseImage" v-if="previewImages.length < 9"></div> -->
             </div>
-            <div class="add-image" @click="chooseImage" v-if="previewImages.length < 10">
+            <div class="add-image" @click="chooseImage" v-if="previewImages.length < 9">
                 <div class="add-image-icon">添加图片</div>
             </div>
         </div>

@@ -34,8 +34,8 @@
 				{
 					"id": 0,
 					"name": "啊啊",
-					"pathName": "pages/edit/index",
-					"query": "id=67",
+					"pathName": "pages/read/index",
+					"query": "id=257",
 					"scene": "1001"
 				}
 			]

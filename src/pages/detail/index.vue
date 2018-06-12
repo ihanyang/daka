@@ -108,7 +108,7 @@
                     <p v-for="item of introList" :key="item" v-text="item"></p>
                 </div>
             </template>
-            <template v-if="! intro">
+            <template v-if="isShowDesc">
                 <p class="no">组长很懒，没有填写打卡描述~</p>
             </template>
         </div>
@@ -250,6 +250,17 @@
             introList() {
                 console.log(!!this.intro)
                 return this.intro.split('\n')
+            },
+            isShowDesc() {
+                if (this.intro) {
+                    return false
+                }
+
+                if (this.detailImages.length) {
+                    return false
+                }
+
+                return true
             },
             isLongIntro() {
                 return this.intro.length > 40
