@@ -130,7 +130,7 @@
 	}
 
 	& .nickname {
-		width: 100px;
+		width: 70px;
 		font-size: 14px;
 		overflow: hidden;
 		text-overflow: ellipsis;
