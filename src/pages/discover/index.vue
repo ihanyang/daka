@@ -80,8 +80,24 @@
 
             if (getApp().$deleteID) {
                 this.dakaList.forEach((item) => {
-                    item.IsJoin = 0
-                    item.HasClock = 0
+                    if (item.ClockPID === getApp().$deleteID) {
+                        item.IsJoin = 0
+                        item.HasClock = 0
+
+                        if (getApp().user) {
+                            let index = -1
+
+                            item.AvatarList.forEach((item, i) => {
+                                if (item.Avatar === getApp().user.avatar) {
+                                    index = i
+                                }
+                            })
+
+                            if (index !== -1) {
+                                item.AvatarList.splice(index, 1)
+                            }
+                        }
+                    }
                 })
 
                 getApp().$deleteID = null

@@ -953,6 +953,7 @@
 
                 if (app.item) {
                     app.item.IsJoin = 1
+                    app.item.JoinNum++
 
                     if (app.item.AvatarList.length < 3) {
                         app.item.AvatarList.unshift({
