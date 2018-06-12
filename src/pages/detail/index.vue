@@ -673,7 +673,7 @@
 
                 // 自定义分享图片
 
-                //this.toImage(data)
+                this.toImage(data)
 
                 // 更新 item
                 const app = getApp()

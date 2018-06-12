@@ -6,7 +6,7 @@
 }
 header {
 	display: flex;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 .avatar {
 	width: 50px;
@@ -25,7 +25,8 @@ header {
 	}
 }
 .content {
-	margin-bottom: 20px;
+	margin-left: 70px;
+	margin-bottom: 15px;
 	line-height: 1.6;
 	word-break: break-all;
 }
@@ -33,6 +34,7 @@ header {
 	width: 100px;
 	height: 105px;
 	margin-bottom: 13px;
+	margin-left: 70px;
 	border-radius: 5px;
 }
 .like-icon {
@@ -53,6 +55,7 @@ header {
 footer {
 	display: flex;
 	margin-bottom: 23px;
+	margin-top: 20px;
 	color: #AAA;
 	font-size: 14px;
 }
@@ -80,13 +83,15 @@ footer {
 	font-size: 14px;
 }
 .image-wrapper {
+	margin-left: 70px;
 	position: relative;
 
 	& img {
-		width: 105px;
-		height: 70px;
+		width: 90px;
+		height: 90px;
 		margin-right: 10px;
 		margin-bottom: 0;
+		margin-left: 0;
 	}
 
 	& img:nth-child(3n) {
@@ -104,6 +109,12 @@ footer {
 		margin-right: 10px;
 	}
 }
+.f-line {
+	width: 100%;
+	height: 5px;
+	margin-top: 22px;
+	background-color: #E1E1E1;
+}
 </style>
 
 <template>
@@ -113,7 +124,7 @@ footer {
 				<img class="avatar" :src="item.Avatar || defaultAvatar" mode="aspectFill">
 				<div class="info">
 					<strong class="nickname" v-text="item.Nickname"></strong>
-					<span>已坚持打卡{{item.ClockDay}}天</span>
+					<span>{{time}} 已坚持打卡{{item.ClockDay}}天</span>
 				</div>
 			</header>
 			<p class="content" v-text="item.Content"></p>
@@ -126,13 +137,14 @@ footer {
 		<music-e :audio="item.AudioInfo" v-if="item.AudioInfo"></music-e>
 
 		<footer>
-			<div class="time">{{time}}</div>
+
 
 			<template v-if="item.HasJoin">
 				<div class="like-icon" :class="{liked: item.IsPraise}" @click="like" v-text="item.PraiseNum"></div>
 				<div class="comment-icon" @click="comment" v-text="item.ReplyNum"></div>
 			</template>
 		</footer>
+		<div class="f-line"></div>
 		<div class="reply-list">
 			<div v-for="(item, $ii) of replyList" :key="item.ReplyID" @click="comment(item.ReplyID, item.Nickname)">
 				<template v-if="item.ReplyMemberID">
