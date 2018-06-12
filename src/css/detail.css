@@ -36,6 +36,9 @@
 		letter-spacing: 1px;
 	}
 }
+.detail-header.san {
+	height: 200px;
+}
 .detail-avatar-list {
 	font-size: 0;
 

@@ -29,7 +29,7 @@
                 <div id="daka-invite" class="invite-btn" v-if="isShowInviteBtn" @click="showActionSheet"></div>
             </header>
         </template> -->
-            <header class="detail-header">
+            <header class="detail-header" :class="{san: isSan}">
                 <p>已坚持打卡(天)</p>
                 <strong v-text="day"></strong>
 
@@ -179,6 +179,7 @@
     export default {
         data() {
             return {
+                isSan: false,
                 canvasId: 'mycanvas',
 
                 loaded: false,
@@ -283,6 +284,12 @@
         },
 
         async onLoad() {
+            const res = wx.getSystemInfoSync()
+            console.log(res.brand)
+            if (res.brand === 'QiKU') {
+                this.isSan = true
+            }
+
             this.$detailID = this.$root.$mp.query.id || decodeURIComponent(this.$root.$mp.query.scene)
             getApp().detailID = this.$detailID
 
@@ -377,6 +384,7 @@
         },
 
         onUnload() {
+            this.isSan = false
             this.clear()
         },
 
