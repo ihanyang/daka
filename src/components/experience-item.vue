@@ -9,8 +9,8 @@ header {
 	margin-bottom: 10px;
 }
 .avatar {
-	width: 50px;
-	height: 50px;
+	width: 40px;
+	height: 40px;
 	margin-right: 20px;
 }
 .info {

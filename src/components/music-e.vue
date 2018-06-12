@@ -2,10 +2,11 @@
 .musice-wrapper {
 	display: flex;
 	align-items: center;
-	height: 60px;
+	/* height: 60px; */
 	padding: 13px 39px 13px 20px;
 	margin-top: 14px;
 	margin-bottom: 20px;
+	margin-left: 70px;
 	border-radius: 5px;
 	background-color: #FFF;
 }

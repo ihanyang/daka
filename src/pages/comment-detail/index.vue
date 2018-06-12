@@ -22,6 +22,8 @@
 				</div>
 			</template>
 
+			<music-e :audio="audioInfo" v-if="audioInfo"></music-e>
+
 			<footer v-if="isJoin">
 				<div class="like-icon" :class="{liked: liked}" @click="like" v-text="likeNum"></div>
 				<div class="comment-icon" @click="comment" v-text="replyNum"></div>
@@ -40,6 +42,7 @@
 <script>
 	import {timeFormat, getDefaultAvatar} from '@/utils'
 
+	import musicE from '@/components/music-e'
 	import replyItem from '@/components/reply-item'
 
 	import {fetch} from '@/api'
@@ -58,6 +61,8 @@
 				images: [],
 				likeNameList: [],
 
+				audioInfo: null,
+
 				replyList: [],
 
 				placeholder: '说点啥',
@@ -66,7 +71,8 @@
 		},
 
 		components: {
-			replyItem
+			replyItem,
+			musicE
 		},
 
 		computed: {
@@ -148,6 +154,8 @@
                 this.content = data.data.Content
                 this.createTimeStamp = data.data.CreateTimeStamp
                 this.isJoin = data.data.HasJoin
+
+                this.audioInfo = data.data.AudioInfo
 
                 this.replyList = data.data.ReplyList
             	getApp().postItem.ReplyList = data.data.ReplyList

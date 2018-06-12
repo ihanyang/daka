@@ -97,7 +97,7 @@
         <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus && loaded">暂无打卡心得</p>
 
         <div class="detail-intro" v-if="index === 1 && ! checkStatus">
-            <img class="detail-image" :src="item.MediaUrl" v-for="item of detailImages" mode="widthFix">
+
 
             <template v-if="introList.length">
                 <!-- <p :class="{'line-overflow': isShrink && isLongIntro}" v-text="intro"></p>
@@ -111,6 +111,8 @@
             <template v-if="isShowDesc">
                 <p class="no">组长很懒，没有填写打卡描述~</p>
             </template>
+
+            <img class="detail-image" :src="item.MediaUrl" v-for="item of detailImages" mode="widthFix">
         </div>
 
         <div class="cc-list" v-if="index === 2 && ! checkStatus">
