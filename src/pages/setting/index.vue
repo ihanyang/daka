@@ -353,6 +353,8 @@
 							wx.switchTab({
 								url: '/pages/index/index'
 							})
+
+							getApp().$deleteID = this.$root.$mp.query.id
 						}
 
 						if (cancel) {
@@ -392,6 +394,8 @@
 				wx.switchTab({
 					url: '/pages/index/index'
 				})
+
+				getApp().$deleteID = this.$root.$mp.query.id
 			},
 			go() {
 				wx.navigateTo({
