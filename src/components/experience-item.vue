@@ -111,9 +111,12 @@ footer {
 }
 .f-line {
 	width: 100%;
-	height: 5px;
+	height: 1px;
 	margin-top: 22px;
 	background-color: #E1E1E1;
+}
+.experience-item:last-child .f-line {
+	display: none;
 }
 </style>
 
