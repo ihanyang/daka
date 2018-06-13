@@ -111,6 +111,10 @@
 		watch: {
 			isNeedPaused(value) {
 				if (value) {
+					wx.showModal({
+						title: '232',
+						content: '23423'
+					})
 					this.$music.stop()
 
 					this.$store.commit('setIsNeedPaused', false)
@@ -120,9 +124,13 @@
 
 		methods: {
 			play() {
+				if (getApp().$musicE) {
+					getApp().$musicE.pause()
+				}
+
 				const music = wx.createInnerAudioContext()
 
-				this.$music = music
+				getApp().$musicE = this.$music = music
 
 				music.autoplay = true
 				music.src = this.audio.MediaUrl
@@ -175,6 +183,10 @@
 			},
 			resume() {
 				this.$music.play()
+
+				getApp().$musicE.pause()
+
+				getApp().$musicE = this.$music
 			},
 			toEnd() {
 				this.time = 0

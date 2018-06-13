@@ -389,13 +389,23 @@
             this.isSan = false
             this.clear()
 
-            this.$store.commit('setIsNeedPaused', true)
+            let music = getApp().$musicE
+
+            if (music) {
+                music.stop()
+                music = null
+            }
         },
 
         onHide() {
             this.isShowHome = false
 
-            this.$store.commit('setIsNeedPaused', true)
+            let music = getApp().$musicE
+
+            if (music) {
+                music.stop()
+                music = null
+            }
         },
 
         onShareAppMessage(res) {
