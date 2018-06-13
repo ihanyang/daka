@@ -25,7 +25,7 @@ header {
 	}
 }
 .content {
-	margin-left: 70px;
+	margin-left: 60px;
 	margin-bottom: 15px;
 	line-height: 1.6;
 	word-break: break-all;
@@ -34,7 +34,7 @@ header {
 	width: 100px;
 	height: 105px;
 	margin-bottom: 13px;
-	margin-left: 70px;
+	margin-left: 60px;
 	border-radius: 5px;
 }
 .like-icon {
@@ -83,7 +83,7 @@ footer {
 	font-size: 14px;
 }
 .image-wrapper {
-	margin-left: 70px;
+	margin-left: 60px;
 	position: relative;
 
 	& img {

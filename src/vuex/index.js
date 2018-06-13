@@ -18,7 +18,9 @@ export default new Vuex.Store({
 		// 0 播放中 1 暂停  2 播放完毕
 		bgmStatus: -1,
 		currentCover: '',
-		musicEnded: null
+		musicEnded: null,
+
+		isNeedPaused: false
 	},
 	mutations: {
 		setDakaList(state, value) {

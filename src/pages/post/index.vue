@@ -550,14 +550,16 @@
 				}
 
 				if (this.isRecording === 3) {
-					wx.showToast({
-						title: '正在播放',
-						icon: 'none'
-					})
+					if (! this.$voice.paused) {
+						wx.showToast({
+							title: '正在播放',
+							icon: 'none'
+						})
 
-					this.posting = false
+						this.posting = false
 
-					return
+						return
+					}
 				}
 
 				setTimeout(async () => {

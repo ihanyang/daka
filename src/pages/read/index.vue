@@ -40,6 +40,11 @@ video {
 	width: 100%;
 	margin: 0 auto;
 }
+img {
+	display: block;
+	width: 100%;
+	margin-bottom: 15px;
+}
 </style>
 
 <template>
@@ -51,7 +56,14 @@ video {
 		<music :id="id" :audio="audio" v-if="audio"></music>
 
 		<!-- <text class="content" v-text="content"></text> -->
-		<p class="content" :key="item" v-for="item of contentList" v-text="item"></p>
+		<p class="content" :key="item.value" v-for="item of contentList" v-if="item.value">
+			<template v-if="item.type === 0">
+				<img :src="item" mode="widthFix" v-for="(item, i) of item.value">
+			</template>
+			<template v-if="item.type === 1">
+				{{item.value}}
+			</template>
+		</p>
 
 		<div class="tips">今日任务已阅</div>
 	</div>
@@ -127,10 +139,36 @@ video {
 				this.title = data.data.ChapterTitle
 		        //this.content = data.data.Content.replace(/<br>/g, '\n').replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, '')
 
-		        this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))
+		        //this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))
 
-		        console.log( data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "")) )
-		        console.log(data.data.Content.match(/<p>.*?<\/p>/g))
+		        //console.log( data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "")) )
+		        //console.log(data.data.Content.match(/<p>.*?<\/p>/g))
+		        const re = /<img\s+src=['"]([^'"]+)[^>]*>/g
+
+		        this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => {
+		        	if (item.indexOf('<img') === -1) {
+		        		return {
+			        		type: 1,
+			        		value: item.replace(/<(?:.|\s)*?>/g, "")
+			        	}
+		        	}
+
+		        	const obj = {
+		        		type: 0,
+		        		value: []
+		        	}
+		        	let result
+		        	//console.log(result)
+
+		        	while(result = re.exec(item)) {
+		        		obj.value.push(result[1])
+		        	}
+
+		        	return obj
+
+
+
+		        })
 
 		        wx.setNavigationBarTitle({
 		        	title: data.data.BookTitle

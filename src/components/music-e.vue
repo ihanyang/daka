@@ -6,7 +6,7 @@
 	padding: 13px 39px 13px 20px;
 	margin-top: 14px;
 	margin-bottom: 20px;
-	margin-left: 70px;
+	margin-left: 60px;
 	border-radius: 5px;
 	background-color: #FFF;
 }
@@ -148,8 +148,8 @@
 			},
 			seek(e) {
 				const width = wx.getSystemInfoSync().windowWidth
-				const barWidth = 184 * width / 375
-				const offsetleft = 105
+				const barWidth = 165 * width / 375 //184 * width / 375
+				const offsetleft = 153//105
 				const value = ~~ (((e.mp.detail.x - offsetleft) / barWidth) * this.audio.MediaTime)
 
 

@@ -22,8 +22,8 @@
 	}
 
 	& .avatar {
-		width: 56px;
-		height: 56px;
+		width: 40px;
+		height: 40px;
 		margin-right: 20px;
 	}
 
@@ -41,7 +41,7 @@
 	}
 
 	& p {
-		margin-left: 70px;
+		margin-left: 60px;
 		margin-bottom: 15px;
 		word-break: break-all;
 	}
@@ -49,7 +49,7 @@
 	& .comment-image {
 		width: 100px;
 		height: 105px;
-		margin-left: 70px;
+		margin-left: 60px;
 		margin-bottom: 15px;
 		border-radius: 5px;
 	}
