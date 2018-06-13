@@ -719,7 +719,7 @@
                 })
             },
             async toImage(data) {
-                const arr = ['http://oocffpuei.bkt.clouddn.com/FmHeVs4Wkn6zw2x3Yoq3hky9LCHy', ... data.data.AvatarList.map((item) => item.Avatar)].map((item) => this.downloadImage(item))
+                const arr = ['http://oocffpuei.bkt.clouddn.com/FmHeVs4Wkn6zw2x3Yoq3hky9LCHy', ... data.data.AvatarList.map((item) => item.Avatar || this.defaultAvatar)].map((item) => this.downloadImage(item))
                 const result = await Promise.all(arr)
 
                 const ctx = wx.createCanvasContext('ccc')
