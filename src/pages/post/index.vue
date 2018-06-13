@@ -320,6 +320,11 @@
                 app.qiniu = data.data
             },
             chooseAudio() {
+            	let bgm = this.$store.state.bgm
+
+				if (bgm) {
+					bgm.pause()
+				}
             	//this.isRecording = 1
 
             	this.$recorder = wx.getRecorderManager()
