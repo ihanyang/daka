@@ -67,6 +67,7 @@
 	export default {
 		data() {
 			return {
+				isShow: false,
 				//cover: '',
 
 				isPause: false,
@@ -87,17 +88,16 @@
 			bgmStatus() {
 				return this.$store.state.bgmStatus
 			},
-			isShow() {
-				return !! this.bgm
-			}
 		},
 
 		watch: {
 			bgmStatus(value) {
 				if (value === 0) {
 					this.play()
+					this.isShow = true
 				} else if (value === 1) {
 					this.pause()
+					this.isShow = true
 				} else {
 					this.toEnd()
 				}
@@ -182,17 +182,22 @@
 				this.isPause = true
 			},
 			close() {
-				let bgm = getApp().bgm
+				let bgm = this.$store.state.bgm
 
-				console.log(bgm)
-				//if (bgm.paused) {
-					bgm.stop()
-				//}
+				bgm.stop()
 
-				bgm = null
-				getApp().musicCover = null
+				this.isShow = false
+				// let bgm = getApp().bgm
 
-				this.$emit('close')
+				// console.log(bgm)
+				// //if (bgm.paused) {
+				// 	bgm.stop()
+				// //}
+
+				// bgm = null
+				// getApp().musicCover = null
+
+				// this.$emit('close')
 			}
 		}
 	}

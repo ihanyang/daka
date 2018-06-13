@@ -20,6 +20,7 @@ header {
 	justify-content: space-between;
 
 	& span {
+		margin-top: 5px;
 		color: #AAA;
 		font-size: 15px;
 	}
@@ -61,6 +62,7 @@ footer {
 }
 .reply-list {
 	padding-left: 12px;
+	margin-left: 60px;
 	color: #AAA;
 	font-size: 14px;
 	border-left: 4px solid #EBEBEB;
@@ -147,7 +149,7 @@ footer {
 				<div class="comment-icon" @click="comment" v-text="item.ReplyNum"></div>
 			</template>
 		</footer>
-		<div class="f-line"></div>
+		<!-- <div class="f-line"></div> -->
 		<div class="reply-list">
 			<div v-for="(item, $ii) of replyList" :key="item.ReplyID" @click="comment(item.ReplyID, item.Nickname)">
 				<template v-if="item.ReplyMemberID">
