@@ -32,6 +32,9 @@ export default new Vuex.Store({
 		setDakaPlanNum(state, value) {
 			state.dakaPlanNum = value
 		},
+		setIsNeedPaused(state, value) {
+			state.isNeedPaused = value
+		},
 
 		setExperienceList(state, value) {
 			state.experienceList = value

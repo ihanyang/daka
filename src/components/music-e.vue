@@ -102,6 +102,19 @@
 			},
 			second() {
 				return `${this.time - (this.minute * 60)}`.replace(/\b(\w)\b/g, '0$1')
+			},
+			isNeedPaused() {
+				return this.$store.state.isNeedPaused
+			}
+		},
+
+		watch: {
+			isNeedPaused(value) {
+				if (value) {
+					this.$music.stop()
+
+					this.$store.commit('setIsNeedPaused', false)
+				}
 			}
 		},
 

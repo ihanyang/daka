@@ -285,6 +285,8 @@
 			if (this.$recorder) {
 				this.isCanStop = false
 				! this.stoped && this.$recorder.stop()
+
+				this.$recorder = null
 			}
 
 

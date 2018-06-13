@@ -388,10 +388,14 @@
         onUnload() {
             this.isSan = false
             this.clear()
+
+            this.$store.commit('setIsNeedPaused', true)
         },
 
         onHide() {
             this.isShowHome = false
+
+            this.$store.commit('setIsNeedPaused', true)
         },
 
         onShareAppMessage(res) {
