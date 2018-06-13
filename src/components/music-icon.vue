@@ -97,9 +97,10 @@
 					this.isShow = true
 				} else if (value === 1) {
 					this.pause()
-					//this.isShow = true
+					this.isShow = false
 				} else {
 					this.toEnd()
+					this.isShow = false
 				}
 			},
 			bgmEnd(value) {
