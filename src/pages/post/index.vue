@@ -258,6 +258,8 @@
 		},
 
 		onLoad() {
+			this.isCanStop = true
+
 			this.getQiNiuToken()
 		},
 
@@ -285,7 +287,7 @@
 				! this.stoped && this.$recorder.stop()
 			}
 
-			this.isCanStop = true
+
 			this.stoped = false
 
 			this.$voice = null
