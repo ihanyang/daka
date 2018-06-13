@@ -97,7 +97,7 @@
 					this.isShow = true
 				} else if (value === 1) {
 					this.pause()
-					this.isShow = true
+					//this.isShow = true
 				} else {
 					this.toEnd()
 				}
