@@ -738,38 +738,109 @@
 
                 const ctx = wx.createCanvasContext('ccc')
 
-                ctx.drawImage(result[0], 0, 0, 300, 240)
+                ctx.drawImage(result[0], 0, 0, 500, 400)
 
                 ctx.save()
                 ctx.setFillStyle('#FFF')
-                ctx.fillRect(32, 26, 236, 188)
+                ctx.fillRect(53, 80, 394, 240)
                 ctx.fill()
                 ctx.save()
 
-                const start = 32 + (236 - (data.data.AvatarList.length * 14) - 5 - ((`${data.data.joinNum}`.length + 4) * 10)  )
+
+
+                ctx.setFontSize(14)
+                ctx.setFillStyle('#333')
+                //ctx.setTextAlign('center')
+                ctx.fillText('今日热门打卡', (500 - ctx.measureText('今日热门打卡').width) / 2, 50 + 80)
+
+                ctx.setFontSize(28)
+                ctx.setFillStyle('#1D2C2F')
+
+                const strArr = data.data.PlanName.split('')//.length > 8 ? `${data.data.PlanName.slice(0, 8)}...` : data.data.PlanName
+
+                let str = ''
+                let i = []
+                strArr.forEach((item, index) => {
+                    str = str + item
+
+                    //console.log(str)
+                        //console.log(ctx.measureText(str).width / 180)
+                    if (~~ (ctx.measureText(str).width / 180)) {
+                        if (i.findIndex((item) => item.b === ~~ (ctx.measureText(str).width / 180)) === -1) {
+                            i.push({
+                                a: index,
+                                b: ~~ (ctx.measureText(str).width / 180)
+                            })
+                        }
+
+                    }
+                })
+
+                //console.log(i)
+                i = i.map((item) => item.a)
+                 //i = [... new Set(i.map((item) => item.b))]
+                 //i = [6,12]
+
+
+                if (i.length === 0) {
+                    ctx.fillText(str, (500 - ctx.measureText(str).width) / 2, 30 + 80 + 53 + 21)
+                } else {
+                    ctx.fillText(str.slice(0, i[0]), (500 - ctx.measureText(str.slice(0, i[0])).width) / 2, 30 + 80 + 53 + 21)
+
+                    i.length > 1 && i.forEach((item, index) => {
+                        if (index + 1 === i.length) {
+                            return
+                        }
+
+                        ctx.fillText(str.slice(i[index], i[index + 1] - 1) + '...', (500 - ctx.measureText(str.slice(i[index], i[index + 1] - 1) + '...').width) / 2, (30 + 80 + 53 + 21) + ((index + 1) * 50))
+                    })
+
+                    i.length === 1 && ctx.fillText(str.slice(i[i.length - 1]), (500 - ctx.measureText(str.slice(i[i.length - 1])).width) / 2, (30 + 80 + 53 + 21) + 50)
+
+                    //ctx.fillText(str.slice(i[0]), (300 - ctx.measureText(str.slice(i[0])).width) / 2, 150)
+                }
+
+                // let num = ~~ (ctx.measureText(str).width / 180)
+
+                // while (num--) {
+                //     ctx.fillText(str, (300 - 180 / 2, 100)
+                // }
+
+                ctx.setFontSize(10)
+
+                //const start = 53 + (394 - (data.data.AvatarList.length * 14) - 5 - ((`${data.data.joinNum}`.length + 4) * 10)  )
+                const avatarWidth = data.data.AvatarList.length * 14
+                const textWidth = ctx.measureText(`${data.data.JoinNum}人已加入`).width
+                const start = (500 - (avatarWidth + 5 + textWidth)) / 2
+
+                //console.log(avatarWidth)
+                //console.log(textWidth)
+                //console.log(start)
+
+                let avatarY = (30 + 80 + 53 + 21) + 50 + 40
+
+                if (i.length === 0) {
+                    avatarY = avatarY - 50
+                }
 
                 data.data.AvatarList.forEach((item, index) => {
                     ctx.beginPath()
-                    ctx.arc(start + (index * 14) + 7, 139 + 7, 7, 0, Math.PI * 2)
+                    ctx.arc(start + (index * 14) + 7, avatarY + 7, 7, 0, Math.PI * 2)
                     ctx.clip()
-                    ctx.drawImage(result[index + 1], start + (index * 14), 139, 14, 14)
+                    ctx.drawImage(result[index + 1], start + (index * 14), avatarY, 14, 14)
                     ctx.restore()
                 })
 
-                ctx.setFontSize(8)
-                ctx.setFillStyle('#333')
-                ctx.fillText('今日热门打卡', 126, 55)
 
-                ctx.setFontSize(18)
+                let joinY = (30 + 80 + 53 + 21) + 50 + 50
+
+                if (i.length === 0) {
+                    joinY = joinY - 50
+                }
+
+
                 ctx.setFillStyle('#1D2C2F')
-
-                const str = data.data.PlanName.length > 10 ? `${data.data.PlanName.slice(0, 10)}...` : data.data.PlanName
-
-                ctx.fillText(str, 32 + ((236 - (str.length * 18)) / 2), 100)
-
-                ctx.setFontSize(10)
-                ctx.setFillStyle('#1D2C2F')
-                ctx.fillText(`${data.data.JoinNum}人已加入`, (start + (data.data.AvatarList.length * 14)) + 5, 150)
+                ctx.fillText(`${data.data.JoinNum}人已加入`, (start + (data.data.AvatarList.length * 14)) + 5, joinY)
 
                 ctx.draw(false, () => {
                     //return
@@ -801,7 +872,7 @@
                                         return
                                     }
 
-                                    console.log(`${app.qiniu.domain}${data.key}`)
+                                    //console.log(`${app.qiniu.domain}${data.key}`)
                                     this.$shareURL = `${app.qiniu.domain}${data.key}`
                                 }
                             })

@@ -59,7 +59,7 @@ button {
 <template>
 	<div class="auth-wrapper" :class="{transition: status}" @touchmove.stop>
 		<div class="auth-content" :class="{transition: status}">
-			<h1>为了给您提供更好的体验</h1>
+			<h1>静好打卡需要你的授权才能更好的为你服务。</h1>
 			<button open-type="getUserInfo" @getuserinfo="userInfoHandler" @click="aa">去授权</button>
 		</div>
 	</div>

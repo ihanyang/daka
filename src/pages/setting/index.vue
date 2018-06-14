@@ -322,7 +322,7 @@
 				if (this.iszu && this.ccList.length) {
 					wx.showModal({
 						title: '退出并转移组长权限',
-						content: '您是小组长，退出后，打卡小组将会解散，是否要将组长权限转移给他人？',
+						content: '转移组长权限后即可退出小组，是否转移？',
 						confirmText: '转移权限',
 						cancelText: '再想想',
 						success: async ({confirm, cancel}) => {
