@@ -389,23 +389,21 @@
             this.isSan = false
             this.clear()
 
-            let music = getApp().$musicE
-
-            if (music) {
-                music.stop()
-                music = null
-            }
+            getApp().$musicArray.forEach((item) => {
+                if (! item.paused) {
+                    item.stop()
+                }
+            })
         },
 
         onHide() {
             this.isShowHome = false
 
-            let music = getApp().$musicE
-
-            if (music) {
-                music.stop()
-                music = null
-            }
+            getApp().$musicArray.forEach((item) => {
+                if (! item.paused) {
+                    item.stop()
+                }
+            })
         },
 
         onShareAppMessage(res) {

@@ -116,6 +116,12 @@
 
 			this.loaded = false
 			this.replyList = []
+
+			getApp().$musicArray.forEach((item) => {
+                if (! item.paused) {
+                    item.stop()
+                }
+            })
 		},
 
 		methods: {
