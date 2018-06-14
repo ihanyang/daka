@@ -415,7 +415,7 @@
             return {
                 title: `${app.user.nickname}邀请你加入打卡计划#${app.planName}#`,
                 path: `/pages/detail/index?id=${this.$detailID}`,
-                imageUrl: this.$shareURL
+                imageUrl: this.$shareURL + '?imageMogr2/thumbnail/1200x960!'
             }
         },
 
@@ -809,7 +809,7 @@
                 //     ctx.fillText(str, (300 - 180 / 2, 100)
                 // }
 
-                ctx.setFontSize(10)
+                ctx.setFontSize(14)
 
                 //const start = 53 + (394 - (data.data.AvatarList.length * 14) - 5 - ((`${data.data.joinNum}`.length + 4) * 10)  )
                 const avatarWidth = data.data.AvatarList.length * 14 * rateX
@@ -820,7 +820,7 @@
                 //console.log(textWidth)
                 //console.log(start)
 
-                let avatarY = ((30 + 80 + 53 + 21) + 50 + 40) * rateY
+                let avatarY = ((30 + 80 + 53 + 21) + 50 + 38) * rateY
 
                 if (i.length === 0) {
                     avatarY = avatarY - (50 * rateY)
@@ -841,7 +841,7 @@
                     joinY = joinY - (50 * rateY)
                 }
 
-
+                ctx.setFontSize(14)
                 ctx.setFillStyle('#1D2C2F')
                 ctx.fillText(`${data.data.JoinNum}人已加入`, (start + (data.data.AvatarList.length * 14 * rateX)) + 5, joinY)
 

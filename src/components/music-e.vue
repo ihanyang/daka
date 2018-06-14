@@ -122,15 +122,23 @@
 			}
 		},
 
+		onLoad() {
+			if (! getApp().$musicArray) {
+				getApp().$musicArray = []
+			}
+		},
+
 		methods: {
 			play() {
-				if (getApp().$musicE) {
-					getApp().$musicE.pause()
-				}
+				getApp().$musicArray.forEach((item) => {
+					item.pause()
+				})
 
 				const music = wx.createInnerAudioContext()
 
-				getApp().$musicE = this.$music = music
+				this.$music = music
+
+				getApp().$musicArray.push(music)
 
 				music.autoplay = true
 				music.src = this.audio.MediaUrl
@@ -168,25 +176,33 @@
 				this.$music.pause()
 			},
 			seek(e) {
+				if (! this.$music) {
+					return
+				}
+
+				if (this.$music.paused) {
+					return
+				}
+
 				const width = wx.getSystemInfoSync().windowWidth
 				const barWidth = 165 * width / 375 //184 * width / 375
 				const offsetleft = 153//105
 				const value = ~~ (((e.mp.detail.x - offsetleft) / barWidth) * this.audio.MediaTime)
 
 
-				if (! this.$music) {
-					return
-				}
-
 				//this.time = value
 				this.$music.seek(value)
 			},
 			resume() {
+				getApp().$musicArray.forEach((item) => {
+					item.pause()
+				})
+
 				this.$music.play()
 
-				getApp().$musicE.pause()
+				//getApp().$musicE.pause()
 
-				getApp().$musicE = this.$music
+				//getApp().$musicE = this.$music
 			},
 			toEnd() {
 				this.time = 0

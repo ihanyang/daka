@@ -338,6 +338,8 @@
             	// })
 
             	this.$recorder.onStop(({tempFilePath}) => {
+            		this.stoped = true
+
             		if (! this.isCanStop) {
             			return
             		}
@@ -350,8 +352,9 @@
 
             	this.$recorder.onError((e) => {
             		wx.showToast({
-            			title: '系统错误',
+            			title: JSON.stringify(e),
             			icon: 'none',
+            			duration: 2000
             		})
 
             		this.isRecording = 0
@@ -360,11 +363,11 @@
             	})
 
             	this.$recorder.start({
-            		duration: 60000 * 10,
+            		duration: 10 * 1000,
             	})
 
             	this.$timer = setTimeout(function go () {
-            		if (this.time >= 10 * 60) {
+            		if (this.time >= 10) {
             			this.isRecording = 2
 
             			return
