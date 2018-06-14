@@ -143,6 +143,14 @@
 				music.autoplay = true
 				music.src = this.audio.MediaUrl
 
+				//console.log(wx.getSystemInfoSync())
+
+				if (wx.getSystemInfoSync().system.match(/iOS\s9/)) {
+					setTimeout(() => {
+						music.stop()
+					}, 50)
+				}
+
 				music.onPlay((e) => {
 					//this.stage === 2 && this.resume()
 					console.log('音乐播放')
@@ -173,6 +181,7 @@
 				})
 			},
 			pause() {
+				console.log(34342)
 				this.$music.pause()
 			},
 			seek(e) {

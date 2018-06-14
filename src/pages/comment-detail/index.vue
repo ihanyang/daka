@@ -117,7 +117,7 @@
 			this.loaded = false
 			this.replyList = []
 
-			getApp().$musicArray.forEach((item) => {
+			getApp().$musicArray && getApp().$musicArray.forEach((item) => {
                 if (! item.paused) {
                     item.stop()
                 }

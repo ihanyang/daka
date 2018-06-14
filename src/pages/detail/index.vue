@@ -389,7 +389,7 @@
             this.isSan = false
             this.clear()
 
-            getApp().$musicArray.forEach((item) => {
+            getApp().$musicArray && getApp().$musicArray.forEach((item) => {
                 if (! item.paused) {
                     item.stop()
                 }
@@ -399,7 +399,7 @@
         onHide() {
             this.isShowHome = false
 
-            getApp().$musicArray.forEach((item) => {
+            getApp().$musicArray && getApp().$musicArray.forEach((item) => {
                 if (! item.paused) {
                     item.stop()
                 }

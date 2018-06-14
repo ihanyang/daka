@@ -11,6 +11,7 @@
 	"compileType": "miniprogram",
 	"appid": "wx40f6e6a99fdc055f",
 	"projectname": "daka",
+	"libVersion": "2.0.9",
 	"condition": {
 		"search": {
 			"current": -1,
