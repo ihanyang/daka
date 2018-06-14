@@ -363,11 +363,11 @@
             	})
 
             	this.$recorder.start({
-            		duration: 10 * 1000,
+            		duration: 60000 * 10,
             	})
 
             	this.$timer = setTimeout(function go () {
-            		if (this.time >= 10) {
+            		if (this.time >= 10 * 60) {
             			this.isRecording = 2
 
             			return
