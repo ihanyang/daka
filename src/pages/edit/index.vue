@@ -35,8 +35,8 @@
         <div class="newly-build-box">
             <div class="preview-image" v-if="previewImages.length">
                 <div class="n-image-wrapper" :key="item" v-for="(item, index) of previewImages">
-                    <span class="del" @click="deleteImage(index)"></span>
-                    <img :src="item" mode="aspectFill">
+                    <span class="del" @click="deleteImage(item, index)"></span>
+                    <img :src="item.url" mode="aspectFill">
                 </div>
 
                 <!-- <div class="n-image-wrapper resume-add-image" @click="chooseImage" v-if="previewImages.length < 9"></div> -->
@@ -77,6 +77,7 @@
                 newlyBuildImage: '',
 
                 previewImages: [],
+                uploadImages: [],
 
                 secretType: -1,
 
@@ -114,7 +115,11 @@
 
                 wx.chooseImage({
                     success: (res) => {
-                        this.previewImages = [... this.previewImages, ... res.tempFilePaths].slice(0, 9)
+                        //this.uploadImages.push(... res.tempFilePaths)
+                        this.previewImages = [... this.previewImages, ... res.tempFilePaths.map((item) => ({
+                            type: 1,
+                            url: item
+                        }))].slice(0, 9)
                     },
                     fail() {
                         wx.showToast({
@@ -125,14 +130,12 @@
                     }
                 })
             },
-            deleteImage(index) {
+            deleteImage(url, index) {
                 this.previewImages.splice(index, 1)
             },
             uploadImage() {
                 const app = getApp()
-                const p = this.previewImages.filter((item) => {
-                    return item.indexOf('oocffpuei.bkt.clouddn.com') === -1
-                }).map((item) => {
+                const p = this.previewImages.filter((item) => item.type === 1).map((item) => item.url).map((item) => {
                     return new Promise((resolve, reject) => {
                         wx.uploadFile({
                             url: 'https://up.qbox.me',
@@ -184,7 +187,10 @@
                 this.secretType = data.data.Private
                 this.newlyBuildImage = data.data.Cover
 
-                this.previewImages = data.data.DescImages.map((item) => item.MediaUrl)
+                this.previewImages = data.data.DescImages.map((item) => ({
+                    type: 0,
+                    url: item.MediaUrl
+                }))
 
                 wx.hideLoading()
             },
@@ -238,7 +244,7 @@
                     let imagesURL = await this.uploadImage()
 
 
-                    imagesURL = [... this.previewImages.filter((item) => item.indexOf('oocffpuei.bkt.clouddn.com') !== -1), ... imagesURL]
+                    imagesURL = [... this.previewImages.filter((item) => item.type === 0).map((item) => item.url), ... imagesURL]
 
                     const a = imagesURL.map((item) => ({MediaUrl: item, Width: 0, Height: 0}))
 
@@ -256,6 +262,7 @@
                         params[`descImages[${index}][Width]`] = item.Width
                         params[`descImages[${index}][Height]`] = item.Height
                     })
+
 
                     await editDetailData(params)
 

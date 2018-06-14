@@ -145,11 +145,11 @@
 
 				//console.log(wx.getSystemInfoSync())
 
-				if (wx.getSystemInfoSync().system.match(/iOS\s9/)) {
-					setTimeout(() => {
-						music.stop()
-					}, 50)
-				}
+				// if (wx.getSystemInfoSync().system.match(/iOS\s9/)) {
+				// 	setTimeout(() => {
+				// 		music.stop()
+				// 	}, 50)
+				// }
 
 				music.onPlay((e) => {
 					//this.stage === 2 && this.resume()

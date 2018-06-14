@@ -506,6 +506,8 @@
 		                    	// })
 		                        const data = JSON.parse(res.data)
 
+		                        console.log(data)
+
 		                        if (res.statusCode !== 200) {
 		                            wx.showModal({
 		                                title: '提示',
@@ -613,7 +615,7 @@
 					if (audioURL) {
 						params.audioUrl = audioURL
 						params.audioTime = this.time
-						//params.processID = ''
+						//params.processID = app.qiniu.persistentId
 					}
 
 					const data = await postExperience(params)
