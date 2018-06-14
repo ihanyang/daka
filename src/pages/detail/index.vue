@@ -91,7 +91,7 @@
             <div class="detail-tab-item" :class="{selected: index === i}" @click="index = i" :key="i" v-text="item" v-for="(item, i) of tabs"></div>
             <!-- <div id="daka-ke" class="detail-tab-item" :class="{selected: index === 1}" @click="index = 1" v-if="isShowTable">课程表</div> -->
         </div>
-        <div class="experience-list" v-if="index === 0 && ! checkStatus">
+        <div class="experience-list" v-show="index === 0 && ! checkStatus">
             <experience-item :key="item.PostID" :item="item" v-for="item of experienceList"></experience-item>
         </div>
         <p class="no-data" v-if="index === 0 && ! experienceList.length && ! checkStatus && loaded">暂无打卡心得</p>
