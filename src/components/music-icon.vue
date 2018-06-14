@@ -111,7 +111,7 @@
 		},
 
 		onLoad() {
-			console.log(123)
+			//console.log(123)
 			//this.cover = getApp().musicCover
 
 			const bgm = this.bgm

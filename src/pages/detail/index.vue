@@ -735,14 +735,17 @@
             async toImage(data) {
                 const arr = ['http://oocffpuei.bkt.clouddn.com/FmHeVs4Wkn6zw2x3Yoq3hky9LCHy', ... data.data.AvatarList.map((item) => item.Avatar || this.defaultAvatar)].map((item) => this.downloadImage(item))
                 const result = await Promise.all(arr)
-
+                const rateX = wx.getSystemInfoSync().windowWidth / 414
+                const rateY = wx.getSystemInfoSync().windowHeight / 672
+                //console.log(wx.getSystemInfoSync().windowWidth)
+                //console.log(wx.getSystemInfoSync().windowHeight)
                 const ctx = wx.createCanvasContext('ccc')
 
-                ctx.drawImage(result[0], 0, 0, 500, 400)
+                ctx.drawImage(result[0], 0, 0, 500 * rateX, 400 * rateY)
 
                 ctx.save()
                 ctx.setFillStyle('#FFF')
-                ctx.fillRect(53, 80, 394, 240)
+                ctx.fillRect(53 * rateX, 80 * rateY, 394 * rateX, 240 * rateY)
                 ctx.fill()
                 ctx.save()
 
@@ -751,7 +754,7 @@
                 ctx.setFontSize(14)
                 ctx.setFillStyle('#333')
                 //ctx.setTextAlign('center')
-                ctx.fillText('今日热门打卡', (500 - ctx.measureText('今日热门打卡').width) / 2, 50 + 80)
+                ctx.fillText('今日热门打卡', ((500 * rateX) - ctx.measureText('今日热门打卡').width) / 2, (50 + 80) * rateY)
 
                 ctx.setFontSize(28)
                 ctx.setFillStyle('#1D2C2F')
@@ -765,11 +768,11 @@
 
                     //console.log(str)
                         //console.log(ctx.measureText(str).width / 180)
-                    if (~~ (ctx.measureText(str).width / 180)) {
-                        if (i.findIndex((item) => item.b === ~~ (ctx.measureText(str).width / 180)) === -1) {
+                    if (~~ (ctx.measureText(str).width / (180 * 1))) {
+                        if (i.findIndex((item) => item.b === ~~ (ctx.measureText(str).width / (180 * 1))) === -1) {
                             i.push({
                                 a: index,
-                                b: ~~ (ctx.measureText(str).width / 180)
+                                b: ~~ (ctx.measureText(str).width / (180 * 1))
                             })
                         }
 
@@ -783,19 +786,19 @@
 
 
                 if (i.length === 0) {
-                    ctx.fillText(str, (500 - ctx.measureText(str).width) / 2, 30 + 80 + 53 + 21)
+                    ctx.fillText(str, ((500 * rateX) - ctx.measureText(str).width) / 2, (30 + 80 + 53 + 21) * rateY)
                 } else {
-                    ctx.fillText(str.slice(0, i[0]), (500 - ctx.measureText(str.slice(0, i[0])).width) / 2, 30 + 80 + 53 + 21)
+                    ctx.fillText(str.slice(0, i[0]), ((500 * rateX) - ctx.measureText(str.slice(0, i[0])).width) / 2, (30 + 80 + 53 + 21) * rateY)
 
                     i.length > 1 && i.forEach((item, index) => {
                         if (index + 1 === i.length) {
                             return
                         }
 
-                        ctx.fillText(str.slice(i[index], i[index + 1] - 1) + '...', (500 - ctx.measureText(str.slice(i[index], i[index + 1] - 1) + '...').width) / 2, (30 + 80 + 53 + 21) + ((index + 1) * 50))
+                        ctx.fillText(str.slice(i[index], i[index + 1] - 1) + '...', ((500 * rateX) - ctx.measureText(str.slice(i[index], i[index + 1] - 1) + '...').width) / 2, ((30 + 80 + 53 + 21) + ((index + 1) * 50)) * rateY  )
                     })
 
-                    i.length === 1 && ctx.fillText(str.slice(i[i.length - 1]), (500 - ctx.measureText(str.slice(i[i.length - 1])).width) / 2, (30 + 80 + 53 + 21) + 50)
+                    i.length === 1 && ctx.fillText(str.slice(i[i.length - 1]), ((500 * rateX) - ctx.measureText(str.slice(i[i.length - 1])).width) / 2, ((30 + 80 + 53 + 21) + 50) * rateY)
 
                     //ctx.fillText(str.slice(i[0]), (300 - ctx.measureText(str.slice(i[0])).width) / 2, 150)
                 }
@@ -809,38 +812,38 @@
                 ctx.setFontSize(10)
 
                 //const start = 53 + (394 - (data.data.AvatarList.length * 14) - 5 - ((`${data.data.joinNum}`.length + 4) * 10)  )
-                const avatarWidth = data.data.AvatarList.length * 14
+                const avatarWidth = data.data.AvatarList.length * 14 * rateX
                 const textWidth = ctx.measureText(`${data.data.JoinNum}人已加入`).width
-                const start = (500 - (avatarWidth + 5 + textWidth)) / 2
+                const start = ((500 * rateX) - (avatarWidth + 5 + textWidth)) / 2
 
                 //console.log(avatarWidth)
                 //console.log(textWidth)
                 //console.log(start)
 
-                let avatarY = (30 + 80 + 53 + 21) + 50 + 40
+                let avatarY = ((30 + 80 + 53 + 21) + 50 + 40) * rateY
 
                 if (i.length === 0) {
-                    avatarY = avatarY - 50
+                    avatarY = avatarY - (50 * rateY)
                 }
 
                 data.data.AvatarList.forEach((item, index) => {
                     ctx.beginPath()
-                    ctx.arc(start + (index * 14) + 7, avatarY + 7, 7, 0, Math.PI * 2)
+                    ctx.arc(start + (index * 14 * rateX) + (7 * rateX), avatarY + (7 * rateY), (7 * rateX), 0, Math.PI * 2)
                     ctx.clip()
-                    ctx.drawImage(result[index + 1], start + (index * 14), avatarY, 14, 14)
+                    ctx.drawImage(result[index + 1], start + (index * 14 * rateX), avatarY, 14 * rateX, 14 * rateY)
                     ctx.restore()
                 })
 
 
-                let joinY = (30 + 80 + 53 + 21) + 50 + 50
+                let joinY = ((30 + 80 + 53 + 21) + 50 + 50) * rateY
 
                 if (i.length === 0) {
-                    joinY = joinY - 50
+                    joinY = joinY - (50 * rateY)
                 }
 
 
                 ctx.setFillStyle('#1D2C2F')
-                ctx.fillText(`${data.data.JoinNum}人已加入`, (start + (data.data.AvatarList.length * 14)) + 5, joinY)
+                ctx.fillText(`${data.data.JoinNum}人已加入`, (start + (data.data.AvatarList.length * 14 * rateX)) + 5, joinY)
 
                 ctx.draw(false, () => {
                     //return
