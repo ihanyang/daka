@@ -17,6 +17,11 @@
 }
 .add-image-wrapper {
 	display: flex;
+
+	& button {
+		color: inherit;
+		line-height: normal;
+	}
 }
 .add-image {
 	display: flex;
@@ -170,9 +175,17 @@
 			<div class="add-image" @click="chooseImage" v-if="! previewImages.length">
 				<div class="add-image-icon">图片</div>
 			</div>
-			<div class="add-image post-audio" @click="chooseAudio" v-if="isRecording === 0">
-				<div class="add-image-icon microphone">音频</div>
-			</div>
+
+			<template v-if="isNeedToSetting">
+				<button open-type="openSetting" class="add-image post-audio" @opensetting="handlerOpenSetting">
+					<div class="add-image-icon microphone">音频</div>
+				</button>
+			</template>
+			<template v-else>
+				<div class="add-image post-audio" @click="chooseAudio" v-if="isRecording === 0">
+					<div class="add-image-icon microphone">音频</div>
+				</div>
+			</template>
 		</div>
 
 		<div class="post-audio-wrapper" v-if="isRecording === 1">
@@ -224,6 +237,7 @@
 	export default {
 		data() {
 			return {
+				isNeedToSetting: false,
 				posting: false,
 
 				experience: '',
@@ -283,6 +297,10 @@
 
 
 			if (this.$recorder) {
+				if (! this.$isCanRecord) {
+					return
+				}
+
 				this.isCanStop = false
 				! this.stoped && this.$recorder.stop()
 
@@ -319,7 +337,38 @@
 
                 app.qiniu = data.data
             },
-            chooseAudio() {
+            getAuth() {
+            	return new Promise((resolve, reject) => {
+            		wx.getSetting({
+	            		success: (res) => {
+	            			if (! res.authSetting['scope.record']) {
+	            				wx.authorize({
+	            					scope: 'scope.record',
+	            					success: () => {
+	            						resolve()
+	            					},
+	            					fail: () => {
+	            						console.log(2342)
+	            					}
+	            				})
+	            			} else {
+	            				resolve()
+	            			}
+	            		}
+	            	})
+            	})
+            },
+            handlerOpenSetting(e) {
+            	console.log(e)
+
+            	if (e.mp.detail.authSetting['scope.record']) {
+            		this.isNeedToSetting = false
+            	}
+            },
+            async chooseAudio() {
+            	// 先查询权限
+            	//await this.getAuth()
+
             	let bgm = this.$store.state.bgm
 
 				if (bgm) {
@@ -330,6 +379,7 @@
             	this.$recorder = wx.getRecorderManager()
 
             	this.$recorder.onStart(() => {
+            		this.$isCanRecord = true
             		this.isRecording = 1
             	})
 
@@ -351,11 +401,18 @@
             	})
 
             	this.$recorder.onError((e) => {
-            		wx.showToast({
-            			title: JSON.stringify(e),
-            			icon: 'none',
-            			duration: 2000
-            		})
+            		//console.log(e)
+            		if (e.errMsg.indexOf('auth') !== -1) {
+            			this.isNeedToSetting = true
+            		} else {
+            			wx.showToast({
+	            			title: JSON.stringify(e),
+	            			icon: 'none',
+	            			duration: 2000
+	            		})
+            		}
+
+
 
             		this.isRecording = 0
 
