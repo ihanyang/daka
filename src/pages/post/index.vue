@@ -615,7 +615,7 @@
 					if (audioURL) {
 						params.audioUrl = audioURL
 						params.audioTime = this.time
-						//params.processID = app.qiniu.persistentId
+						params.processID = app.qiniu.persistentId
 					}
 
 					const data = await postExperience(params)
