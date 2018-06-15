@@ -12,6 +12,7 @@
     position: relative;
 
     & img {
+        display: block;
         width: 70px;
         height: 70px;
         border-radius: 5px;

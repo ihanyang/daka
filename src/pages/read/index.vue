@@ -38,7 +38,7 @@ h1 {
 video {
 	display: block;
 	width: 100%;
-	margin: 0 auto;
+	margin: 0 auto 15px;
 }
 img {
 	display: block;
@@ -114,6 +114,9 @@ img {
 		onUnload() {
 			this.title = ''
 			this.contentList = []
+
+			this.video = null
+			this.audio = null
 
 			// 背景音乐
 			// if (this.audio) {
