@@ -487,7 +487,7 @@
                 }
 
                 if (data.flag === 1) {
-                    if (+ data.data.status02 === 1) {
+                    if (+ data.data.status03 === 1) {
                         this.checkStatus = false
                     } else {
                         this.checkStatus = true
@@ -1065,7 +1065,13 @@
                 if (wx.getStorageSync('isLoadedHomeData')) {
                     this.$store.commit('setDakaPlanNum', ++ this.$store.state.dakaPlanNum)
 
-                    app.item && this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
+                    if (app.item) {
+                        console.log(7777)
+                        this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
+                    } else {
+                        app.isNeedPull = true
+                    }
+                    //app.item && this.$store.commit('setDakaList', [app.item, ... this.$store.state.dakaList])
                 }
 
                 // 加入任意一个之后，再次进入就直接进入首页
@@ -1113,6 +1119,8 @@
                 this.loadingScroll = false
             },
             clear() {
+                getApp().item = null
+
                 this.day = 0
                 this.todayDaKa = 0
                 this.intro = ''

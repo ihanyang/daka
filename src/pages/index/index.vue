@@ -148,6 +148,11 @@
         },
 
         async onShow() {
+            if (getApp().isNeedPull) {
+                getApp().isNeedPull = false
+                wx.startPullDownRefresh()
+            }
+
             wx.setNavigationBarTitle({
                 title: '打卡'
             })
@@ -227,7 +232,7 @@
                     return
                 }
 
-                + data.data.status02 === 1 ? this.checkStatus = false : this.checkStatus = true
+                + data.data.status03 === 1 ? this.checkStatus = false : this.checkStatus = true
             },
             submit(e) {
                 this.sendFormId(e.target.formId)
