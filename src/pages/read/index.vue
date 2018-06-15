@@ -1,7 +1,7 @@
 <style scoped>
 .read-wrapper {
 	min-height: 100vh;
-	padding: 40px 30px 0;
+	padding: 40px 30px;
 	color: #333;
 	font-size: 18px;
 	box-sizing: border-box;
@@ -14,7 +14,7 @@ h1 {
 }
 .content {
 	margin-bottom: 10px;
-	text-indent: 35px;
+	/* text-indent: 35px; */
 	line-height: 1.7;
 	word-break: break-all;
 }
@@ -56,12 +56,17 @@ img {
 		<music :id="id" :audio="audio" v-if="audio"></music>
 
 		<!-- <text class="content" v-text="content"></text> -->
-		<p class="content" :key="item.value" v-for="item of contentList" v-if="item.value">
+		<p class="content" :style="item.ps" :key="item.value" v-for="item of contentList" v-if="item.value">
 			<template v-if="item.type === 0">
 				<img :src="item" mode="widthFix" v-for="(item, i) of item.value">
 			</template>
 			<template v-if="item.type === 1">
-				{{item.value}}
+				<span :style="item.ss" v-if="item.ss">
+					{{item.value}}
+				</span>
+				<span v-else>
+					{{item.value}}
+				</span>
 			</template>
 		</p>
 
@@ -99,7 +104,9 @@ img {
 		},
 
 		onLoad() {
-			this.getContent()
+			this.getContent().catch((e) => {
+				console.log(e)
+			})
 
 			getApp().currentReadID = this.$root.$mp.query.id
 		},
@@ -142,14 +149,36 @@ img {
 		        //this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ''))
 
 		        //console.log( data.data.Content.match(/<p>.*?<\/p>/g).map((item) => item.replace(/<(?:.|\s)*?>/g, "")) )
-		        //console.log(data.data.Content.match(/<p>.*?<\/p>/g))
+		        //console.log(data.data.Content)
+		        //console.log(data.data.Content.match(/<p[^>]*>.*?<\/p>/g))
 		        const re = /<img\s+src=['"]([^'"]+)[^>]*>/g
 
-		        this.contentList = data.data.Content.match(/<p>.*?<\/p>/g).map((item) => {
+		        this.contentList = data.data.Content.match(/<p[^>]*>.*?<\/p>/g).map((item) => {
 		        	if (item.indexOf('<img') === -1) {
+		        		//console.log(item.match(/style="(.+)"/))
+
+		        		let styleText = ''
+		        		let psStyletext = ''
+		        		let bb
+		        		let pp
+
+		        		var pRe = /<p[^>]*style="([^>]+)"/g
+		        		var sRe = /style="([^>]+)"/g
+
+		        		while(bb = sRe.exec(item)) {
+		        			styleText = styleText + bb[1]
+		        		}
+
+		        		//console.log(item.match(/<p[^>]*style="([^>]+)"/g))
+		        		while(pp = pRe.exec(item)) {
+		        			psStyletext = psStyletext + pp[1]
+		        		}
+
 		        		return {
 			        		type: 1,
-			        		value: item.replace(/<(?:.|\s)*?>/g, "")
+			        		value: item.replace(/<(?:.|\s)*?>/g, "").replace(/&nbsp;/g, ' '),
+			        		ss: styleText,
+			        		ps: psStyletext
 			        	}
 		        	}
 
@@ -169,6 +198,7 @@ img {
 
 
 		        })
+		        //console.log(this.contentList)
 
 		        wx.setNavigationBarTitle({
 		        	title: data.data.BookTitle

@@ -506,7 +506,7 @@
 		                    	// })
 		                        const data = JSON.parse(res.data)
 
-		                        console.log(data)
+		                        //console.log(data)
 
 		                        app.qiniu.persistentId = data.persistentId
 
@@ -619,6 +619,8 @@
 						params.audioTime = this.time
 						params.processID = app.qiniu.persistentId
 					}
+
+					//console.log(JSON.stringify(params))
 
 					const data = await postExperience(params)
 
