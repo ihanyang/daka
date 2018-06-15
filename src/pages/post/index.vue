@@ -508,6 +508,8 @@
 
 		                        console.log(data)
 
+		                        app.qiniu.persistentId = data.persistentId
+
 		                        if (res.statusCode !== 200) {
 		                            wx.showModal({
 		                                title: '提示',
